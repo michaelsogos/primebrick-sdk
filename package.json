@@ -3,10 +3,38 @@
 	"version": "0.27.0",
 	"description": "PrimeBrick SDK",
 	"main": "dist/index.js",
+	"author": "Michael Sogos",
 	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/michaelsogos/primebrick-sdk.git"
+	},
+	"bugs": {
+		"url": "https://github.com/michaelsogos/primebrick-sdk/issues",
+		"email": "michael.sogos@gurustudioweb.it"
+	},
+	"homepage": "https://github.com/michaelsogos/primebrick-sdk#readme",
+	"keywords": [
+		"primebrick"
+	],
+	"engines": {
+		"node": ">=10.18.0"
+	},
+	"scripts": {
+		"prebuild": "rimraf dist",
+		"build": "nest build",
+		"lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
+	},
 	"dependencies": {
 		"@nestjs/common": "^7.4.2",
 		"@nestjs/core": "^7.4.2",
+		"@nestjs/microservices": "^7.4.2",
+		"@nestjs/typeorm": "^7.1.0",
+		"express": "^4.17.1",
 		"typeorm": "0.2.25"
+	},
+	"devDependencies": {
+		"@nestjs/cli": "^7.4.1",
+		"rimraf": "^3.0.2"
 	}
 }
