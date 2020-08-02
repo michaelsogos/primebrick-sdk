@@ -1,18 +1,16 @@
-import { TenantAuthConfig } from "../../TenantManager/entities/TenantAUTHConfig.entity";
 import { ExecutionContext, UnauthorizedException } from "@nestjs/common";
 import { Request } from "express";
 import * as jwt from "jsonwebtoken";
 import { LocalAuthConfig } from "../models/LocalAuthConfig";
-import { TenantRepositoryService } from "../../TenantManager/tenantrepository.service";
 import { Tenant } from "../../TenantManager/entities/Tenant.entity";
 import { Repository } from "typeorm";
 import { Login } from "../entities/Login.entity";
 import { User } from "../entities/User.entity";
 
 export class LocalStrategyHelper {
-	static validateRequest(config: TenantAuthConfig, token: string): boolean {
-		const authConfig: LocalAuthConfig = config.auth_config;
-		const decodedToken = jwt.verify(token, authConfig.secretKey, { issuer: "primebrick", audience: `tenant:${config.tenant.code}` });
+	static validateRequest(tenantConfig: Tenant, token: string): boolean {
+		const authConfig: LocalAuthConfig = tenantConfig.tenant_auth_config.auth_config;
+		const decodedToken = jwt.verify(token, authConfig.secretKey, { issuer: "primebrick", audience: `tenant:${tenantConfig.code}` });
 		return true;
 	}
 
