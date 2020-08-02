@@ -1,6 +1,6 @@
 {
 	"name": "primebrick-sdk",
-	"version": "0.30.0",
+	"version": "0.31.0",
 	"description": "PrimeBrick SDK",
 	"main": "dist/index.js",
 	"author": "Michael Sogos",
@@ -24,7 +24,6 @@
 		"prebuild": "rimraf dist",
 		"build": "nest build",
 		"lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-		"pub": "nest build & npm publish",
 		"migration:create": "typeorm migration:generate -n coordinator_schema_update & nest build",
 		"migration:run": "typeorm migration:run"
 	},
