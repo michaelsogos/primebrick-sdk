@@ -5,7 +5,7 @@ module.exports = {
 	username: "postgres",
 	password: "postgres",
 	database: "primebrick_coordinator",
-	entities: ["dist/modules/**/entities/*.js"],
+	entities: ["dist/modules/TenantManager/entities/*.js"],
 	synchronize: false,
 	subscribers: [],
 	autoLoadEntities: true,

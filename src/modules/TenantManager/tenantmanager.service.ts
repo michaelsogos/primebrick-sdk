@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { Tenant } from "./entities/Tenant.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { TenantManagerHelper } from "./utils/TenantManagerHelper";
 
 @Injectable()
 export class TenantManagerService {
@@ -22,5 +23,9 @@ export class TenantManagerService {
 			const tenants = await this.getAllTenants();
 			global["tenants"] = tenants;
 		}
+	}
+
+	getTenantConfig(tenantAlias: string): Tenant {
+		return TenantManagerHelper.getTenantConfigByAlias(tenantAlias);
 	}
 }

@@ -6,5 +6,4 @@ export { ProcessorManagerModule } from "./ProcessorManager/processormanager.modu
 export { ProcessorManagerService } from "./ProcessorManager/processormanager.service";
 export { MessagePayload } from "./ProcessorManager/models/MessagePayload";
 export { Tenant } from "./TenantManager/tenantextractor.decorator";
-export { AuthManagerModule } from "./AuthManager/authmanager.module";
 export { AuthGuard } from "./AuthManager/auth.guard";
