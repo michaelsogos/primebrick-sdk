@@ -11,7 +11,7 @@ import { User } from "../entities/User.entity";
 
 export class LocalStrategyHelper {
 	static validateRequest(config: TenantAuthConfig, token: string): boolean {
-		const authConfig: LocalAuthConfig = JSON.parse(config.auth_config);
+		const authConfig: LocalAuthConfig = config.auth_config;
 		const decodedToken = jwt.verify(token, authConfig.secretKey, { issuer: "primebrick", audience: `tenant:${config.tenant.code}` });
 		return true;
 	}

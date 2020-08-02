@@ -19,7 +19,7 @@ export class TenantAuthConfig {
 	auth_type: string;
 
 	@Column("json")
-	auth_config: string;
+	auth_config: any;
 
 	@OneToOne((type) => Tenant, (T) => T.tenant_auth_config)
 	@JoinColumn({ name: "tenant_id" })
