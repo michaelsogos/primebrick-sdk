@@ -1,19 +1,16 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { TenantAlias } from './entities/TenantAlias.entity';
-import { TenantConfig } from './entities/TenantConfig.entity';
-import { TenantManagerService } from './tenantmanager.service';
-import { TenantRepositoryService } from './tenantrepository.service';
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { TenantAlias } from "./entities/TenantAlias.entity";
+import { Tenant } from "./entities/Tenant.entity";
+import { TenantManagerService } from "./tenantmanager.service";
+import { TenantRepositoryService } from "./tenantrepository.service";
+import { TenantDBConfig } from "./entities/TenantDBConfig.entity";
+import { TenantAuthConfig } from "./entities/TenantAUTHConfig.entity";
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature(
-      [TenantAlias, TenantConfig],
-      'primebrick_coordinator',
-    ),
-  ],
-  controllers: [],
-  providers: [TenantManagerService, TenantRepositoryService],
-  exports: [TenantManagerService, TenantRepositoryService],
+	imports: [TypeOrmModule.forFeature([Tenant, TenantAlias, TenantDBConfig, TenantAuthConfig], "primebrick_coordinator")],
+	controllers: [],
+	providers: [TenantManagerService, TenantRepositoryService],
+	exports: [TenantManagerService, TenantRepositoryService],
 })
 export class TenantManagerModule {}

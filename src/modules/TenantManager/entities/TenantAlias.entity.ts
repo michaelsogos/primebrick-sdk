@@ -1,37 +1,24 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  DeleteDateColumn,
-  ManyToOne,
-  JoinColumn,
-} from 'typeorm';
-import { TenantConfig } from './TenantConfig.entity';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Tenant } from "./Tenant.entity";
 
-@Entity('tenant_alias')
+@Entity("tenant_aliases")
 export class TenantAlias {
-  @PrimaryGeneratedColumn()
-  id: number;
+	@PrimaryGeneratedColumn()
+	id: number;
 
-  @Column({ unique: true })
-  alias: string;
+	@Column({ unique: true })
+	alias: string;
 
-  @CreateDateColumn()
-  created_on: Date;
+	@CreateDateColumn()
+	created_on: Date;
 
-  @UpdateDateColumn()
-  updated_on: Date;
+	@UpdateDateColumn()
+	updated_on: Date;
 
-  @DeleteDateColumn()
-  deleted_on: Date;
+	@DeleteDateColumn()
+	deleted_on: Date;
 
-  @ManyToOne(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    type => TenantConfig,
-    tenant_config => tenant_config.tenant_alias,
-  )
-  @JoinColumn({ name: 'tenant_config_id' })
-  tenant_config: TenantConfig;
+	@ManyToOne((type) => Tenant, (T) => T.tenant_aliases)
+	@JoinColumn({ name: "tenant_id" })
+	tenant: Tenant;
 }
