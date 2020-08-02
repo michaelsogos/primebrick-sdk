@@ -1,6 +1,6 @@
 {
 	"name": "primebrick-sdk",
-	"version": "0.33.0",
+	"version": "0.34.0",
 	"description": "PrimeBrick SDK",
 	"main": "dist/index.js",
 	"author": "Michael Sogos",
