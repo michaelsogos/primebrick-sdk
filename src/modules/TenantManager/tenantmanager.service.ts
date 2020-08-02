@@ -12,7 +12,7 @@ export class TenantManagerService {
 
 	async getAllTenants(): Promise<Tenant[]> {
 		const tenantConfigs = await this.tenantManagerRepository.find({
-			relations: ["tenant_alias"],
+			relations: ["tenant_aliases"],
 		});
 		return tenantConfigs;
 	}
