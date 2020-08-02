@@ -3,9 +3,6 @@ import { Request } from "express";
 import * as jwt from "jsonwebtoken";
 import { LocalAuthConfig } from "../models/LocalAuthConfig";
 import { Tenant } from "../../TenantManager/entities/Tenant.entity";
-import { Repository } from "typeorm";
-import { Login } from "../entities/Login.entity";
-import { User } from "../entities/User.entity";
 
 export class LocalStrategyHelper {
 	static validateRequest(tenantConfig: Tenant, token: string): boolean {
@@ -30,10 +27,5 @@ export class LocalStrategyHelper {
 			default:
 				throw new UnauthorizedException();
 		}
-	}
-
-	static async authenticate(loginRepository: Repository<Login>, credentials: { username: string; password: string }): Promise<User> {
-		const validLogin = await loginRepository.findOneOrFail(null, { where: { username: credentials.username, password: credentials.password } });
-		return validLogin.user;
 	}
 }
