@@ -9,15 +9,15 @@ import { Saml2StrategyHelper } from "./utils/Saml2StrategyHelper";
 export class AuthGuard implements CanActivate {
 	canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
 		const tenantAlias = TenantManagerHelper.getTenantAliasFromContext(context);
-		const tenantAuthConfig = TenantManagerHelper.getTenantConfigByAlias(tenantAlias).tenant_auth_config;
+		const tenant = TenantManagerHelper.getTenantConfigByAlias(tenantAlias);
 
-		switch (tenantAuthConfig.auth_type) {
+		switch (tenant.tenant_auth_config.auth_type) {
 			case "local":
-				return LocalStrategyHelper.validateRequest(tenantAuthConfig, LocalStrategyHelper.getBearerToken(context));
+				return LocalStrategyHelper.validateRequest(tenant, LocalStrategyHelper.getBearerToken(context));
 			case "oauth2":
-				return OAuth2StrategyHelper.validateRequest(tenantAuthConfig);
+				return OAuth2StrategyHelper.validateRequest(tenant);
 			case "saml2":
-				return Saml2StrategyHelper.validateRequest(tenantAuthConfig);
+				return Saml2StrategyHelper.validateRequest(tenant);
 		}
 	}
 }
