@@ -1,19 +1,19 @@
-import { TenantConfig } from '../entities/TenantConfig.entity';
+import { Tenant } from "../entities/Tenant.entity";
 
 export class TenantManagerHelper {
-  static getTenantConfigByAlias(alias: string): TenantConfig {
-    let config: TenantConfig = null;
-    for (const tenantConfig of global['tenants'] as TenantConfig[]) {
-      for (const tenantAlias of tenantConfig.tenant_alias) {
-        if (tenantAlias.alias == alias) {
-          config = tenantConfig;
-          break;
-        }
-      }
+	static getTenantConfigByAlias(alias: string): Tenant {
+		let config: Tenant = null;
+		for (const tenant of global["tenants"] as Tenant[]) {
+			for (const tenantAlias of tenant.tenant_aliases) {
+				if (tenantAlias.alias == alias) {
+					config = tenant;
+					break;
+				}
+			}
 
-      if (config) break;
-    }
+			if (config) break;
+		}
 
-    return config;
-  }
+		return config;
+	}
 }
