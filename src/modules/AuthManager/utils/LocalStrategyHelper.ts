@@ -1,7 +1,7 @@
 import { TenantAuthConfig } from "../../TenantManager/entities/TenantAUTHConfig.entity";
 import { ExecutionContext, UnauthorizedException } from "@nestjs/common";
 import { Request } from "express";
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 import { LocalAuthConfig } from "../models/LocalAuthConfig";
 import { TenantRepositoryService } from "../../TenantManager/tenantrepository.service";
 import { Tenant } from "../../TenantManager/entities/Tenant.entity";
