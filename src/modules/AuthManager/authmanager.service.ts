@@ -17,7 +17,7 @@ export class AuthManagerService {
 
 	async login(tenantAlias: string, credentials: { username: string; password: string }): Promise<string> {
 		const tenantAuthConfig = TenantManagerHelper.getTenantConfigByAlias(tenantAlias).tenant_auth_config;
-		const authConfig: LocalAuthConfig = JSON.parse(tenantAuthConfig.auth_config);
+		const authConfig: LocalAuthConfig = tenantAuthConfig.auth_config;
 
 		let user: User = null;
 		switch (tenantAuthConfig.auth_type) {
