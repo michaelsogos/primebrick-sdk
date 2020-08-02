@@ -1,9 +1,9 @@
-import { TenantAuthConfig } from "../../TenantManager/entities/TenantAUTHConfig.entity";
 import { NotImplementedException } from "@nestjs/common";
 import { User } from "../entities/User.entity";
+import { Tenant } from "../../TenantManager/entities/Tenant.entity";
 
 export class Saml2StrategyHelper {
-	static validateRequest(config: TenantAuthConfig): boolean {
+	static validateRequest(tenantConfig: Tenant): boolean {
 		throw new NotImplementedException();
 	}
 
