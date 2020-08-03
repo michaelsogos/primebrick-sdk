@@ -36,6 +36,7 @@
 		"@types/jsonwebtoken": "^8.5.0",
 		"jsonwebtoken": "^8.5.1",
 		"pg": "^8.3.0",
+		"rxjs": "^6.6.2",
 		"typeorm": "0.2.25"
 	},
 	"devDependencies": {
