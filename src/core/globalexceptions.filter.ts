@@ -5,7 +5,10 @@ import { throwError } from "rxjs";
 @Catch()
 export class GlobalExceptionsFilter implements ExceptionFilter {
 	catch(error: Error, host: ArgumentsHost) {
-		let status = error instanceof HttpException ? error.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
+		let status =
+			Object.getPrototypeOf(error.constructor).name == "HttpException"
+				? (error as HttpException).getStatus()
+				: HttpStatus.INTERNAL_SERVER_ERROR;
 
 		switch (host.getType()) {
 			case "http":
