@@ -36,7 +36,7 @@ export class TenantRepositoryService {
 				subscribers: [OptimisticLockingSubscriber],
 				// autoLoadEntities: true,
 				migrationsTableName: "db_migration_history",
-				migrations: ["dist/migrations/coordinator/*.js"],
+				migrations: ["dist/db/migrations/*.js"],
 			});
 		} else {
 			return connectionManager.get(tenant.code);
