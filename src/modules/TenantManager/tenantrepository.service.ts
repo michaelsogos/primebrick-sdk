@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Repository, getConnectionManager, createConnection, getRepository } from "typeorm";
+import { Repository, getConnectionManager, createConnection, getRepository, Connection } from "typeorm";
 import { Tenant } from "../TenantManager/entities/Tenant.entity";
 import { OptimisticLockingSubscriber } from "../../db/events/OptimisticLocking.subscriber";
 import { TenantManagerHelper } from "./utils/TenantManagerHelper";
@@ -9,6 +9,11 @@ import { MessagePayload } from "../ProcessorManager/models/MessagePayload";
 @Injectable()
 export class TenantRepositoryService {
 	async getTenantRepository<TEntity>(tenantAlias: string, entity: new () => TEntity): Promise<Repository<TEntity>> {
+		const connection = await this.getTenantConnection(tenantAlias);
+		return getRepository<TEntity>(entity, connection.name);
+	}
+
+	async getTenantConnection(tenantAlias: string): Promise<Connection> {
 		const tenant: Tenant = TenantManagerHelper.getTenantConfigByAlias(tenantAlias);
 
 		if (!tenant)
@@ -18,7 +23,7 @@ export class TenantRepositoryService {
 		const connectionManager = getConnectionManager();
 
 		if (!connectionManager.has(tenant.code)) {
-			let a = await createConnection({
+			return await createConnection({
 				name: tenant.code,
 				type: "postgres",
 				host: tenant.tenant_db_config.db_host,
@@ -33,10 +38,9 @@ export class TenantRepositoryService {
 				migrationsTableName: "db_migration_history",
 				migrations: ["dist/migrations/coordinator/*.js"],
 			});
-			a.runMigrations();
+		} else {
+			return connectionManager.get(tenant.code);
 		}
-
-		return getRepository<TEntity>(entity, tenant.code);
 	}
 
 	async getRepository<TEntity>(ctx: Request | MessagePayload, entity: new () => TEntity): Promise<Repository<TEntity>> {
