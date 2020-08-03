@@ -7,8 +7,12 @@ import { Tenant } from "../../TenantManager/entities/Tenant.entity";
 export class LocalStrategyHelper {
 	static validateRequest(tenantConfig: Tenant, token: string): boolean {
 		const authConfig: LocalAuthConfig = tenantConfig.tenant_auth_config.auth_config;
-		const decodedToken = jwt.verify(token, authConfig.secretKey, { issuer: "primebrick", audience: `tenant:${tenantConfig.code}` });
-		return true;
+		try {
+			const decodedToken = jwt.verify(token, authConfig.secretKey, { issuer: "primebrick", audience: `tenant:${tenantConfig.code}` });
+			return true;
+		} catch (ex) {
+			throw new UnauthorizedException("Authorization token is not valid!");
+		}
 	}
 
 	static getBearerToken(context: ExecutionContext): string {
@@ -17,15 +21,15 @@ export class LocalStrategyHelper {
 				const req = context.switchToHttp().getRequest() as Request;
 
 				const authHeader = req.get("Authorization");
-				if (!authHeader) throw new UnauthorizedException();
+				if (!authHeader) throw new UnauthorizedException("Authorization header missing!");
 
 				const token = authHeader.split(" ")[1];
-				if (!token) throw new UnauthorizedException();
+				if (!token) throw new UnauthorizedException("Authorization bearer token malformed!");
 
 				return token;
 			}
 			default:
-				throw new UnauthorizedException();
+				throw new UnauthorizedException("Only HTTP authorization token is supported!");
 		}
 	}
 }
