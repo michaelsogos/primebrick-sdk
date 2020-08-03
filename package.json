@@ -1,6 +1,6 @@
 {
 	"name": "primebrick-sdk",
-	"version": "0.42.0",
+	"version": "0.43.0",
 	"description": "PrimeBrick SDK",
 	"main": "dist/index.js",
 	"author": "Michael Sogos",
@@ -36,6 +36,7 @@
 		"@types/jsonwebtoken": "^8.5.0",
 		"jsonwebtoken": "^8.5.1",
 		"pg": "^8.3.0",
+		"rxjs": "^6.6.2",
 		"typeorm": "0.2.25"
 	},
 	"devDependencies": {
