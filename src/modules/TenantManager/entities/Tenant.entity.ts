@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateCol
 import { TenantAlias } from "./TenantAlias.entity";
 import { TenantDBConfig } from "./TenantDBConfig.entity";
 import { TenantAuthConfig } from "./TenantAUTHConfig.entity";
+import { TenantThemeConfig } from "./TenantThemeConfig.entity";
 
 @Entity("tenants")
 export class Tenant {
@@ -28,4 +29,7 @@ export class Tenant {
 
 	@OneToOne((type) => TenantAuthConfig, (T) => T.tenant)
 	tenant_auth_config: TenantAuthConfig;
+
+	@OneToOne((type) => TenantThemeConfig, (T) => T.tenant)
+	tenant_theme_config: TenantThemeConfig;
 }

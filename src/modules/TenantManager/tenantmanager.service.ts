@@ -3,12 +3,14 @@ import { Tenant } from "./entities/Tenant.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { TenantManagerHelper } from "./utils/TenantManagerHelper";
+import { TenantThemeConfig } from "./entities/TenantThemeConfig.entity";
 
 @Injectable()
 export class TenantManagerService {
 	constructor(
 		@InjectRepository(Tenant, "primebrick_coordinator")
-		private tenantManagerRepository: Repository<Tenant>
+		private tenantManagerRepository: Repository<Tenant>,
+		private themeManagerRepository: Repository<TenantThemeConfig>
 	) {}
 
 	async getAllTenants(): Promise<Tenant[]> {
@@ -27,5 +29,13 @@ export class TenantManagerService {
 
 	getTenantConfig(tenantAlias: string): Tenant {
 		return TenantManagerHelper.getTenantConfigByAlias(tenantAlias);
+	}
+
+	async getTenantTheme(tenant: Tenant): Promise<TenantThemeConfig> {
+		const tenantTheme = await this.themeManagerRepository.findOneOrFail(null, {
+			where: { tenant: tenant },
+		});
+
+		return tenantTheme;
 	}
 }

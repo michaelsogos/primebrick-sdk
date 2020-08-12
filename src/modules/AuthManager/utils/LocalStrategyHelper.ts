@@ -29,7 +29,13 @@ export class LocalStrategyHelper {
 				return token;
 			}
 			default:
-				throw new UnauthorizedException("Only HTTP authorization token is supported!");
+				throw new UnauthorizedException("Only HTTP HEADER bearer authorization token is supported!");
 		}
+	}
+
+	static getUserProfile(context: ExecutionContext) {
+		const token = this.getBearerToken(context);
+		const userProfile = jwt.decode(token);
+		return userProfile;
 	}
 }
