@@ -10,6 +10,7 @@ export class TenantManagerService {
 	constructor(
 		@InjectRepository(Tenant, "primebrick_coordinator")
 		private tenantManagerRepository: Repository<Tenant>,
+		@InjectRepository(Tenant, "primebrick_coordinator")
 		private themeManagerRepository: Repository<TenantThemeConfig>
 	) {}
 
