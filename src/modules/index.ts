@@ -8,3 +8,4 @@ export { MessagePayload } from "./ProcessorManager/models/MessagePayload";
 export { Tenant } from "./TenantManager/tenantextractor.decorator";
 export { AuthGuard } from "./AuthManager/auth.guard";
 export { LocalAuthConfig } from "./AuthManager/models/LocalAuthConfig";
+export { UserProfile } from "./AuthManager/userprofilextractor.decorator";
