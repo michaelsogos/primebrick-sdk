@@ -7,7 +7,9 @@ export class SnakeNamingStrategy extends DefaultNamingStrategy implements Naming
 	}
 
 	columnName(propertyName: string, customName: string, embeddedPrefixes: string[]): string {
-		return `${snakeCase(embeddedPrefixes.join("_"))}_${customName ? customName : snakeCase(propertyName)}`;
+		const columnName = customName ? customName : snakeCase(propertyName);
+
+		return embeddedPrefixes.length ? `${snakeCase(embeddedPrefixes.join("_"))}_${columnName}` : columnName;
 	}
 
 	relationName(propertyName: string): string {
