@@ -5,6 +5,7 @@ import { OptimisticLockingSubscriber } from "../../db/events/OptimisticLocking.s
 import { TenantManagerHelper } from "./utils/TenantManagerHelper";
 import { Request } from "express";
 import { MessagePayload } from "../ProcessorManager/models/MessagePayload";
+import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 
 @Injectable()
 export class TenantRepositoryService {
@@ -37,6 +38,7 @@ export class TenantRepositoryService {
 				// autoLoadEntities: true,
 				migrationsTableName: "db_migration_history",
 				migrations: ["dist/db/migrations/*.js"],
+				namingStrategy: new SnakeNamingStrategy(),
 			});
 		} else {
 			return connectionManager.get(tenant.code);
