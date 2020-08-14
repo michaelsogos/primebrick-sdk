@@ -5,30 +5,30 @@ export abstract class AudibleEntity {
 	id: number;
 
 	@CreateDateColumn()
-	created_on: Date;
+	createdOn: Date;
 
 	@Column()
-	created_by: number;
+	createdBy: number;
 
 	@UpdateDateColumn()
-	updated_on: Date;
+	updatedOn: Date;
 
 	@Column()
-	updated_by: number;
+	updatedBy: number;
 
 	@DeleteDateColumn({ nullable: true })
-	deleted_on: Date;
+	deletedOn: Date;
 
 	@Column({ nullable: true })
-	deleted_by: number;
+	deletedBy: number;
 
 	@VersionColumn()
 	version: number;
 
 	@BeforeInsert()
 	setAuditingFields(): void {
-		this.created_by = -1; //TODO: @mso -> Collect from context the LOGGED IN USER ID
-		this.updated_by = -1; //TODO: @mso -> Collect from context the LOGGED IN USER ID
+		this.createdBy = -1; //TODO: @mso -> Collect from context the LOGGED IN USER ID
+		this.updatedBy = -1; //TODO: @mso -> Collect from context the LOGGED IN USER ID
 		//this.deleted_by = -1; //TODO: @mso -> Collect from context the LOGGED IN USER ID
 	}
 }
