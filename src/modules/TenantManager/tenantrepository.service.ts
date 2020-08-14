@@ -39,6 +39,7 @@ export class TenantRepositoryService {
 				migrationsTableName: "db_migration_history",
 				migrations: ["dist/db/migrations/*.js"],
 				namingStrategy: new SnakeNamingStrategy(),
+				entityPrefix: global["appModuleName"],
 			});
 		} else {
 			return connectionManager.get(tenant.code);
