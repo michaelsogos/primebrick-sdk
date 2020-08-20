@@ -3,6 +3,7 @@ import { Request } from "express";
 import * as jwt from "jsonwebtoken";
 import { LocalAuthConfig } from "../models/LocalAuthConfig";
 import { Tenant } from "../../TenantManager/entities/Tenant.entity";
+import { UserProfile } from "../models/UserProfile";
 
 export class LocalStrategyHelper {
 	static validateRequest(tenantConfig: Tenant, token: string): boolean {
@@ -33,9 +34,9 @@ export class LocalStrategyHelper {
 		}
 	}
 
-	static getUserProfile(context: ExecutionContext) {
+	static getUserProfile(context: ExecutionContext): UserProfile {
 		const token = this.getBearerToken(context);
-		const userProfile = jwt.decode(token);
+		const userProfile = jwt.decode(token) as UserProfile;
 		return userProfile;
 	}
 }
