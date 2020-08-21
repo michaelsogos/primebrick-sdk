@@ -6,7 +6,7 @@ export class CommonHelper {
 	static getLanguageCode(context: ExecutionContext, userProfile: UserProfile): string {
 		switch (context.getType()) {
 			case "http":
-				return userProfile.languageCode || this.getLanguageCodeFromHttpRequest(context);
+				return userProfile ? userProfile.languageCode : this.getLanguageCodeFromHttpRequest(context);
 			case "rpc":
 				throw new Error("Not implemented yet!");
 			case "ws":
@@ -14,7 +14,7 @@ export class CommonHelper {
 		}
 	}
 
-	 static getLanguageCodeFromHttpRequest(context: ExecutionContext): string {
+	static getLanguageCodeFromHttpRequest(context: ExecutionContext): string {
 		const request = context.switchToHttp().getRequest() as Request;
 		const acceptedLanguages = request.acceptsLanguages();
 		let languageCode: string = null;
