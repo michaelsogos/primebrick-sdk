@@ -14,7 +14,7 @@ export class CommonHelper {
 		}
 	}
 
-	private static getLanguageCodeFromHttpRequest(context: ExecutionContext): string {
+	 static getLanguageCodeFromHttpRequest(context: ExecutionContext): string {
 		const request = context.switchToHttp().getRequest() as Request;
 		const acceptedLanguages = request.acceptsLanguages();
 		let languageCode: string = null;
