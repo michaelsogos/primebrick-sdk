@@ -5,7 +5,7 @@ import { throwError } from "rxjs";
 @Catch()
 export class GlobalExceptionsFilter implements ExceptionFilter {
 	catch(error: Error, host: ArgumentsHost) {
-		let status =
+		const status =
 			Object.getPrototypeOf(error.constructor).name == "HttpException"
 				? (error as HttpException).getStatus()
 				: HttpStatus.INTERNAL_SERVER_ERROR;
@@ -13,7 +13,7 @@ export class GlobalExceptionsFilter implements ExceptionFilter {
 		switch (host.getType()) {
 			case "http":
 				{
-					let response: Response = host.switchToHttp().getResponse();
+					const response: Response = host.switchToHttp().getResponse();
 					response.status(status).json({
 						statusCode: status,
 						timestamp: new Date().toISOString(),
