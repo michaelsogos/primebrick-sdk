@@ -1,0 +1,10 @@
+{
+    "prettier.printWidth": 150,
+    "prettier.singleQuote": true,
+    "prettier.tabWidth": 4,
+    "typescript.format.semicolons": "insert",
+    "emmet.showExpandedAbbreviation": "never",
+    "eslint.alwaysShowStatus": true,
+    "eslint.lintTask.enable": true,
+    "typescript.tsserver.experimental.enableProjectDiagnostics": true
+}
