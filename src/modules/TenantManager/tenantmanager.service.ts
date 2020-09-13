@@ -58,7 +58,7 @@ export class TenantManagerService {
         if (typeof tenant === 'string') connection = await this.tenantRepositoryService.getTenantConnection(tenant);
         else connection = await this.tenantRepositoryService.getDbConnectionByTenant(tenant as Tenant);
 
-        const modulesPath = path.join(__dirname, 'modules');
+        const modulesPath = path.join(process.cwd(), 'modules');
         const importsLog = [];
         const moduleFolders = fs
             .readdirSync(modulesPath, { withFileTypes: true })
