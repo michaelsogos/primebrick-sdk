@@ -32,14 +32,21 @@ export class CommonHelper {
 
     static async importCsv(dbconn: Connection, importFolderPath: string, descriptorFileName: string): Promise<any[]> {
         //TODO: @mso -> Create a model for return type array
-        const literalJson = fs.readFileSync(path.join(importFolderPath, descriptorFileName), 'utf8');
+        const descriptorFilePath = path.join(importFolderPath, descriptorFileName);
+        if (!fs.existsSync(descriptorFilePath)) return [];
+
+        const literalJson = fs.readFileSync(descriptorFilePath, 'utf8');
         const dataInit: ImporterDescriptor = JSON.parse(literalJson);
         const importLogs = [];
 
         for (const definition of dataInit.defs) {
             for (const file of definition.files) {
                 try {
-                    const rawCsv = fs.readFileSync(path.join(importFolderPath, file), definition.csvOptions.encoding);
+                    const csvFilePath = path.join(importFolderPath, file);
+                    if (!fs.existsSync(csvFilePath))
+                        throw new Error(`Import "${definition.name}" failed beacuse csv file "${csvFilePath}" not exists! `);
+
+                    const rawCsv = fs.readFileSync(csvFilePath, definition.csvOptions.encoding);
                     const csv = papa.parse(rawCsv, {
                         skipEmptyLines: true,
                         header: definition.csvOptions.header != undefined ? definition.csvOptions.header : true,
@@ -242,5 +249,9 @@ export class CommonHelper {
         }
 
         return importLogs;
+    }
+
+    static isDebugMode() {
+        return !process.env.NODE_ENV || process.env.NODE_ENV != 'production';
     }
 }
