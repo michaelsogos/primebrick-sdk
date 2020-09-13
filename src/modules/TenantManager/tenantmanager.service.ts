@@ -58,7 +58,7 @@ export class TenantManagerService {
         if (typeof tenant === 'string') connection = await this.tenantRepositoryService.getTenantConnection(tenant);
         else connection = await this.tenantRepositoryService.getDbConnectionByTenant(tenant as Tenant);
 
-        const modulesPath = path.join(process.cwd(), 'modules');
+        const modulesPath = path.join(process.cwd(), CommonHelper.isDebugMode() ? 'src' : '', 'modules');
         const importsLog = [];
         const moduleFolders = fs
             .readdirSync(modulesPath, { withFileTypes: true })
@@ -68,7 +68,7 @@ export class TenantManagerService {
         for (const folder of moduleFolders) {
             const importFolderPath = path.join(modulesPath, folder, 'resources', 'imports');
 
-            importsLog.push(await CommonHelper.importCsv(connection, importFolderPath, 'data-init.json'));
+            if (fs.existsSync(importFolderPath)) importsLog.push(...(await CommonHelper.importCsv(connection, importFolderPath, 'data-init.json')));
             //TODO: @michaelsogos -> Log imports status
         }
 
