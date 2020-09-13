@@ -1,6 +1,6 @@
 {
     "name": "primebrick-sdk",
-    "version": "0.72.0",
+    "version": "0.73.0",
     "description": "PrimeBrick SDK",
     "main": "dist/index.js",
     "author": "Michael Sogos",
@@ -40,7 +40,9 @@
         "pg": "8.3.3",
         "reflect-metadata": "0.1.13",
         "rxjs": "6.6.3",
-        "typeorm": "0.2.26"
+        "typeorm": "0.2.26",
+        "winston": "^3.3.3",
+        "winston-daily-rotate-file": "^4.5.0"
     },
     "devDependencies": {
         "@nestjs/cli": "7.5.1",
