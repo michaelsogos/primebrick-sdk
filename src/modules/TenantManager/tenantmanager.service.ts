@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Tenant } from './entities/Tenant.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Migration, Repository } from 'typeorm';
+import { Connection, Migration, Repository } from 'typeorm';
 import { TenantManagerHelper } from './utils/TenantManagerHelper';
 import { TenantThemeConfig } from './entities/TenantThemeConfig.entity';
 import { TenantRepositoryService } from './tenantrepository.service';
@@ -45,13 +45,19 @@ export class TenantManagerService {
         return tenantTheme;
     }
 
-    async updateTenantDatabaseSchema(tenant: Tenant): Promise<Migration[]> {
-        const connection = await this.tenantRepositoryService.getDbConnectionByTenant(tenant);
+    async updateTenantDatabaseSchema(tenant: String | Tenant): Promise<Migration[]> {
+        let connection: Connection = null;
+        if (typeof tenant === 'string') connection = await this.tenantRepositoryService.getTenantConnection(tenant);
+        else connection = await this.tenantRepositoryService.getDbConnectionByTenant(tenant as Tenant);
+
         return await connection.runMigrations();
     }
 
-    async importTenantDatabaseData(tenant: Tenant): Promise<any[]> {
-        const connection = await this.tenantRepositoryService.getDbConnectionByTenant(tenant);
+    async importTenantDatabaseData(tenant: String | Tenant): Promise<any[]> {
+        let connection: Connection = null;
+        if (typeof tenant === 'string') connection = await this.tenantRepositoryService.getTenantConnection(tenant);
+        else connection = await this.tenantRepositoryService.getDbConnectionByTenant(tenant as Tenant);
+
         const modulesPath = path.join(__dirname, 'modules');
         const importsLog = [];
         const moduleFolders = fs
