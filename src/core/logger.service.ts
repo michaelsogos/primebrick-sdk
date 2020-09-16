@@ -6,9 +6,11 @@ import * as fs from 'fs';
 
 export class AdvancedLogger extends Logger {
     private readonly logger: winston.Logger;
+    private readonly timestampEnabled: boolean;
 
     constructor(@Optional() protected context?: string, @Optional() isTimestampEnabled = false) {
         super(context, isTimestampEnabled);
+        this.timestampEnabled = isTimestampEnabled;
 
         if (!fs.existsSync('logs')) {
             fs.mkdirSync('logs');
@@ -36,29 +38,31 @@ export class AdvancedLogger extends Logger {
     }
 
     error(message: string, trace: string) {
-        super.error(message, trace);
+        Logger.error(message, trace, this.context, this.timestampEnabled);
         this.logger.error(trace);
     }
 
     log(message: string) {
-        this.debug(message);
+        Logger.log(message, this.context, this.timestampEnabled);
+        this.logger.info(message);
     }
 
     warn(message: string) {
-        super.warn(message);
+        Logger.warn(message, this.context, this.timestampEnabled);
         this.logger.warn(message);
     }
 
     debug(message: string) {
-        super.debug(message);
+        Logger.debug(message, this.context, this.timestampEnabled);
         this.logger.debug(message);
     }
     verbose(message: string) {
-        this.debug(message);
+        Logger.verbose(message, this.context, this.timestampEnabled);
+        this.logger.debug(message);
     }
 
     info(message: string) {
-        super.log(message);
+        Logger.log(message, this.context, this.timestampEnabled);
         this.logger.info(message);
     }
 }
