@@ -60,3 +60,14 @@ export abstract class AudibleEntity {
         this.deletedBy = -1; //TODO: @mso -> Collect from context the LOGGED IN USER ID
     }
 }
+
+// class a implements EntitySubscriberInterface<AudibleEntity> {
+
+//     listenTo(){
+//         return AudibleEntity
+//     }
+
+//     beforeUpdate(event: UpdateEvent<AudibleEntity>){
+// event.
+//     }
+// }
