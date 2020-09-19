@@ -31,7 +31,7 @@ export class TenantRepositoryService {
     }
 
     async getDbConnectionByTenant(tenant: Tenant) {
-        if (!tenant) throw new Error('Cannot instanciate database connection because [Tenant] is null!');
+        if (!tenant) throw new Error('Cannot create connecton to database because [Tenant] is null!');
 
         const connectionManager = getConnectionManager();
 

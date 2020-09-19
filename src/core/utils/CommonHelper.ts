@@ -6,6 +6,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { ImporterDescriptor, ImporterCardinalityType } from '../models/ImporterDescriptor';
 import * as papa from 'papaparse';
+import { ContextPayload } from '../models/ContextPayload';
+import { TenantManagerHelper } from '../../modules/TenantManager/utils/TenantManagerHelper';
+import { AuthManagerHelper } from '../../modules/AuthManager/utils/AuthManagerHelper';
 
 export class CommonHelper {
     static getLanguageCode(context: ExecutionContext, userProfile: UserProfile): string {
@@ -40,6 +43,8 @@ export class CommonHelper {
         const importLogs = [];
 
         for (const definition of dataInit.defs) {
+            const repository = dbconn.getRepository(definition.csvOptions.entity);
+
             for (const file of definition.files) {
                 try {
                     const csvFilePath = path.join(importFolderPath, file);
@@ -53,7 +58,6 @@ export class CommonHelper {
                         quoteChar: definition.csvOptions.quoteChar || '"',
                         delimiter: ImporterDescriptor.mapDelimiterToChar(definition.csvOptions.delimiter),
                     });
-                    const repository = dbconn.getRepository(definition.csvOptions.entity);
                     const entities = [];
 
                     for (let x = 0; x < csv.data.length; x++) {
@@ -253,5 +257,17 @@ export class CommonHelper {
 
     static isDebugMode() {
         return !process.env.NODE_ENV || process.env.NODE_ENV != 'production';
+    }
+
+    static getRequestContext(context: ExecutionContext) {
+        const result = new ContextPayload();
+        result.tenantAlias = TenantManagerHelper.getTenantAliasFromContext(context);
+        try {
+            result.userProfile = AuthManagerHelper.getUserProfile(context);
+        } finally {
+            result.userProfile = null;
+        }
+        result.languageCode = this.getLanguageCode(context, result.userProfile);
+        return result;
     }
 }
