@@ -12,4 +12,5 @@ export { UserProfile as User } from './AuthManager/userprofilextractor.decorator
 export { UserProfile } from './AuthManager/models/UserProfile';
 export { SessionManagerModule } from './SessionManager/sessionmanager.module';
 export { SessionManagerService } from './SessionManager/sessionmanager.service';
-export { SessionManagerMiddleware } from './SessionManager/sessionmanager.middleware';
+export { sessionManagerMiddleware } from './SessionManager/sessionmanager.middleware';
+export { SessionManagerInterceptor } from './SessionManager/sessionmanager.interceptor';
