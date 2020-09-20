@@ -22,7 +22,7 @@ export class TenantManagerHelper {
     static getTenantAliasFromExecutionContext(context: ExecutionContext): string {
         switch (context.getType()) {
             case 'http':
-                return this.getTenantAliasFromHttpContext(context.switchToHttp().getRequest());
+                return this.getTenantAliasFromHttpRequest(context.switchToHttp().getRequest());
             case 'rpc':
                 return context.switchToRpc().getData()['tenantAlias'];
             case 'ws':
@@ -30,7 +30,7 @@ export class TenantManagerHelper {
         }
     }
 
-    static getTenantAliasFromHttpContext(request: Request) {
+    static getTenantAliasFromHttpRequest(request: Request) {
         return request['tenantAlias'];
     }
 }
