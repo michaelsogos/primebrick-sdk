@@ -13,3 +13,4 @@ export { UserProfile } from './AuthManager/models/UserProfile';
 export { SessionManagerModule } from './SessionManager/sessionmanager.module';
 export { SessionManagerService } from './SessionManager/sessionmanager.service';
 export { SessionInterceptor } from './SessionManager/session.interceptor';
+export { AuthManagerHelper } from './AuthManager/utils/AuthManagerHelper';
