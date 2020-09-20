@@ -273,10 +273,10 @@ export class CommonHelper {
 
     static getContextFromHttpRequest(request: Request) {
         const result = new SessionContext();
-        result.tenantAlias = TenantManagerHelper.getTenantAliasFromHttpContext(request);
+        result.tenantAlias = TenantManagerHelper.getTenantAliasFromHttpRequest(request);
         try {
             result.userProfile = AuthManagerHelper.getUserProfileFromHttpRequest(request);
-        } finally {
+        } catch (err) {
             result.userProfile = null;
         }
         result.languageCode = this.getLanguageCodeFromHttpRequest(request, result.userProfile);
