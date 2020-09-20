@@ -1,6 +1,6 @@
-import { createParamDecorator, ExecutionContext } from "@nestjs/common";
-import { TenantManagerHelper } from "./utils/TenantManagerHelper";
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { TenantManagerHelper } from './utils/TenantManagerHelper';
 
 export const Tenant = createParamDecorator((data: unknown, ctx: ExecutionContext) => {
-	return TenantManagerHelper.getTenantAliasFromContext(ctx);
+    return TenantManagerHelper.getTenantAliasFromExecutionContext(ctx);
 });

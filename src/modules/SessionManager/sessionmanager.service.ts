@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as cls from 'cls-hooked';
-import { ContextPayload } from '../../core';
+import { SessionContext } from '../../core';
 
 @Injectable()
 export class SessionManagerService {
@@ -14,7 +14,7 @@ export class SessionManagerService {
         return this.session.get(key);
     }
 
-    getContext(): ContextPayload {
+    getContext(): SessionContext {
         return this.session.get('context');
     }
 }

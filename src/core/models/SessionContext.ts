@@ -1,6 +1,6 @@
 import { UserProfile } from "../../modules/AuthManager/models/UserProfile";
 
-export class ContextPayload {
+export class SessionContext {
 	tenantAlias: string;
 	userProfile: UserProfile;
 	languageCode: string;
