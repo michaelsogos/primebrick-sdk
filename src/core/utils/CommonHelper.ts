@@ -6,15 +6,15 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { ImporterDescriptor, ImporterCardinalityType } from '../models/ImporterDescriptor';
 import * as papa from 'papaparse';
-import { ContextPayload } from '../models/ContextPayload';
+import { SessionContext } from '../models/SessionContext';
 import { TenantManagerHelper } from '../../modules/TenantManager/utils/TenantManagerHelper';
 import { AuthManagerHelper } from '../../modules/AuthManager/utils/AuthManagerHelper';
 
 export class CommonHelper {
-    static getLanguageCode(context: ExecutionContext, userProfile: UserProfile): string {
+    static getLanguageCodeFromExecutionContext(context: ExecutionContext, userProfile: UserProfile): string {
         switch (context.getType()) {
             case 'http':
-                return userProfile ? userProfile.languageCode : this.getLanguageCodeFromHttpRequest(context);
+                return this.getLanguageCodeFromHttpRequest(context.switchToHttp().getRequest(), userProfile);
             case 'rpc':
                 throw new Error('Not implemented yet!');
             case 'ws':
@@ -22,8 +22,9 @@ export class CommonHelper {
         }
     }
 
-    static getLanguageCodeFromHttpRequest(context: ExecutionContext): string {
-        const request = context.switchToHttp().getRequest() as Request;
+    static getLanguageCodeFromHttpRequest(request: Request, userProfile: UserProfile): string {
+        if (userProfile && userProfile.languageCode) return userProfile.languageCode;
+
         const acceptedLanguages = request.acceptsLanguages();
         let languageCode: string = null;
 
@@ -259,15 +260,26 @@ export class CommonHelper {
         return !process.env.NODE_ENV || process.env.NODE_ENV != 'production';
     }
 
-    static getRequestContext(context: ExecutionContext) {
-        const result = new ContextPayload();
-        result.tenantAlias = TenantManagerHelper.getTenantAliasFromContext(context);
+    static getContextFromExecutionContext(context: ExecutionContext) {
+        switch (context.getType()) {
+            case 'http':
+                return this.getContextFromHttpRequest(context.switchToHttp().getRequest());
+            case 'rpc':
+                throw new Error('Not implemented yet!');
+            case 'ws':
+                throw new Error('Not implemented yet!');
+        }
+    }
+
+    static getContextFromHttpRequest(request: Request) {
+        const result = new SessionContext();
+        result.tenantAlias = TenantManagerHelper.getTenantAliasFromHttpContext(request);
         try {
-            result.userProfile = AuthManagerHelper.getUserProfile(context);
+            result.userProfile = AuthManagerHelper.getUserProfileFromHttpRequest(request);
         } finally {
             result.userProfile = null;
         }
-        result.languageCode = this.getLanguageCode(context, result.userProfile);
+        result.languageCode = this.getLanguageCodeFromHttpRequest(request, result.userProfile);
         return result;
     }
 }
