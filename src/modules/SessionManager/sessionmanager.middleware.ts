@@ -3,19 +3,17 @@ import * as cls from 'cls-hooked';
 import { CommonHelper } from '../../core/utils/CommonHelper';
 import { Injectable, NestMiddleware } from '@nestjs/common';
 
-@Injectable()
-export class SessionMiddleware implements NestMiddleware {
-    constructor() {
-        cls.createNamespace('session');
-    }
+const session = cls.createNamespace('session');
 
+@Injectable()
+export class SessionManagerMiddleware implements NestMiddleware {
     use(req: Request, res: Response, next: Function) {
         const requestContext = CommonHelper.getContextFromHttpRequest(req);
-        const session = cls.getNamespace('session');
+        const sessionA = cls.getNamespace('session');
 
-        if (!session) throw new Error('CLS Session is not initialized!');
-        session.run(() => {
-            session.set('context', requestContext);
+        if (!sessionA) throw new Error('CLS Session is not initialized!');
+        sessionA.run(() => {
+            sessionA.set('context', requestContext);
             next();
         });
     }
