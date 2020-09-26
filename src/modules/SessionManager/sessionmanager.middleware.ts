@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
 // import * as cls from 'cls-hooked';
 import { CommonHelper } from '../../core/utils/CommonHelper';
-import { AsyncLocalStorageContext as Context } from '@northscaler/continuation-local-storage';
+import { AsyncLocalStorage } from 'async_hooks';
+
 // const session = cls.createNamespace('session');
+global['als'] = new AsyncLocalStorage<Map<string, any>>();
 
 export function sessionManagerMiddleware(req: Request, res: Response, next: Function): void {
     const requestContext = CommonHelper.getContextFromHttpRequest(req);
@@ -16,11 +18,10 @@ export function sessionManagerMiddleware(req: Request, res: Response, next: Func
 
     // req['context'] = requestContext;
 
-    Context().run(
-        () => {
-            console.log(Context().get('context'));
-            next();
-        },
-        { context: requestContext },
-    );
+    global['als'].run(new Map(), () => {
+        global['als'].getStore().set('context', requestContext);
+        next();
+    });
+
+    next();
 }
