@@ -10,6 +10,8 @@ import { AudibleEntitySubscriber } from '../../db/events/audibleentity.subscribe
 
 @Injectable()
 export class TenantRepositoryService {
+    constructor(private readonly audibleEntitySubscriber: AudibleEntitySubscriber) {}
+
     async getRepository<TEntity>(ctx: Request | MessagePayload, entity: new () => TEntity): Promise<Repository<TEntity>> {
         if ((ctx as Request).body) return await this.getTenantRepository(ctx['tenantAlias'], entity);
         else if ((ctx as MessagePayload).tenantAlias) return await this.getTenantRepository((ctx as MessagePayload).tenantAlias, entity);
@@ -37,7 +39,7 @@ export class TenantRepositoryService {
         const connectionManager = getConnectionManager();
 
         if (!connectionManager.has(tenant.code)) {
-            return await createConnection({
+            const conn = await createConnection({
                 name: tenant.code,
                 type: 'postgres',
                 host: tenant.tenant_db_config.db_host,
@@ -47,13 +49,15 @@ export class TenantRepositoryService {
                 database: tenant.tenant_db_config.db_name,
                 entities: ['dist/modules/**/entities/*.js'], //TODO: @mso -> Here an error because it will include also tenant*.js entities, move tenant files out module (maybe a coordinator folder?)
                 synchronize: false,
-                subscribers: [OptimisticLockingSubscriber, AudibleEntitySubscriber],
+                subscribers: [OptimisticLockingSubscriber],
                 // autoLoadEntities: true,
                 migrationsTableName: 'db_migration_history',
                 migrations: ['dist/db/migrations/*.js'],
                 namingStrategy: new SnakeNamingStrategy(),
                 entityPrefix: `${global['appModuleName']}_`,
             });
+            conn.subscribers.push(this.audibleEntitySubscriber);
+            return conn;
         } else {
             return connectionManager.get(tenant.code);
         }
