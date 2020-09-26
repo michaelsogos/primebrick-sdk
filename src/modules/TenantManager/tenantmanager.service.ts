@@ -8,6 +8,8 @@ import { TenantRepositoryService } from './tenantrepository.service';
 import { CommonHelper } from '../../core/utils/CommonHelper';
 import * as fs from 'fs';
 import * as path from 'path';
+import { SessionManagerContext } from '../SessionManager/sessionmanager.context';
+import { SessionContext } from '../../core/models/SessionContext';
 
 @Injectable()
 export class TenantManagerService {
@@ -17,6 +19,7 @@ export class TenantManagerService {
         @InjectRepository(Tenant, 'primebrick_coordinator')
         private themeManagerRepository: Repository<TenantThemeConfig>,
         private tenantRepositoryService: TenantRepositoryService,
+        private readonly sessionManagerContext: SessionManagerContext,
     ) {}
 
     async getAllTenants(): Promise<Tenant[]> {
@@ -33,7 +36,16 @@ export class TenantManagerService {
         }
     }
 
-    getTenantConfig(tenantAlias: string): Tenant {
+    getTenantConfig(): Tenant {
+        let tenantAlias: string = null;
+        try {
+            const context: SessionContext = this.sessionManagerContext.get('context');
+            tenantAlias = context.tenantAlias;
+        } catch (ex) {
+            throw new Error(
+                'TenantManagerService.getTenantConfig() can be used only within an execution context [http request, microservice message, etc.]!',
+            );
+        }
         return TenantManagerHelper.getTenantConfigByAlias(tenantAlias);
     }
 
