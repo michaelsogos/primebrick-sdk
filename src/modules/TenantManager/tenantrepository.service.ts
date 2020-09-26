@@ -7,10 +7,20 @@ import { Request } from 'express';
 import { MessagePayload } from '../ProcessorManager/models/MessagePayload';
 import { SnakeNamingStrategy } from '../../db/namingStrategies/SnakeNamingStrategy';
 import { AudibleEntitySubscriber } from '../../db/events/audibleentity.subscriber';
+import { SessionManagerContext } from '../SessionManager/sessionmanager.context';
+import { SessionContext } from '../../core';
 
 @Injectable()
 export class TenantRepositoryService {
-    constructor(private readonly audibleEntitySubscriber: AudibleEntitySubscriber) {}
+    constructor(private readonly sessionManagerContext: SessionManagerContext, private readonly audibleEntitySubscriber: AudibleEntitySubscriber) {}
+
+    getContext() {
+        try {
+            return;
+        } catch (ex) {
+            throw new Error('TenantRepositoryService');
+        }
+    }
 
     async getRepository<TEntity>(ctx: Request | MessagePayload, entity: new () => TEntity): Promise<Repository<TEntity>> {
         if ((ctx as Request).body) return await this.getTenantRepository(ctx['tenantAlias'], entity);
@@ -24,7 +34,17 @@ export class TenantRepositoryService {
     }
 
     async getTenantConnection(tenantAlias: string): Promise<Connection> {
-        const tenant: Tenant = TenantManagerHelper.getTenantConfigByAlias(tenantAlias);
+        let aa: string = null;
+        try {
+            const context: SessionContext = this.sessionManagerContext.get('context');
+            aa = context.tenantAlias;
+        } catch (ex) {
+            throw new Error(
+                'TenantRepositoryService.getTenantConnection() can be used only within an execution context [http request, microservice message, etc.]!',
+            );
+        }
+
+        const tenant: Tenant = TenantManagerHelper.getTenantConfigByAlias(aa);
 
         if (!tenant)
             //TODO: @mso -> Add new Exception class for the below error
