@@ -1,4 +1,5 @@
 export class UserProfile {
+	id: number;
 	code: string;
 	email: string;
 	firstName: string;

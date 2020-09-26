@@ -10,6 +10,6 @@ import { SessionManagerService } from './sessionmanager.service';
             useValue: SessionManagerContext.getInstance(),
         },
     ],
-    exports: [SessionManagerService],
+    exports: [SessionManagerService, SessionManagerContext],
 })
 export class SessionManagerModule {}
