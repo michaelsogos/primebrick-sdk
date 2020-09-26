@@ -33,7 +33,12 @@ export class AudibleEntitySubscriber implements EntitySubscriberInterface<Audibl
     }
 
     private getCurrentUser(): number {
-        const context: SessionContext = this.sessionManagerContext.get('context');
-        return context.userProfile ? context.userProfile.id : -1;
+        const sessionContext = this.sessionManagerContext;
+        try {
+            const context = sessionContext.get('context');
+            return context.userProfile ? context.userProfile.id : -1;
+        } catch (ex) {
+            return -1;
+        }
     }
 }

@@ -1,14 +1,4 @@
-import {
-    PrimaryGeneratedColumn,
-    Column,
-    CreateDateColumn,
-    UpdateDateColumn,
-    DeleteDateColumn,
-    VersionColumn,
-    // BeforeInsert,
-    // BeforeUpdate,
-    // BeforeRemove,
-} from 'typeorm';
+import { PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, VersionColumn } from 'typeorm';
 
 export abstract class AudibleEntity {
     @PrimaryGeneratedColumn()
@@ -43,20 +33,4 @@ export abstract class AudibleEntity {
 
     @Column({ nullable: true })
     importedBy: number;
-
-    // @BeforeUpdate()
-    // setAuditingFieldsOnUpdate(): void {
-    //     this.updatedBy = -1; //TODO: @mso -> Collect from context the LOGGED IN USER ID
-    // }
-
-    // @BeforeInsert()
-    // setAuditingFieldsOnInsert(): void {
-    //     this.createdBy = -1; //TODO: @mso -> Collect from context the LOGGED IN USER ID
-    //     this.updatedBy = -1; //TODO: @mso -> Collect from context the LOGGED IN USER ID
-    // }
-
-    // @BeforeRemove()
-    // setAuditingFieldsOnRemove(): void {
-    //     this.deletedBy = -1; //TODO: @mso -> Collect from context the LOGGED IN USER ID
-    // }
 }
