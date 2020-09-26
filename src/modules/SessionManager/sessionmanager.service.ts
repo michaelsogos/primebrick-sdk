@@ -2,10 +2,13 @@ import { Injectable } from '@nestjs/common';
 // import { ContextId, ContextIdFactory, ModuleRef } from '@nestjs/core';
 import { SessionContext } from '../../core/models/SessionContext';
 // import * as cls from 'cls-hooked';
-import { AsyncLocalStorage } from 'async_hooks';
+// import { AsyncLocalStorage } from 'async_hooks';
+import { SessionManagerContext } from './sessionmanager.context';
 
 @Injectable()
 export class SessionManagerService {
+    constructor(private readonly sessionManagerContext: SessionManagerContext) {}
+
     // private readonly contextId: ContextId;
     // constructor(private moduleRef: ModuleRef) {
     //     this.contextId = ContextIdFactory.create();
@@ -25,12 +28,12 @@ export class SessionManagerService {
     //     return request['context'];
     // }
 
-    getLocalStorage(): AsyncLocalStorage<Map<string, any>> {
-        return global['als'];
-    }
+    // getLocalStorage(): AsyncLocalStorage<Map<string, any>> {
+    //     return global['als'];
+    // }
 
     getValue(key: string): any {
-        return this.getLocalStorage().getStore().get(key);
+        return this.sessionManagerContext.get(key);
     }
 
     getContext(): SessionContext {
