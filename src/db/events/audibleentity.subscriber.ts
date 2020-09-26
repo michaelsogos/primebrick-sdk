@@ -1,3 +1,4 @@
+import { Inject } from '@nestjs/common';
 import { EntitySubscriberInterface, EventSubscriber, InsertEvent, RemoveEvent, UpdateEvent } from 'typeorm';
 import { SessionContext } from '../../core';
 import { SessionManagerContext } from '../../modules/SessionManager/sessionmanager.context';
@@ -5,7 +6,7 @@ import { AudibleEntity } from '../entities/audible.entity';
 
 @EventSubscriber()
 export class AudibleEntitySubscriber implements EntitySubscriberInterface<AudibleEntity> {
-    constructor(private readonly sessionManagerContext: SessionManagerContext) {}
+    constructor(@Inject(SessionManagerContext) private readonly sessionManagerContext: SessionManagerContext) {}
 
     /**
      * Indicates that this subscriber only listen to Post events.
