@@ -57,7 +57,7 @@ export class TenantManagerService {
         return tenantTheme;
     }
 
-    async updateTenantDatabaseSchema(tenant: Tenant): Promise<Migration[]> {
+    async updateTenantDatabaseSchema(tenant?: Tenant): Promise<Migration[]> {
         let connection: Connection = null;
         if (!tenant) connection = await this.tenantRepositoryService.getTenantConnection();
         else connection = await this.tenantRepositoryService.getDbConnectionByTenant(tenant as Tenant);
@@ -65,7 +65,7 @@ export class TenantManagerService {
         return await connection.runMigrations();
     }
 
-    async importTenantDatabaseData(tenant: Tenant): Promise<any[]> {
+    async importTenantDatabaseData(tenant?: Tenant): Promise<any[]> {
         let connection: Connection = null;
         if (!tenant) connection = await this.tenantRepositoryService.getTenantConnection();
         else connection = await this.tenantRepositoryService.getDbConnectionByTenant(tenant as Tenant);
