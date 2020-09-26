@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Repository, getConnectionManager, createConnection, getRepository, Connection } from 'typeorm';
 import { Tenant } from '../TenantManager/entities/Tenant.entity';
-import { OptimisticLockingSubscriber } from '../../db/events/OptimisticLocking.subscriber';
+import { OptimisticLockingSubscriber } from '../../db/events/optimisticLocking.subscriber';
 import { TenantManagerHelper } from './utils/TenantManagerHelper';
 import { Request } from 'express';
 import { MessagePayload } from '../ProcessorManager/models/MessagePayload';
 import { SnakeNamingStrategy } from '../../db/namingStrategies/SnakeNamingStrategy';
+import { AudibleEntitySubscriber } from '../../db/events/audibleentity.subscriber';
 
 @Injectable()
 export class TenantRepositoryService {
@@ -46,7 +47,7 @@ export class TenantRepositoryService {
                 database: tenant.tenant_db_config.db_name,
                 entities: ['dist/modules/**/entities/*.js'], //TODO: @mso -> Here an error because it will include also tenant*.js entities, move tenant files out module (maybe a coordinator folder?)
                 synchronize: false,
-                subscribers: [OptimisticLockingSubscriber],
+                subscribers: [OptimisticLockingSubscriber, AudibleEntitySubscriber],
                 // autoLoadEntities: true,
                 migrationsTableName: 'db_migration_history',
                 migrations: ['dist/db/migrations/*.js'],
