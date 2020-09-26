@@ -45,17 +45,17 @@ export class TenantManagerService {
         return tenantTheme;
     }
 
-    async updateTenantDatabaseSchema(tenant: String | Tenant): Promise<Migration[]> {
+    async updateTenantDatabaseSchema(tenant: Tenant): Promise<Migration[]> {
         let connection: Connection = null;
-        if (typeof tenant === 'string') connection = await this.tenantRepositoryService.getTenantConnection(tenant);
+        if (!tenant) connection = await this.tenantRepositoryService.getTenantConnection();
         else connection = await this.tenantRepositoryService.getDbConnectionByTenant(tenant as Tenant);
 
         return await connection.runMigrations();
     }
 
-    async importTenantDatabaseData(tenant: String | Tenant): Promise<any[]> {
+    async importTenantDatabaseData(tenant: Tenant): Promise<any[]> {
         let connection: Connection = null;
-        if (typeof tenant === 'string') connection = await this.tenantRepositoryService.getTenantConnection(tenant);
+        if (!tenant) connection = await this.tenantRepositoryService.getTenantConnection();
         else connection = await this.tenantRepositoryService.getDbConnectionByTenant(tenant as Tenant);
 
         const modulesPath = path.join(process.cwd(), CommonHelper.isDebugMode() ? 'src' : '', 'modules');

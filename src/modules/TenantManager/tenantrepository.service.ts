@@ -3,8 +3,6 @@ import { Repository, getConnectionManager, createConnection, getRepository, Conn
 import { Tenant } from '../TenantManager/entities/Tenant.entity';
 import { OptimisticLockingSubscriber } from '../../db/events/optimisticLocking.subscriber';
 import { TenantManagerHelper } from './utils/TenantManagerHelper';
-import { Request } from 'express';
-import { MessagePayload } from '../ProcessorManager/models/MessagePayload';
 import { SnakeNamingStrategy } from '../../db/namingStrategies/SnakeNamingStrategy';
 import { AudibleEntitySubscriber } from '../../db/events/audibleentity.subscriber';
 import { SessionManagerContext } from '../SessionManager/sessionmanager.context';
@@ -14,37 +12,29 @@ import { SessionContext } from '../../core';
 export class TenantRepositoryService {
     constructor(private readonly sessionManagerContext: SessionManagerContext, private readonly audibleEntitySubscriber: AudibleEntitySubscriber) {}
 
-    getContext() {
-        try {
-            return;
-        } catch (ex) {
-            throw new Error('TenantRepositoryService');
-        }
-    }
+    // async getRepository<TEntity>(ctx: Request | MessagePayload, entity: new () => TEntity): Promise<Repository<TEntity>> {
+    //     if ((ctx as Request).body) return await this.getTenantRepository(entity);
+    //     else if ((ctx as MessagePayload).tenantAlias) return await this.getTenantRepository((ctx as MessagePayload).tenantAlias, entity);
+    //     else throw new Error('The request context is not inherited from [Request] or [MessagePayload] interfaces!');
+    // }
 
-    async getRepository<TEntity>(ctx: Request | MessagePayload, entity: new () => TEntity): Promise<Repository<TEntity>> {
-        if ((ctx as Request).body) return await this.getTenantRepository(ctx['tenantAlias'], entity);
-        else if ((ctx as MessagePayload).tenantAlias) return await this.getTenantRepository((ctx as MessagePayload).tenantAlias, entity);
-        else throw new Error('The request context is not inherited from [Request] or [MessagePayload] interfaces!');
-    }
-
-    async getTenantRepository<TEntity>(tenantAlias: string, entity: new () => TEntity): Promise<Repository<TEntity>> {
-        const connection = await this.getTenantConnection(tenantAlias);
+    async getTenantRepository<TEntity>(entity: new () => TEntity): Promise<Repository<TEntity>> {
+        const connection = await this.getTenantConnection();
         return getRepository<TEntity>(entity, connection.name);
     }
 
-    async getTenantConnection(tenantAlias: string): Promise<Connection> {
-        let aa: string = null;
+    async getTenantConnection(): Promise<Connection> {
+        let tenantAlias: string = null;
         try {
             const context: SessionContext = this.sessionManagerContext.get('context');
-            aa = context.tenantAlias;
+            tenantAlias = context.tenantAlias;
         } catch (ex) {
             throw new Error(
                 'TenantRepositoryService.getTenantConnection() can be used only within an execution context [http request, microservice message, etc.]!',
             );
         }
 
-        const tenant: Tenant = TenantManagerHelper.getTenantConfigByAlias(aa);
+        const tenant: Tenant = TenantManagerHelper.getTenantConfigByAlias(tenantAlias);
 
         if (!tenant)
             //TODO: @mso -> Add new Exception class for the below error
