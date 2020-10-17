@@ -4,6 +4,10 @@ import { SessionManagerException } from './sessionmanager.exception';
 import { SessionManagerHelper } from './sessionmanager.helper';
 import { SessionManagerStorage } from './sessionmanager.storage';
 
+//TODO: @michaelsogos:
+//1. Is possible to improve the weight on HEAP MEMORY using, on internal MAP, just a random\uuid word. Then saving object in a parallel map that exists once
+//2. Add an HAS method to check if a MAP KEY exists before call GET
+//3. Investigate if MAP is garbageable when KEY is removed or not
 export class SessionManagerContext implements OnModuleInit, OnModuleDestroy {
     public static getInstance(): SessionManagerContext {
         if (!this.instance) {

@@ -16,6 +16,9 @@ export class AdvancedLogger extends Logger {
             fs.mkdirSync('logs');
         }
 
+        //TODO: @mso -> Winston seems to not be fully async this mean it will impact code execution
+        // We can give a try to PINO, many posts confirm that is fully async and resolve memory leak and cpu spikes
+        // In other project i made however winston didn't gave me any problem, even if still remain not async
         this.logger = winston.createLogger({
             level: CommonHelper.isDebugMode() ? 'debug' : 'info',
             format: winston.format.combine(
@@ -29,6 +32,7 @@ export class AdvancedLogger extends Logger {
                     filename: `logs/%DATE%.log`,
                     datePattern: 'YYYY-MM-DD',
                     zippedArchive: true,
+                    maxFiles: 15,
                 }),
             ],
             exitOnError: false,
