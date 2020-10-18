@@ -1,22 +1,52 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { MessagePayload } from './models/MessagePayload';
 import { ClientProxy } from '@nestjs/microservices';
-import { Request } from 'express';
+import { Tenant } from '../TenantManager/entities/Tenant.entity';
+import { SessionManagerContext } from '../SessionManager/sessionmanager.context';
+import { SessionContext } from '../../core';
+import { TenantManagerHelper } from '../TenantManager/utils/TenantManagerHelper';
 
 @Injectable()
 export class ProcessorManagerService {
-    constructor(@Inject('PRIMEBRICK_SERVICE') private busClient: ClientProxy) {}
+    constructor(@Inject('PRIMEBRICK_SERVICE') private busClient: ClientProxy, private readonly sessionManagerContext: SessionManagerContext) {}
 
-    private prepareMessage<T>(req: Request, payload: T): MessagePayload<T> {
+    private prepareMessage<T>(payload: T, context: SessionContext): MessagePayload<T> {
         const messagePayload = new MessagePayload<T>();
         messagePayload.data = payload;
+        messagePayload.context = context;
 
         return messagePayload;
     }
 
-    async sendMessage<T>(req: Request, actionName: string, payload: T, timeout = 30000): Promise<any> {
+    async sendMessage<T>(actionName: string, payload: T, timeout = 30000): Promise<any> {
+        let tenantAlias: string = null;
+        try {
+            const context: SessionContext = this.sessionManagerContext.get('context');
+            tenantAlias = context.tenantAlias;
+        } catch (ex) {
+            throw new Error(
+                'ProcessorManagerService.sendMessage() can be used only within an execution context [http request, microservice message, etc.]!',
+            );
+        }
+
+        const tenant: Tenant = TenantManagerHelper.getTenantConfigByAlias(tenantAlias);
+
+        if (!tenant) throw new Error(`No tenant aliases found for "${tenantAlias}"!`);
+
+        return await this.sendMessageWithTenant<T>(tenant, actionName, payload, timeout);
+    }
+
+    async sendMessageWithTenant<T>(tenant: Tenant, actionName: string, payload: T, timeout = 30000, sessionContext?: SessionContext) {
+        let context = sessionContext;
+        if (!context) {
+            context = new SessionContext();
+            context.languageCode = 'en';
+            context.tenantAlias = tenant.tenant_aliases[0].alias;
+            context.userProfile = null;
+        }
+
         const respose = await Promise.race([
-            this.busClient.send(actionName, this.prepareMessage<T>(req, payload)).toPromise(),
+            this.busClient.send(actionName, this.prepareMessage<T>(payload, context)).toPromise(),
 
             new Promise((res, rej) => {
                 setTimeout(() => {

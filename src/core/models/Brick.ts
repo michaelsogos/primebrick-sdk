@@ -1,5 +1,5 @@
 export class Brick {
-    name: string;
+    code: string;
     description: string;
     version: string;
     autoInstall: boolean;
