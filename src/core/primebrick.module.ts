@@ -1,8 +1,8 @@
-import { OnApplicationBootstrap } from '@nestjs/common';
+import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { Tenant } from '../modules/TenantManager/entities/Tenant.entity';
 import { TenantManagerService } from '../modules/TenantManager/tenantmanager.service';
 
-// @Injectable()
+@Injectable()
 export class PrimeBrickModule implements OnApplicationBootstrap {
     constructor(readonly tenantManagerService: TenantManagerService) {}
 
