@@ -1,5 +1,3 @@
-export class MessagePayload {
-  sessionId: string;
-  tenantAlias: string;
-  data: any;
+export class MessagePayload<T> {
+    data: T;
 }
