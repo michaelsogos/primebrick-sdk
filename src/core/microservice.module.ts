@@ -7,6 +7,7 @@ import { RpcAction } from './enums/RpcAction';
 import * as fs from 'fs';
 import * as path from 'path';
 import { ProcessorManagerService } from '../modules/ProcessorManager/processormanager.service';
+
 @Injectable()
 export class MicroserviceModule extends PrimeBrickModule implements OnApplicationBootstrap {
     constructor(readonly tenantManagerService: TenantManagerService, readonly processorManagerService: ProcessorManagerService) {
@@ -16,9 +17,7 @@ export class MicroserviceModule extends PrimeBrickModule implements OnApplicatio
     async onApplicationBootstrap(): Promise<void> {
         await super.onApplicationBootstrap();
 
-        const pkJson = JSON.parse(
-            fs.readFileSync(path.resolve(__dirname, process.env.NODE_ENV == 'production' ? '' : '../..', 'package.json')).toString(),
-        );
+        const pkJson = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json')).toString());
 
         const brick = new Brick();
         brick.code = pkJson.name;
