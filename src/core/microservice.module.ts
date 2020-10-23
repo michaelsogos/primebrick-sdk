@@ -3,10 +3,10 @@ import { Tenant } from '../modules/TenantManager/entities/Tenant.entity';
 import { TenantManagerService } from '../modules/TenantManager/tenantmanager.service';
 import { PrimeBrickModule } from './primebrick.module';
 import { Brick } from './models/Brick';
-import { ProcessorManagerService } from '../modules';
 import { RpcAction } from './enums/RpcAction';
 import * as fs from 'fs';
 import * as path from 'path';
+import { ProcessorManagerService } from '../modules/ProcessorManager/processormanager.service';
 @Injectable()
 export class MicroserviceModule extends PrimeBrickModule implements OnApplicationBootstrap {
     constructor(readonly tenantManagerService: TenantManagerService, readonly processorManagerService: ProcessorManagerService) {
