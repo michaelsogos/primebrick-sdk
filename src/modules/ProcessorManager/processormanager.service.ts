@@ -46,9 +46,9 @@ export class ProcessorManagerService {
         }
 
         const respose = await Promise.race([
-            this.busClient.send(actionName, this.prepareMessage<T>(payload, context)).toPromise(),
+            this.busClient.send(actionName, this.prepareMessage<T>(payload, context)).toPromise<MessagePayload<any>>(),
 
-            new Promise((res, rej) => {
+            new Promise<MessagePayload<any>>((res, rej) => {
                 setTimeout(() => {
                     rej(new Error(`The processor ${actionName} timed out!`));
                 }, timeout); // 30 second timeout

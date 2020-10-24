@@ -29,11 +29,12 @@
     },
     "dependencies": {
         "@nestjs/common": "7.4.4",
+        "@nestjs/config": "0.5.0",
         "@nestjs/core": "7.4.4",
         "@nestjs/microservices": "7.4.4",
         "@nestjs/typeorm": "7.1.4",
-        "@nestjs/config": "0.5.0",
         "jsonwebtoken": "8.5.1",
+        "nats": "1.4.12",
         "papaparse": "5.3.0",
         "pg": "8.3.3",
         "reflect-metadata": "0.1.13",

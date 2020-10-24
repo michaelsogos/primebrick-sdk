@@ -16,6 +16,7 @@ export interface AppConfig {
     scheduler: {
         tenantsLoader: number;
     };
+    natsUrl: string;
 }
 
 export function loadConfig(): PrimebrickConfig {
@@ -25,6 +26,7 @@ export function loadConfig(): PrimebrickConfig {
             scheduler: {
                 tenantsLoader: parseInt(process.env.SCHEDULE_TENANTS_LOADER, 10) || 300000,
             },
+            natsUrl: process.env.NATS_URL || 'nats://localhost:4222',
         },
         database: {
             host: process.env.DB_HOST,
