@@ -33,7 +33,7 @@ export class ProcessorManagerService {
 
         if (!tenant) throw new Error(`No tenant aliases found for "${tenantAlias}"!`);
 
-        return await this.sendMessageWithTenant<T>(tenant, actionName, payload, timeout);
+        return await this.sendMessageWithTenant<T>(tenant, actionName, payload, timeout, this.sessionManagerContext.get('context'));
     }
 
     async sendMessageWithTenant<T>(tenant: Tenant, actionName: string, payload: T, timeout = 30000, sessionContext?: SessionContext) {

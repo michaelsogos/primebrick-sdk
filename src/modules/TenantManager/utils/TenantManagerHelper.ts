@@ -33,4 +33,8 @@ export class TenantManagerHelper {
     static getTenantAliasFromHttpRequest(request: Request) {
         return request['tenantAlias'];
     }
+
+    static getTenantAliasFromRpcRequest(request: any) {
+        return request['tenantAlias'];
+    }
 }
