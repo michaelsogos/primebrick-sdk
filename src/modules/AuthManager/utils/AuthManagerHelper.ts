@@ -11,7 +11,7 @@ export class AuthManagerHelper {
             case 'http':
                 return this.getUserProfileFromHttpRequest(context.switchToHttp().getRequest());
             case 'rpc':
-                throw new Error('Not implemented yet!');
+                return this.getUserProfileFromRpcRequest(context.switchToRpc().getContext());
             case 'ws':
                 throw new Error('Not implemented yet!');
         }
@@ -19,6 +19,10 @@ export class AuthManagerHelper {
 
     static getUserProfileFromHttpRequest(request: Request) {
         return LocalStrategyHelper.getUserProfileFromHttpRequest(request);
+    }
+
+    static getUserProfileFromRpcRequest(request: any) {
+        return LocalStrategyHelper.getUserProfileFromRpcRequest(request);
     }
 
     private static hashPassword(salt: string, iterations: number, password: string): string {

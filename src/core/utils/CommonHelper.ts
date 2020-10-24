@@ -34,6 +34,12 @@ export class CommonHelper {
         return languageCode;
     }
 
+    static getLanguageCodeFromRpcRequest(request: any, userProfile: UserProfile): string {
+        if (userProfile && userProfile.languageCode) return userProfile.languageCode;
+        else if (request && request['languageCode']) return request['languageCode'];
+        else return 'en';
+    }
+
     static async importCsv(dbconn: Connection, importFolderPath: string, descriptorFileName: string): Promise<any[]> {
         //TODO: @mso -> Create a model for return type array
         const descriptorFilePath = path.join(importFolderPath, descriptorFileName);
@@ -265,7 +271,7 @@ export class CommonHelper {
             case 'http':
                 return this.getContextFromHttpRequest(context.switchToHttp().getRequest());
             case 'rpc':
-                throw new Error('Not implemented yet!');
+                throw this.getContextFromRpcRequest(context.switchToRpc().getContext());
             case 'ws':
                 throw new Error('Not implemented yet!');
         }
@@ -280,6 +286,19 @@ export class CommonHelper {
             result.userProfile = null;
         }
         result.languageCode = this.getLanguageCodeFromHttpRequest(request, result.userProfile);
+        return result;
+    }
+
+    static getContextFromRpcRequest(request: any) {
+        const result = new SessionContext();
+        result.tenantAlias = TenantManagerHelper.getTenantAliasFromRpcRequest(request);
+
+        try {
+            result.userProfile = AuthManagerHelper.getUserProfileFromRpcRequest(request);
+        } catch (err) {
+            result.userProfile = null;
+        }
+        result.languageCode = this.getLanguageCodeFromRpcRequest(request, result.userProfile);
         return result;
     }
 }

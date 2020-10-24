@@ -42,7 +42,7 @@ export class LocalStrategyHelper {
             case 'http':
                 return LocalStrategyHelper.getUserProfileFromHttpRequest(context.switchToHttp().getRequest());
             case 'rpc':
-                throw new Error('Not implemented yet!');
+                return LocalStrategyHelper.getUserProfileFromRpcRequest(context.switchToRpc().getContext());
             case 'ws':
                 throw new Error('Not implemented yet!');
         }
@@ -52,5 +52,9 @@ export class LocalStrategyHelper {
         const token = this.getBearerToken(request);
         const userProfile = jwt.decode(token) as UserProfile;
         return userProfile;
+    }
+
+    static getUserProfileFromRpcRequest(request: any): UserProfile {
+        return request['userProfile'];
     }
 }
