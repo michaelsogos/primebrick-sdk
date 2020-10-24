@@ -4,6 +4,7 @@ import * as jwt from 'jsonwebtoken';
 import { LocalAuthConfig } from '../models/LocalAuthConfig';
 import { Tenant } from '../../TenantManager/entities/Tenant.entity';
 import { UserProfile } from '../models/UserProfile';
+import { MessagePayload } from '../../ProcessorManager/models/MessagePayload';
 
 export class LocalStrategyHelper {
     static validateRequest(tenantConfig: Tenant, token: string): boolean {
@@ -42,7 +43,7 @@ export class LocalStrategyHelper {
             case 'http':
                 return LocalStrategyHelper.getUserProfileFromHttpRequest(context.switchToHttp().getRequest());
             case 'rpc':
-                return LocalStrategyHelper.getUserProfileFromRpcRequest(context.switchToRpc().getContext());
+                return LocalStrategyHelper.getUserProfileFromRpcRequest(context.switchToRpc().getData());
             case 'ws':
                 throw new Error('Not implemented yet!');
         }
@@ -54,7 +55,7 @@ export class LocalStrategyHelper {
         return userProfile;
     }
 
-    static getUserProfileFromRpcRequest(request: any): UserProfile {
-        return request['userProfile'];
+    static getUserProfileFromRpcRequest(request: MessagePayload<any>): UserProfile {
+        return request.context.userProfile;
     }
 }
