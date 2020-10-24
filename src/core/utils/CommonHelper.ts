@@ -9,6 +9,7 @@ import * as papa from 'papaparse';
 import { SessionContext } from '../models/SessionContext';
 import { TenantManagerHelper } from '../../modules/TenantManager/utils/TenantManagerHelper';
 import { AuthManagerHelper } from '../../modules/AuthManager/utils/AuthManagerHelper';
+import { MessagePayload } from '../../modules';
 
 export class CommonHelper {
     static getLanguageCodeFromExecutionContext(context: ExecutionContext, userProfile: UserProfile): string {
@@ -16,7 +17,7 @@ export class CommonHelper {
             case 'http':
                 return this.getLanguageCodeFromHttpRequest(context.switchToHttp().getRequest(), userProfile);
             case 'rpc':
-                throw this.getLanguageCodeFromHttpRequest(context.switchToRpc().getContext(), userProfile);
+                throw this.getLanguageCodeFromRpcRequest(context.switchToRpc().getData(), userProfile);
             case 'ws':
                 throw new Error('Not implemented yet!');
         }
@@ -34,9 +35,9 @@ export class CommonHelper {
         return languageCode;
     }
 
-    static getLanguageCodeFromRpcRequest(request: any, userProfile: UserProfile): string {
+    static getLanguageCodeFromRpcRequest(request: MessagePayload<any>, userProfile: UserProfile): string {
         if (userProfile && userProfile.languageCode) return userProfile.languageCode;
-        else if (request && request['languageCode']) return request['languageCode'];
+        else if (request && request.context && request.context.languageCode) return request.context.languageCode;
         else return 'en';
     }
 
@@ -271,7 +272,7 @@ export class CommonHelper {
             case 'http':
                 return this.getContextFromHttpRequest(context.switchToHttp().getRequest());
             case 'rpc':
-                throw this.getContextFromRpcRequest(context.switchToRpc().getContext());
+                throw this.getContextFromRpcRequest(context.switchToRpc().getData());
             case 'ws':
                 throw new Error('Not implemented yet!');
         }
@@ -289,16 +290,7 @@ export class CommonHelper {
         return result;
     }
 
-    static getContextFromRpcRequest(request: any) {
-        const result = new SessionContext();
-        result.tenantAlias = TenantManagerHelper.getTenantAliasFromRpcRequest(request);
-
-        try {
-            result.userProfile = AuthManagerHelper.getUserProfileFromRpcRequest(request);
-        } catch (err) {
-            result.userProfile = null;
-        }
-        result.languageCode = this.getLanguageCodeFromRpcRequest(request, result.userProfile);
-        return result;
+    static getContextFromRpcRequest(request: MessagePayload<any>) {
+        return request.context;
     }
 }

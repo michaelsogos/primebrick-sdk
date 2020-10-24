@@ -4,6 +4,7 @@ import { UserProfile } from '../models/UserProfile';
 import { Request } from 'express';
 import { SecureString } from '../models/SecureString';
 import * as crypto from 'crypto';
+import { MessagePayload } from '../../ProcessorManager/models/MessagePayload';
 
 export class AuthManagerHelper {
     static getUserProfileFromExecutionContext(context: ExecutionContext): UserProfile {
@@ -11,7 +12,7 @@ export class AuthManagerHelper {
             case 'http':
                 return this.getUserProfileFromHttpRequest(context.switchToHttp().getRequest());
             case 'rpc':
-                return this.getUserProfileFromRpcRequest(context.switchToRpc().getContext());
+                return this.getUserProfileFromRpcRequest(context.switchToRpc().getData());
             case 'ws':
                 throw new Error('Not implemented yet!');
         }
@@ -21,8 +22,8 @@ export class AuthManagerHelper {
         return LocalStrategyHelper.getUserProfileFromHttpRequest(request);
     }
 
-    static getUserProfileFromRpcRequest(request: any) {
-        return LocalStrategyHelper.getUserProfileFromRpcRequest(request);
+    static getUserProfileFromRpcRequest(request: MessagePayload<any>) {
+        return request.context.userProfile;
     }
 
     private static hashPassword(salt: string, iterations: number, password: string): string {
