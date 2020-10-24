@@ -16,7 +16,7 @@ export class CommonHelper {
             case 'http':
                 return this.getLanguageCodeFromHttpRequest(context.switchToHttp().getRequest(), userProfile);
             case 'rpc':
-                throw new Error('Not implemented yet!');
+                throw this.getLanguageCodeFromHttpRequest(context.switchToRpc().getContext(), userProfile);
             case 'ws':
                 throw new Error('Not implemented yet!');
         }
