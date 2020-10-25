@@ -1,0 +1,230 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://primebrick-sdk/grid-view-definition.schema.json",
+    "title": "FormViewDefinition",
+    "description": "The form view definition model",
+    "type": "object",
+    "properties": {
+        "$schema": {
+            "description": "JSON Schema URL or path",
+            "type": "string"
+        },
+        "version": {
+            "description": "Definition version",
+            "type": "string"
+        },
+        "name": {
+            "description": "View name",
+            "type": "string"
+        },
+        "labelKey": {
+            "description": "View title translatable key",
+            "type": "string"
+        },
+        "icon": {
+            "description": "View icon",
+            "type": "string"
+        },
+        "color": {
+            "description": "View main color",
+            "type": "string"
+        },
+        "definition": {
+            "description": "View definition",
+            "type": "object",
+            "properties": {
+                "entity": {
+                    "description": "Entity name",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "View type",
+                    "type": "string",
+                    "enum": ["grid", "form", "cards"]
+                },
+                "containers": {
+                    "description": "List of containers",
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "cols": {
+                                "description": "Number of flex grid columns to fill",
+                                "type": "number",
+                                "default": 12
+                            },
+                            "showTitle": {
+                                "description": "True to show the container title",
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "fields": {
+                                "description": "List of fields to place into container",
+                                "type": "array",
+                                "minItems": 1,
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "description": "Entity field name",
+                                            "type": "string"
+                                        },
+                                        "labelKey": {
+                                            "description": "Field label translatable key",
+                                            "type": "string"
+                                        },
+                                        "cols": {
+                                            "description": "Number of flex grid columns to fill",
+                                            "type": "number",
+                                            "default": 12
+                                        },
+                                        "type": {
+                                            "description": "UI component type",
+                                            "type": "string",
+                                            "enum": ["string", "checkbox", "switch"],
+                                            "default": "string"
+                                        },
+                                        "validationRules": {
+                                            "description": "List of validation rules",
+                                            "type": "array",
+                                            "minItems": 1,
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "rule": {
+                                                        "description": "Rule name",
+                                                        "type": "string",
+                                                        "enum": ["required"]
+                                                    },
+                                                    "labelKey": {
+                                                        "description": "Error message translatable key",
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": ["rule", "labelKey"],
+                                                "additionalProperties": false
+                                            }
+                                        },
+                                        "translatable": {
+                                            "description": "True to add translatable option to field",
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "required": ["name", "labelKey"],
+                                    "additionalProperties": false
+                                }
+                            }
+                        },
+                        "required": ["fields"],
+                        "additionalProperties": false
+                    }
+                },
+                "perms": {
+                    "description": "List of permission needed to access to this view",
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": ["entity", "type", "containers"],
+            "additionalProperties": false
+        },
+        "actions": {
+            "description": "List of configurable actions",
+            "type": "object",
+            "properties": {
+                "save": {
+                    "description": "[ Save ] action configuration",
+                    "type": "object",
+                    "properties": {
+                        "enableToolbarButton": {
+                            "description": "Show button in toolbar",
+                            "type": "boolean",
+                            "default": true
+                        },
+                        "enableMenuLink": {
+                            "description": "Show link in menu",
+                            "type": "boolean",
+                            "default": false
+                        }
+                    },
+                    "additionalProperties": false
+                },              
+                "delete": {
+                    "description": "[ Delete ] action configuration",
+                    "type": "object",
+                    "properties": {
+                        "enableToolbarButton": {
+                            "description": "Show button in toolbar",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "enableMenuLink": {
+                            "description": "Show link in menu",
+                            "type": "boolean",
+                            "default": false
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "archive": {
+                    "description": "[ Archive ] action configuration",
+                    "type": "object",
+                    "properties": {
+                        "enableToolbarButton": {
+                            "description": "Show button in toolbar",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "enableMenuLink": {
+                            "description": "Show link in menu",
+                            "type": "boolean",
+                            "default": false
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "refresh": {
+                    "description": "[ Refresh ] action configuration",
+                    "type": "object",
+                    "properties": {
+                        "enableToolbarButton": {
+                            "description": "Show button in toolbar",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "enableMenuLink": {
+                            "description": "Show link in menu",
+                            "type": "boolean",
+                            "default": false
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "info": {
+                    "description": "[ Info ] action configuration",
+                    "type": "object",
+                    "properties": {
+                        "enableToolbarButton": {
+                            "description": "Show button in toolbar",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "enableMenuLink": {
+                            "description": "Show link in menu",
+                            "type": "boolean",
+                            "default": false
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "required": ["name", "labelKey", "definition"],
+    "additionalProperties": false
+}

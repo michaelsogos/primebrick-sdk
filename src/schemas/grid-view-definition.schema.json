@@ -1,0 +1,420 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://primebrick-sdk/grid-view-definition.schema.json",
+    "title": "GridViewDefinition",
+    "description": "The grid view definition model",
+    "type": "object",
+    "properties": {
+        "$schema": {
+            "description": "JSON Schema URL or path",
+            "type": "string"
+        },
+        "version": {
+            "description": "Definition version",
+            "type": "string"
+        },
+        "name": {
+            "description": "View name",
+            "type": "string"
+        },
+        "labelKey": {
+            "description": "View title translatable key",
+            "type": "string"
+        },
+        "icon": {
+            "description": "View icon",
+            "type": "string"
+        },
+        "color": {
+            "description": "View main color",
+            "type": "string"
+        },
+        "alternativeViews": {
+            "description": "List of alternative views",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "description": "View name",
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "View type",
+                        "type": "string",
+                        "enum": ["grid", "form", "cards"]
+                    }
+                },
+                "required": ["name", "type"],
+                "additionalProperties": false
+            }
+        },
+        "definition": {
+            "description": "View definition",
+            "type": "object",
+            "properties": {
+                "entity": {
+                    "description": "Entity name",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "View type",
+                    "type": "string",
+                    "enum": ["grid", "form", "cards"]
+                },
+                "fields": {
+                    "description": "List of fields to show",
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "description": "Field name",
+                                "type": "string"
+                            },
+                            "labelKey": {
+                                "description": "Field label translatable key",
+                                "type": "string"
+                            },
+                            "perms": {
+                                "description": "List of permission needed to access to this field",
+                                "type": "array",
+                                "minItems": 1,
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": {
+                                "description": "Field type",
+                                "type": "string",
+                                "enum": ["string", "number", "boolean"],
+                                "default": "string"
+                            }
+                        },
+                        "required": ["name", "labelKey"],
+                        "additionalProperties": false
+                    }
+                },
+                "filters": {
+                    "description": "List of filters to apply",
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "leftOperator": {
+                                "description": "Logical operator AND/OR before the expression block",
+                                "type": "string",
+                                "enum": ["AND", "OR"],
+                                "default": "AND"
+                            },
+                            "expressionOperator": {
+                                "description": "Logical operator AND/OR between expression values",
+                                "type": "string",
+                                "enum": ["AND", "OR"],
+                                "default": "AND"
+                            },
+                            "expressions": {
+                                "description": "Array of conditions to apply",
+                                "type": "array",
+                                "minItems": 1,
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "expressionValues": {
+                                "description": "Object with parametrized values",
+                                "examples": ["{valueAlias: value}"],
+                                "type": "object"
+                            }
+                        },
+                        "required": ["expressions"],
+                        "additionalProperties": false
+                    }
+                },
+                "sorts": {
+                    "description": "List of sort conditions to apply",
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "field": {
+                                "description": "Field name to sort with",
+                                "type": "string"
+                            },
+                            "direction": {
+                                "description": "Direction to sort with",
+                                "type": "string",
+                                "enum": ["ASC", "DESC"],
+                                "default": "ASC"
+                            }
+                        },
+                        "required": ["field"],
+                        "additionalProperties": false
+                    }
+                },
+                "perms": {
+                    "description": "List of permission needed to access to this view",
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": ["entity", "type", "fields"],
+            "additionalProperties": false
+        },
+        "options": {
+            "description": "Grid options",
+            "type": "object",
+            "properties": {
+                "enableMultiSelect": {
+                    "description": "Allow selection of many rows",
+                    "type": "boolean",
+                    "default": false
+                }
+            },
+            "additionalProperties": false
+        },
+        "actions": {
+            "description": "List of configurable actions",
+            "type": "object",
+            "properties": {
+                "open": {
+                    "description": "[ Open ] action configuration",
+                    "type": "object",
+                    "properties": {
+                        "view": {
+                            "description": "View to show",
+                            "type": "string"
+                        },
+                        "enableDoubleClick": {
+                            "description": "Show view on double click",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "enableRowButton": {
+                            "description": "Show button on row",
+                            "type": "boolean",
+                            "default": false
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "edit": {
+                    "description": "[ Edit ] action configuration",
+                    "type": "object",
+                    "properties": {
+                        "view": {
+                            "description": "View to show",
+                            "type": "string"
+                        },
+                        "enableDoubleClick": {
+                            "description": "Show view on double click",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "enableRowButton": {
+                            "description": "Show button on row",
+                            "type": "boolean",
+                            "default": false
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "add": {
+                    "description": "[ Add ] action configuration",
+                    "type": "object",
+                    "properties": {
+                        "view": {
+                            "description": "View to show",
+                            "type": "string"
+                        },
+                        "enableToolbarButton": {
+                            "description": "Show button in toolbar",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "enableFloatingButton": {
+                            "description": "Show floating action button",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "enableMenuLink": {
+                            "description": "Show link in menu",
+                            "type": "boolean",
+                            "default": false
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "delete": {
+                    "description": "[ Delete ] action configuration",
+                    "type": "object",
+                    "properties": {
+                        "enableToolbarButton": {
+                            "description": "Show button in toolbar",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "enableMenuLink": {
+                            "description": "Show link in menu",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "enableRowButton": {
+                            "description": "Show button on row",
+                            "type": "boolean",
+                            "default": false
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "archive": {
+                    "description": "[ Archive ] action configuration",
+                    "type": "object",
+                    "properties": {
+                        "enableToolbarButton": {
+                            "description": "Show button in toolbar",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "enableMenuLink": {
+                            "description": "Show link in menu",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "enableRowButton": {
+                            "description": "Show button on row",
+                            "type": "boolean",
+                            "default": false
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "refresh": {
+                    "description": "[ Refresh ] action configuration",
+                    "type": "object",
+                    "properties": {
+                        "enableToolbarButton": {
+                            "description": "Show button in toolbar",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "enableMenuLink": {
+                            "description": "Show link in menu",
+                            "type": "boolean",
+                            "default": false
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "search": {
+                    "description": "[ Search ] action configuration",
+                    "type": "object",
+                    "properties": {
+                        "enableToolbarButton": {
+                            "description": "Show search box in toolbar",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "fields": {
+                            "description": "List fields to looking for",
+                            "type": "array",
+                            "minItems": 1,
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "filter": {
+                    "description": "[ Filter ] action configuration",
+                    "type": "object",
+                    "properties": {
+                        "enableColumns": {
+                            "description": "Show filter field under column header",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "enableToolbarButton": {
+                            "description": "Show button in toolbar",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "fields": {
+                            "description": "List fields to allow filter",
+                            "type": "array",
+                            "minItems": 1,
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "field": {
+                                        "description": "Field name to allow filter",
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "description": "Type of filter",
+                                        "type": "string",
+                                        "enum": ["string", "list", "search"]
+                                    }
+                                },
+                                "additionalProperties": false
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false
+        },
+        "highlighters": {
+            "description": "List of highlight rules",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "expression": {
+                        "description": "Conditional expression",
+                        "type": "string"
+                    },
+                    "backgroundColor": {
+                        "description": "Background color",
+                        "type": "string"
+                    },
+                    "fontColor": {
+                        "description": "Font color",
+                        "type": "string"
+                    },
+                    "fontWeight": {
+                        "description": "Font weight",
+                        "type": "string",
+                        "enum": ["black", "bold", "medium", "regular", "light", "thin"],
+                        "default": "regular"
+                    },
+                    "fontStyle": {
+                        "description": "Font style",
+                        "type": "string",
+                        "enum": ["none", "line-through", "overline", "underline"],
+                        "default": "none"
+                    },
+                    "fontItalic": {
+                        "description": "Font italic",
+                        "type": "boolean",
+                        "default": false
+                    }
+                },
+                "required": ["expression"],
+                "additionalProperties": false
+            }
+        }
+    },
+    "required": ["name", "labelKey", "definition"],
+    "additionalProperties": false
+}

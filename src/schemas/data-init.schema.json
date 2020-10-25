@@ -1,0 +1,186 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://primebrick-sdk/data-init.schema.json",
+    "title": "DataInit",
+    "description": "The data init model definition",
+    "type": "object",
+    "properties": {
+        "$schema": {
+            "description": "JSON Schema URL or path",
+            "type": "string"
+        },
+        "version": {
+            "description": "Definition version",
+            "type": "string"
+        },
+        "defs": {
+            "description": "Definitions array",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "description": "Definition name; used only for log and debug purpose",
+                        "type": "string"
+                    },
+                    "files": {
+                        "description": "File name (not entire path) to import",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "type": {
+                        "description": "The file format",
+                        "type": "string",
+                        "enum": ["csv", "json", "xml"]
+                    },
+                    "chunkSize": {
+                        "description": "The chunk size in order to commit paged set of records",
+                        "type": "number",
+                        "default": 1000
+                    },
+                    "csvOptions": {
+                        "description": "The CSV options to parse file",
+                        "type": "object",
+                        "properties": {
+                            "delimiter": {
+                                "description": "The CSV column delimiter, when omitted it will auto-detected from file",
+                                "type": "string",
+                                "enum": ["comma", "semicolon", "tab"],
+                                "default": "null"
+                            },
+                            "quoteChar": {
+                                "description": "The character used to quote fields",
+                                "type": "string",
+                                "default": "\""
+                            },
+                            "header": {
+                                "description": "True if the first line is header",
+                                "type": "boolean",
+                                "default": true
+                            },
+                            "columnsMapping": {
+                                "description": "The columns mapping array",
+                                "type": "array",
+                                "minItems": 1,
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "column": {
+                                            "description": "The CSV column name",
+                                            "type": "string"
+                                        },
+                                        "field": {
+                                            "description": "The entity field name",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": ["column", "field"],
+                                    "additionalProperties": false
+                                }
+                            },
+                            "circularRelation": {
+                                "description": "The relations mapping array",
+                                "type": "object",
+                                "properties": {
+                                    "parentColumn": {
+                                        "description": "The CSV column name containing parent relation",
+                                        "type": "string"
+                                    },
+                                    "mappedByColumn": {
+                                        "description": "The CSV column name containing value to retrieve the parent to link",
+                                        "type": "string"
+                                    },
+                                    "childKeyColumn": {
+                                        "description": "The CSV column name containing value to retrieve the child to link",
+                                        "type": "string"
+                                    },
+                                    "parentField": {
+                                        "description": "The child entity field name containing the relation with parent",
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["parentColumn", "mappedByColumn", "childKeyColumn", "parentField"],
+                                "additionalProperties": false
+                            },
+                            "cardinalRelations": {
+                                "description": "The mapping array for cardinal relations (one-to-one, one-to-many, many-to-one, many-to-many)",
+                                "type": "array",
+                                "minItems": 1,
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "cardinality": {
+                                            "description": "The cardinality type",
+                                            "type": "string",
+                                            "enum": ["one-to-one", "one-to-many", "many-to-one", "many-to-many"]
+                                        },
+                                        "targetEntity": {
+                                            "description": "The name of the entity to be linked",
+                                            "type": "string"
+                                        },
+                                        "targetKeyColumn": {
+                                            "description": "The CSV column name containing value used to retrieve target entities to link",
+                                            "type": "string"
+                                        },
+                                        "targetKeyField": {
+                                            "description": "The target entity field name containing value used to retrieve target entities to link",
+                                            "type": "string"
+                                        },
+                                        "sourceKeyColumn": {
+                                            "description": "The CSV column name containing value used to retrieve source entities to link",
+                                            "type": "string"
+                                        },
+                                        "sourceRelationField": {
+                                            "description": "The source entity field name used to link target entities",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "cardinality",
+                                        "targetEntity",
+                                        "targetKeyColumn",
+                                        "targetKeyField",
+                                        "sourceKeyColumn",
+                                        "sourceRelationField"
+                                    ],
+                                    "additionalProperties": false
+                                }
+                            },
+                            "checkColumns": {
+                                "description": "List of columns used to check wherever entity already exist",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "entity": {
+                                "description": "The entity name to map",
+                                "type": "string"
+                            },
+                            "encoding": {
+                                "description": "The file encoding",
+                                "type": "string",
+                                "enum": ["ascii", "utf8", "utf16le", "ucs2", "ucs-2", "base64", "latin1", "binary", "hex"]
+                            }
+                        },
+                        "required": ["entity", "encoding"],
+                        "additionalProperties": false
+                    }
+                },
+                "if": {
+                    "properties": { "type": { "const": "csv" } }
+                },
+                "then": {
+                    "required": ["csvOptions"]
+                },
+                "required": ["files", "type", "name"],
+                "additionalProperties": false
+            }
+        }
+    },
+    "required": ["version", "defs"],
+    "additionalProperties": false
+}
