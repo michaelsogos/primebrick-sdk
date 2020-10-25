@@ -7,11 +7,18 @@ import { RpcAction } from './enums/RpcAction';
 import * as fs from 'fs';
 import * as path from 'path';
 import { ProcessorManagerService } from '../modules/ProcessorManager/processormanager.service';
+import { MessagePayload } from '../modules';
+import { AdvancedLogger } from './logger.service';
 
 @Injectable()
 export class MicroserviceModule extends PrimeBrickModule implements OnApplicationBootstrap {
-    constructor(readonly tenantManagerService: TenantManagerService, readonly processorManagerService: ProcessorManagerService) {
+    constructor(
+        readonly tenantManagerService: TenantManagerService,
+        readonly processorManagerService: ProcessorManagerService,
+        readonly logger: AdvancedLogger,
+    ) {
         super(tenantManagerService);
+        logger.setContext(global['appModuleName']);
     }
 
     async onApplicationBootstrap(): Promise<void> {
@@ -26,7 +33,13 @@ export class MicroserviceModule extends PrimeBrickModule implements OnApplicatio
         brick.autoInstall = pkJson.brickConfig.autoInstall;
 
         for (const tenant of global['tenants'] as Tenant[]) {
-            await this.processorManagerService.sendMessageWithTenant<Brick>(tenant, RpcAction.REGISTER_BRICK, brick);
+            const result: MessagePayload<boolean> = await this.processorManagerService.sendMessageWithTenant<Brick>(
+                tenant,
+                RpcAction.REGISTER_BRICK,
+                brick,
+            );
+            if (result.data) this.logger.debug(`The brick [${brick.code}] has been registered!`);
+
             //TODO: handle when registration fail for anything
         }
     }

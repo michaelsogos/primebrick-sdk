@@ -20,16 +20,16 @@ export class AudibleEntitySubscriber implements EntitySubscriberInterface<Audibl
      */
     beforeInsert(event: InsertEvent<AudibleEntity>) {
         const userId = this.getCurrentUser();
-        event.entity.createdBy = userId; //TODO: @mso -> Collect from context the LOGGED IN USER ID
-        event.entity.updatedBy = userId; //TODO: @mso -> Collect from context the LOGGED IN USER ID
+        event.entity.createdBy = userId;
+        event.entity.updatedBy = userId;
     }
 
     beforeUpdate(event: UpdateEvent<AudibleEntity>) {
-        event.entity.updatedBy = this.getCurrentUser(); //TODO: @mso -> Collect from context the LOGGED IN USER ID
+        event.entity.updatedBy = this.getCurrentUser();
     }
 
     beforeRemove(event: RemoveEvent<AudibleEntity>) {
-        event.entity.deletedBy = this.getCurrentUser(); //TODO: @mso -> Collect from context the LOGGED IN USER ID
+        event.entity.deletedBy = this.getCurrentUser();
     }
 
     private getCurrentUser(): number {
