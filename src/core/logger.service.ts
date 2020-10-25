@@ -41,9 +41,12 @@ export class AdvancedLogger extends Logger {
         this.logger.exceptions.handle();
     }
 
-    error(message: string, trace: string) {
-        Logger.error(message, trace, this.context, this.timestampEnabled);
-        this.logger.error(trace);
+    error(message: string | Error, trace?: string) {
+        const errorMessage = message instanceof Error ? message.message : message;
+        const errorTrace = message instanceof Error ? message.stack : trace || message;
+
+        Logger.error(errorMessage, errorTrace, this.context, this.timestampEnabled);
+        this.logger.error(errorTrace);
     }
 
     log(message: string) {
