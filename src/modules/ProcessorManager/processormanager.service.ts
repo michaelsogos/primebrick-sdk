@@ -7,12 +7,14 @@ import { SessionContext } from '../../core';
 
 @Injectable()
 export class ProcessorManagerService {
-    constructor(@Inject('PRIMEBRICK_SERVICE') private busClient: ClientProxy, private readonly sessionManagerContext: SessionManagerContext) {}
+    constructor(@Inject('PRIMEBRICK_SERVICE') private busClient: ClientProxy /* private readonly sessionManagerContext: SessionManagerContext */) {}
 
     async sendMessage<T>(actionName: string, payload: T, timeout = 30000): Promise<MessagePayload<any>> {
         let context: SessionContext = null;
+
         try {
-            context = this.sessionManagerContext.get('context');
+            const sessionManagerContext = SessionManagerContext.getInstance();
+            context = sessionManagerContext.get('context');
         } catch (ex) {
             throw new Error(
                 'ProcessorManagerService.sendMessage() can be used only within an execution context [http request, microservice message, etc.]!',
