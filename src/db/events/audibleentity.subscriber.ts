@@ -22,6 +22,7 @@ export class AudibleEntitySubscriber implements EntitySubscriberInterface<Audibl
         const userId = this.getCurrentUser();
         event.entity.createdBy = userId;
         event.entity.updatedBy = userId;
+        // event.metadata.columns[0].spatialFeatureTypell
     }
 
     beforeUpdate(event: UpdateEvent<AudibleEntity>) {
