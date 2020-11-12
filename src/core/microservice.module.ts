@@ -1,4 +1,4 @@
-import { Injectable, Module, OnApplicationBootstrap } from '@nestjs/common';
+import { OnApplicationBootstrap } from '@nestjs/common';
 import { Tenant } from '../modules/TenantManager/entities/Tenant.entity';
 import { TenantManagerService } from '../modules/TenantManager/tenantmanager.service';
 import { PrimeBrickModule } from './primebrick.module';
@@ -7,8 +7,8 @@ import { RpcAction } from './enums/RpcAction';
 import * as fs from 'fs';
 import * as path from 'path';
 import { ProcessorManagerService } from '../modules/ProcessorManager/processormanager.service';
-import { MessagePayload, ProcessorManagerModule, TenantManagerModule } from '../modules';
 import { AdvancedLogger } from './logger.service';
+import { MessagePayload } from '../modules/ProcessorManager/models/MessagePayload';
 
 export class MicroserviceModule extends PrimeBrickModule implements OnApplicationBootstrap {
     constructor(
