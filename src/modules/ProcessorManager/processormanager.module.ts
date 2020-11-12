@@ -1,6 +1,6 @@
-import { Module } from '@nestjs/common';
+import { Inject, Module, OnApplicationBootstrap } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ClientProxy, ClientsModule, Transport } from '@nestjs/microservices';
 import { loadConfig } from '../../core/models/primebrick.config';
 import { SessionManagerModule } from '../SessionManager/sessionmanager.module';
 import { ProcessorManagerService } from './processormanager.service';
@@ -25,4 +25,10 @@ import { ProcessorManagerService } from './processormanager.service';
     providers: [ProcessorManagerService],
     exports: [ProcessorManagerService],
 })
-export class ProcessorManagerModule {}
+export class ProcessorManagerModule implements OnApplicationBootstrap {
+    constructor(@Inject('PRIMEBRICK_SERVICE') private client: ClientProxy) {}
+
+    async onApplicationBootstrap() {
+        await this.client.connect();
+    }
+}

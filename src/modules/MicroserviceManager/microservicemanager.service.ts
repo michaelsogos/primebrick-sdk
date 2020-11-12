@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
-import { MessagePayload } from '../modules/ProcessorManager/models/MessagePayload';
-import { ProcessorManagerService } from '../modules/ProcessorManager/processormanager.service';
-import { RpcAction } from './enums/RpcAction';
-import { AdvancedLogger } from './logger.service';
-import { InstallBrickResponse } from './models/InstallBrickResponse';
-import { ViewDefinition } from './models/ViewDefinition';
-import { CommonHelper } from './utils/CommonHelper';
+import { RpcAction } from '../../core/enums/RpcAction';
+import { AdvancedLogger } from '../../core/logger.service';
+import { InstallBrickResponse } from '../../core/models/InstallBrickResponse';
+import { ViewDefinition } from '../../core/models/ViewDefinition';
+import { CommonHelper } from '../../core/utils/CommonHelper';
+import { MessagePayload } from '../ProcessorManager/models/MessagePayload';
+import { ProcessorManagerService } from '../ProcessorManager/processormanager.service';
+
 
 @Injectable()
-export class MicroserviceService {
+export class MicroserviceManagerService {
     constructor(private readonly processorManagerService: ProcessorManagerService, private readonly logger: AdvancedLogger) {}
 
     async installBrick() {
