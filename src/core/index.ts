@@ -9,5 +9,3 @@ export { Brick } from './models/Brick';
 export { MicroserviceModule } from './microservice.module';
 export { RpcAction } from './enums/RpcAction';
 export { ViewDefinition } from './models/ViewDefinition';
-export { MicroserviceController } from './microservice.controller';
-export { MicroserviceService } from './microservice.service';
