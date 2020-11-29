@@ -47,6 +47,7 @@ export class MicroserviceManagerService {
                         const result: MessagePayload<boolean> = await this.processorManagerService.sendMessage<ViewDefinition>(
                             RpcAction.REGISTER_VIEW,
                             viewDefintion,
+                            2000
                         );
 
                         if (result.data) {
