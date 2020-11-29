@@ -1,6 +1,17 @@
 export class InstallBrickResponse {
-    views: {
-        done: number;
-        failed: number;
-    };
+    viewsRegistration: ViewsRegistrationResult;
+
+    constructor() {
+        this.viewsRegistration = new ViewsRegistrationResult();
+    }
+}
+
+class ViewsRegistrationResult {
+    done: string[];
+    failed: string[];
+
+    constructor() {
+        this.done = [];
+        this.failed = [];
+    }
 }
