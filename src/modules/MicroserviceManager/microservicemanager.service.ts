@@ -9,10 +9,11 @@ import { CommonHelper } from '../../core/utils/CommonHelper';
 import { MessagePayload } from '../ProcessorManager/models/MessagePayload';
 import { ProcessorManagerService } from '../ProcessorManager/processormanager.service';
 
-
 @Injectable()
 export class MicroserviceManagerService {
-    constructor(private readonly processorManagerService: ProcessorManagerService, private readonly logger: AdvancedLogger) {}
+    constructor(private readonly processorManagerService: ProcessorManagerService, private readonly logger: AdvancedLogger) {
+        logger.setContext(MicroserviceManagerService.name);
+    }
 
     async installBrick() {
         const response = new InstallBrickResponse();
@@ -23,11 +24,11 @@ export class MicroserviceManagerService {
             .map((dirent) => dirent.name);
 
         for (const folder of moduleFolders) {
-            const viewFolderPath = path.join(modulesPath, folder, 'resources', 'imports');
+            const viewFolderPath = path.join(modulesPath, folder, 'resources', 'views');
 
             if (fs.existsSync(viewFolderPath)) {
                 const viewFiles = fs
-                    .readdirSync(modulesPath, { withFileTypes: true })
+                    .readdirSync(viewFolderPath, { withFileTypes: true })
                     .filter((dirent) => dirent.isFile())
                     .map((dirent) => dirent.name);
 
@@ -42,17 +43,23 @@ export class MicroserviceManagerService {
                     viewDefintion.name = viewJson['name'];
                     viewDefintion.definition = viewFileContent;
 
-                    const result: MessagePayload<boolean> = await this.processorManagerService.sendMessage<ViewDefinition>(
-                        RpcAction.REGISTER_VIEW,
-                        viewDefintion,
-                    );
+                    try {
+                        const result: MessagePayload<boolean> = await this.processorManagerService.sendMessage<ViewDefinition>(
+                            RpcAction.REGISTER_VIEW,
+                            viewDefintion,
+                        );
 
-                    if (result.data) {
-                        this.logger.info(`The view [${viewDefintion.name}] registered succesfully!`);
-                        response.views.done += 1;
-                    } else {
+                        if (result.data) {
+                            this.logger.info(`The view [${viewDefintion.name}] registered succesfully!`);
+                            response.viewsRegistration.done.push(viewDefintion.name);
+                        } else {
+                            this.logger.error(`The view [${viewDefintion.name}] registration failed!`);
+                            response.viewsRegistration.failed.push(viewDefintion.name);
+                        }
+                    } catch (ex) {
+                        this.logger.error(ex);
                         this.logger.error(`The view [${viewDefintion.name}] registration failed!`);
-                        response.views.failed += 1;
+                        response.viewsRegistration.failed.push(viewDefintion.name);
                     }
                 }
             }

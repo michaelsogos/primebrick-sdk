@@ -9,7 +9,7 @@ import { MicroserviceManagerService } from './microservicemanager.service';
 export class MicroserviceManagerController {
     constructor(private readonly microserviceManagerService: MicroserviceManagerService) {}
 
-    @MessagePattern(`${global['appModuleName']}-brick:install`)
+    @MessagePattern(`*.brick:install`)
     async installBrick(data: MessagePayload<Brick>): Promise<MessagePayload<InstallBrickResponse>> {
         const response = await this.microserviceManagerService.installBrick();
         return MessagePayload.wrap(response);
