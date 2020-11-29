@@ -15,13 +15,12 @@ export class ProcessorManagerService {
         try {
             const sessionManagerContext = SessionManagerContext.getInstance();
             context = sessionManagerContext.get('context');
+            return await this.callMicroservice<T>(actionName, payload, timeout, context);
         } catch (ex) {
             throw new Error(
                 'ProcessorManagerService.sendMessage() can be used only within an execution context [http request, microservice message, etc.]!',
             );
         }
-
-        return await this.callMicroservice<T>(actionName, payload, timeout, context);
     }
 
     async sendMessageWithTenant<T>(tenant: Tenant, actionName: string, payload: T, timeout = 30000): Promise<MessagePayload<any>> {
@@ -33,16 +32,18 @@ export class ProcessorManagerService {
     }
 
     private async callMicroservice<T>(actionName: string, payload: T, timeout: number, context: SessionContext): Promise<MessagePayload<any>> {
+        let connectionTimeout: NodeJS.Timeout = null;
         const respose = await Promise.race([
             this.busClient.send(actionName, this.prepareMessage<T>(payload, context)).toPromise<MessagePayload<any>>(),
 
             new Promise<MessagePayload<any>>((res, rej) => {
-                setTimeout(() => {
-                    rej(new Error(`The execution of microservice action [${actionName}] timed out!`));
+                connectionTimeout = setTimeout(() => {
+                    rej(new Error(`The execution of microservice action [${actionName}] timed out after ${timeout}ms!`));
                 }, timeout); // 30 second timeout
             }),
         ]);
 
+        clearTimeout(connectionTimeout);
         return respose;
     }
 

@@ -13,6 +13,7 @@ export interface DatabaseConfig {
 
 export interface AppConfig {
     port: number;
+    requestTimeout: number;
     scheduler: {
         tenantsLoader: number;
     };
@@ -23,6 +24,7 @@ export function loadConfig(): PrimebrickConfig {
     return {
         app: {
             port: parseInt(process.env.PORT, 10) || 3000,
+            requestTimeout: parseInt(process.env.REQUEST_TIMEOUT, 10) || 5000,
             scheduler: {
                 tenantsLoader: parseInt(process.env.SCHEDULE_TENANTS_LOADER, 10) || 300000,
             },
