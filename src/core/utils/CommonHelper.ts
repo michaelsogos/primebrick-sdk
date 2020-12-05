@@ -253,8 +253,8 @@ export class CommonHelper {
         return request.context;
     }
 
-    static getRegisteredEntities(): String[] {
-        const entities: String[] = [];
+    static getRegisteredEntities(): string[] {
+        const entities: string[] = [];
         const registeredEntities = getMetadataArgsStorage().tables;
         for (const entity of registeredEntities) {
             if (global['appModuleName'] == entity.target['prototype'].brickModuleName) entities.push(entity.target['name']);
