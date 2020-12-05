@@ -3,12 +3,13 @@ import { Tenant } from '../modules/TenantManager/entities/Tenant.entity';
 import { TenantManagerService } from '../modules/TenantManager/tenantmanager.service';
 import { PrimeBrickModule } from './primebrick.module';
 import { Brick } from './models/Brick';
-import { RpcAction } from './enums/RpcAction';
 import * as fs from 'fs';
 import * as path from 'path';
 import { ProcessorManagerService } from '../modules/ProcessorManager/processormanager.service';
 import { AdvancedLogger } from './logger.service';
-import { MessagePayload } from '../modules/ProcessorManager/models/MessagePayload';
+import { getMetadataArgsStorage } from 'typeorm';
+import { GlobalRpcAction } from './enums/GlobalRpcAction';
+import { CommonHelper } from './utils/CommonHelper';
 
 export class MicroserviceModule extends PrimeBrickModule implements OnApplicationBootstrap {
     constructor(
@@ -27,16 +28,14 @@ export class MicroserviceModule extends PrimeBrickModule implements OnApplicatio
 
         const brick = new Brick();
         brick.code = pkJson.name;
+        brick.module = global['appModuleName'];
         brick.description = pkJson.description;
         brick.version = pkJson.version;
         brick.autoInstall = pkJson.brickConfig.autoInstall;
+        brick.entities = CommonHelper.getRegisteredEntities();
 
         for (const tenant of global['tenants'] as Tenant[]) {
-            const result: MessagePayload<boolean> = await this.processorManagerService.sendMessageWithTenant<Brick>(
-                tenant,
-                RpcAction.REGISTER_BRICK,
-                brick,
-            );
+            const result = await this.processorManagerService.sendMessageWithTenant<Brick, boolean>(tenant, GlobalRpcAction.REGISTER_BRICK, brick);
             if (result.data) this.logger.debug(`The brick [${brick.code}] has been registered!`);
 
             //TODO: handle when registration fail for anything
