@@ -7,7 +7,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { ProcessorManagerService } from '../modules/ProcessorManager/processormanager.service';
 import { AdvancedLogger } from './logger.service';
-import { getMetadataArgsStorage } from 'typeorm';
 import { GlobalRpcAction } from './enums/GlobalRpcAction';
 import { CommonHelper } from './utils/CommonHelper';
 

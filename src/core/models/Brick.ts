@@ -4,5 +4,5 @@ export class Brick {
     description: string;
     version: string;
     autoInstall: boolean;
-    entities: String[];
+    entities: string[];
 }
