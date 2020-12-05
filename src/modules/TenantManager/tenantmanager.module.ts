@@ -9,9 +9,14 @@ import { TenantAuthConfig } from './entities/TenantAUTHConfig.entity';
 import { TenantThemeConfig } from './entities/TenantThemeConfig.entity';
 import { AudibleEntitySubscriber } from '../../db';
 import { SessionManagerModule } from '../SessionManager/sessionmanager.module';
+import { ProcessorManagerModule } from '../ProcessorManager/processormanager.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Tenant, TenantAlias, TenantDBConfig, TenantAuthConfig, TenantThemeConfig], 'primebrick_coordinator'), SessionManagerModule],
+    imports: [
+        TypeOrmModule.forFeature([Tenant, TenantAlias, TenantDBConfig, TenantAuthConfig, TenantThemeConfig], 'primebrick_coordinator'),
+        SessionManagerModule,
+        ProcessorManagerModule,
+    ],
     controllers: [],
     providers: [TenantManagerService, TenantRepositoryService, AudibleEntitySubscriber],
     exports: [TenantManagerService, TenantRepositoryService],

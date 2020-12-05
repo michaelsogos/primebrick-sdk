@@ -1,17 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
-import { RpcAction } from '../../core/enums/RpcAction';
+import { GlobalRpcAction } from '../../core';
 import { AdvancedLogger } from '../../core/logger.service';
+import { DataImport } from '../../core/models/DataImport';
 import { InstallBrickResponse } from '../../core/models/InstallBrickResponse';
 import { ViewDefinition } from '../../core/models/ViewDefinition';
 import { CommonHelper } from '../../core/utils/CommonHelper';
 import { MessagePayload } from '../ProcessorManager/models/MessagePayload';
 import { ProcessorManagerService } from '../ProcessorManager/processormanager.service';
+import { TenantRepositoryService } from '../TenantManager/tenantrepository.service';
 
 @Injectable()
 export class MicroserviceManagerService {
-    constructor(private readonly processorManagerService: ProcessorManagerService, private readonly logger: AdvancedLogger) {
+    constructor(
+        private readonly tenantRepositoryService: TenantRepositoryService,
+        private readonly processorManagerService: ProcessorManagerService,
+        private readonly logger: AdvancedLogger,
+    ) {
         logger.setContext(MicroserviceManagerService.name);
     }
 
@@ -44,10 +50,10 @@ export class MicroserviceManagerService {
                     viewDefintion.definition = viewFileContent;
 
                     try {
-                        const result: MessagePayload<boolean> = await this.processorManagerService.sendMessage<ViewDefinition>(
-                            RpcAction.REGISTER_VIEW,
+                        const result = await this.processorManagerService.sendMessage<ViewDefinition, boolean>(
+                            GlobalRpcAction.REGISTER_VIEW,
                             viewDefintion,
-                            2000
+                            2000,
                         );
 
                         if (result.data) {
@@ -67,5 +73,11 @@ export class MicroserviceManagerService {
         }
 
         return response;
+    }
+
+    async importData(dataImport: DataImport) {
+        const connection = await this.tenantRepositoryService.getTenantConnection();
+
+        return await CommonHelper.importData(connection, dataImport.data, dataImport.definition, dataImport.file);
     }
 }

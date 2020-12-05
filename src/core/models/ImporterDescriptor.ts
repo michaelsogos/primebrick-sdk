@@ -16,7 +16,7 @@ export class ImporterDescriptor {
     }
 }
 
-class ImporterDefinition {
+export class ImporterDefinition {
     name: string;
     files: string[];
     type: ImporterDefinitionFileType;

@@ -7,5 +7,7 @@ export { AppConfig, DatabaseConfig, PrimebrickConfig, loadConfig } from './model
 export { TypeOrmConfigService } from './typeormconfig.service';
 export { Brick } from './models/Brick';
 export { MicroserviceModule } from './microservice.module';
-export { RpcAction } from './enums/RpcAction';
+export { GlobalRpcAction } from './enums/GlobalRpcAction';
 export { ViewDefinition } from './models/ViewDefinition';
+export { EntityModule } from './entitymodule.decorator';
+export { ComposeModuleRpcAction, ModuleRpcAction } from './enums/ModuleRpcAction';
