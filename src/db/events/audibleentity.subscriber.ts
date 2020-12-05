@@ -30,7 +30,7 @@ export class AudibleEntitySubscriber implements EntitySubscriberInterface<Audibl
     }
 
     beforeRemove(event: RemoveEvent<AudibleEntity>) {
-        event.entity.deletedBy = this.getCurrentUser();
+        if (event.entity) event.entity.deletedBy = this.getCurrentUser();
     }
 
     private getCurrentUser(): number {
