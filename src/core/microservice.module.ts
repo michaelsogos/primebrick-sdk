@@ -34,10 +34,17 @@ export class MicroserviceModule extends PrimeBrickModule implements OnApplicatio
         brick.entities = CommonHelper.getRegisteredEntities();
 
         for (const tenant of global['tenants'] as Tenant[]) {
+            await this.registerBrick(tenant, brick);
+        }
+    }
+
+    async registerBrick(tenant: Tenant, brick: Brick) {
+        try {
             const result = await this.processorManagerService.sendMessageWithTenant<Brick, boolean>(tenant, GlobalRpcAction.REGISTER_BRICK, brick);
             if (result.data) this.logger.debug(`The brick [${brick.code}] has been registered!`);
-
-            //TODO: handle when registration fail for anything
+            else this.logger.debug(`The brick [${brick.code}] cannot be registered!`);
+        } catch (ex) {
+            this.logger.error(ex);
         }
     }
 }

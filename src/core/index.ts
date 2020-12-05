@@ -1,6 +1,6 @@
 export { PrimeBrickModule } from './primebrick.module';
-export { GlobalExceptionsFilter } from './globalexceptions.filter';
-export { Context } from './contextextractor.decorator';
+export { GlobalExceptionsFilter } from './filters/globalexceptions.filter';
+export { Context } from './decorators/contextextractor.decorator';
 export { SessionContext } from './models/SessionContext';
 export { AdvancedLogger } from './logger.service';
 export { AppConfig, DatabaseConfig, PrimebrickConfig, loadConfig } from './models/primebrick.config';
@@ -9,5 +9,5 @@ export { Brick } from './models/Brick';
 export { MicroserviceModule } from './microservice.module';
 export { GlobalRpcAction } from './enums/GlobalRpcAction';
 export { ViewDefinition } from './models/ViewDefinition';
-export { EntityModule } from './entitymodule.decorator';
+export { EntityModule } from './decorators/entitymodule.decorator';
 export { ComposeModuleRpcAction, ModuleRpcAction } from './enums/ModuleRpcAction';

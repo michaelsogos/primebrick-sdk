@@ -1,8 +1,8 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { TenantManagerHelper } from '../modules/TenantManager/utils/TenantManagerHelper';
-import { AuthManagerHelper } from '../modules/AuthManager/utils/AuthManagerHelper';
-import { CommonHelper } from './utils/CommonHelper';
-import { SessionContext } from './models/SessionContext';
+import { TenantManagerHelper } from '../../modules/TenantManager/utils/TenantManagerHelper';
+import { AuthManagerHelper } from '../../modules/AuthManager/utils/AuthManagerHelper';
+import { CommonHelper } from '../utils/CommonHelper';
+import { SessionContext } from '../models/SessionContext';
 
 export const Context = createParamDecorator((data: any, context: ExecutionContext) => {
     const result = new SessionContext();
