@@ -1,5 +1,5 @@
 export class DataImportLog {
-    status: string;
+    hasError: boolean;
     message: string;
     file: string;
     count: number;

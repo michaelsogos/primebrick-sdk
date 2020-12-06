@@ -210,7 +210,7 @@ export class CommonHelper {
             }
 
         const log: DataImportLog = {
-            status: 'success',
+            hasError: false,
             message: `Import succeded`,
             file: file,
             count: savedEntitiesCount,
