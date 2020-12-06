@@ -15,3 +15,4 @@ export { SessionManagerService } from './SessionManager/sessionmanager.service';
 export { SessionManagerMiddleware } from './SessionManager/sessionmanager.middleware';
 export { SessionManagerInterceptor } from './SessionManager/sessionmanager.interceptor';
 export { MicroserviceManagerModule } from './MicroserviceManager/microservicemanager.module';
+export { MicroserviceManagerService } from './MicroserviceManager/microservicemanager.service';

@@ -15,7 +15,7 @@ import { MessagePayload } from '../ProcessorManager/models/MessagePayload';
 import { ProcessorManagerService } from '../ProcessorManager/processormanager.service';
 import { DataImportLog } from '../../core/models/DataImportLog';
 import * as papa from 'papaparse';
-import { ComposeModuleRpcAction, ModuleRpcAction } from '../../core';
+import { ComposeModuleRpcAction, GlobalRpcAction, ModuleRpcAction } from '../../core';
 import { DataImport } from '../../core/models/DataImport';
 
 @Injectable()
@@ -135,13 +135,13 @@ export class TenantManagerService {
 
                         if (!tenant)
                             importResult = await this.processorManagerService.sendMessage<DataImport, DataImportLog>(
-                                ComposeModuleRpcAction(registeredEntity.module, ModuleRpcAction.IMPORT_DATA),
+                                GlobalRpcAction.ROUTE_DATAIMPORT,
                                 dataImport,
                             );
                         else
                             importResult = await this.processorManagerService.sendMessageWithTenant<DataImport, DataImportLog>(
                                 tenant,
-                                ComposeModuleRpcAction(registeredEntity.module, ModuleRpcAction.IMPORT_DATA),
+                                GlobalRpcAction.ROUTE_DATAIMPORT,
                                 dataImport,
                             );
 

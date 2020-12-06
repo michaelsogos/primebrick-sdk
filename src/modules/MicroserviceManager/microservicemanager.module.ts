@@ -9,6 +9,6 @@ import { MicroserviceManagerService } from './microservicemanager.service';
     imports: [ProcessorManagerModule, TenantManagerModule],
     controllers: [MicroserviceManagerController],
     providers: [MicroserviceManagerService, AdvancedLogger],
-    exports: [],
+    exports: [MicroserviceManagerService],
 })
 export class MicroserviceManagerModule {}
