@@ -16,7 +16,7 @@ export class MicroserviceModule extends PrimeBrickModule implements OnApplicatio
         readonly processorManagerService: ProcessorManagerService,
         readonly logger: AdvancedLogger,
     ) {
-        super(tenantManagerService);
+        super(tenantManagerService, logger);
         logger.setContext(global['appModuleName']);
     }
 

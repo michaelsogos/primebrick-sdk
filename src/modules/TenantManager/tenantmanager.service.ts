@@ -73,9 +73,9 @@ export class TenantManagerService {
         return await connection.runMigrations();
     }
 
-    async importTenantDatabaseData(tenant?: Tenant): Promise<any[]> {
+    async importTenantDatabaseData(tenant?: Tenant): Promise<DataImportLog[]> {
         const modulesPath = path.join(process.cwd(), CommonHelper.isDebugMode() ? 'src' : 'dist', 'modules');
-        const importsLog = [];
+        const importsLog: DataImportLog[] = [];
         const moduleFolders = fs
             .readdirSync(modulesPath, { withFileTypes: true })
             .filter((dirent) => dirent.isDirectory())
@@ -85,7 +85,6 @@ export class TenantManagerService {
             const importFolderPath = path.join(modulesPath, folder, 'resources', 'imports');
 
             if (fs.existsSync(importFolderPath)) importsLog.push(...(await this.importCsv(importFolderPath, 'data-init.json', tenant)));
-            //TODO: @michaelsogos -> Log imports status
         }
 
         return importsLog;
@@ -125,7 +124,7 @@ export class TenantManagerService {
                     });
 
                     const registeredEntity = CommonHelper.getRegisteredEntity(definition.csvOptions.entity);
-                    if (registeredEntity.module == global['appModuleName'])
+                    if (registeredEntity && registeredEntity.module == global['appModuleName'])
                         importLogs.push(await CommonHelper.importData(connection, csv.data, definition, file));
                     else {
                         let importResult: MessagePayload<DataImportLog> = null;
@@ -150,12 +149,12 @@ export class TenantManagerService {
                     }
                 } catch (ex) {
                     const log: DataImportLog = {
-                        status: 'failed',
+                        hasError: true,
                         message: ex.message,
                         file: file,
                         count: 0,
                         definition: definition.name,
-                        timestamp: Number(Date.now),
+                        timestamp: Date.now(),
                         entity: definition.csvOptions.entity,
                     };
                     importLogs.push(log);
