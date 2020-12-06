@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Repository, getConnectionManager, createConnection, getRepository, Connection, ObjectID, FindConditions, EntityTarget } from 'typeorm';
+import { Repository, getConnectionManager, createConnection, Connection, ObjectID, FindConditions, EntityTarget, UpdateResult } from 'typeorm';
 import { Tenant } from '../TenantManager/entities/Tenant.entity';
 import { OptimisticLockingSubscriber } from '../../db/events/optimisticLocking.subscriber';
 import { TenantManagerHelper } from './utils/TenantManagerHelper';
@@ -8,7 +8,6 @@ import { AudibleEntitySubscriber } from '../../db/events/audibleentity.subscribe
 import { SessionManagerContext } from '../SessionManager/sessionmanager.context';
 import { SessionContext } from '../../core';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { AudibleEntity } from '../../db';
 
 @Injectable()
 export class TenantRepositoryService {
@@ -77,67 +76,48 @@ export class TenantRepositoryService {
         }
 
         const self = this;
+        const __getRepository = conn.getRepository;
         conn.getRepository = function <TEntity>(entity: EntityTarget<TEntity>) {
-            return self.getSuperRepository<TEntity>(entity, conn.name);
+            const repository = __getRepository.apply(conn, [entity]);
+            return self.overrideRepository<TEntity>(repository);
         };
         return conn;
     }
 
-    getSuperRepository<TEntity>(entity, connectionName) {
-        const repository = getRepository<TEntity>(entity, connectionName);
+    overrideRepository<TEntity>(repository: Repository<TEntity>) {
         const sessionContext = this.sessionManagerContext;
-
-        const __softDelete = repository.softDelete;
-        repository.softDelete = async function (
-            criteria: string | number | string[] | number[] | Date | Date[] | ObjectID | ObjectID[] | FindConditions<TEntity>,
-        ) {
-            let deletedBy = -1;
-            try {
-                const context = sessionContext.get('context');
-                deletedBy = context.userProfile ? context.userProfile.id : -1;
-            } catch (ex) {
-                deletedBy - 1;
-            }
-            const entity: QueryDeepPartialEntity<unknown> = { deletedBy: deletedBy };
-            await repository.update(criteria, entity);
-            return __softDelete(criteria);
-        };
+        let currentUser = -1;
+        try {
+            const context = sessionContext.get('context');
+            currentUser = context.userProfile ? context.userProfile.id : -1;
+        } catch (ex) {
+            currentUser - 1;
+        }
 
         const __update = repository.update;
         repository.update = async function (
             criteria: string | number | string[] | number[] | Date | Date[] | ObjectID | ObjectID[] | FindConditions<TEntity>,
             partialEntity: QueryDeepPartialEntity<TEntity>,
         ) {
-            let updatedBy = -1;
-            try {
-                const context = sessionContext.get('context');
-                updatedBy = context.userProfile ? context.userProfile.id : -1;
-            } catch (ex) {
-                updatedBy - 1;
-            }
+            partialEntity['updatedBy'] = currentUser;
+            return __update.apply(repository, [criteria, partialEntity]);
+        };
 
-            partialEntity['updatedBy'] = updatedBy;
-
-            return __update(criteria, partialEntity);
+        //const __softDelete = repository.softDelete;
+        repository.softDelete = async function (
+            criteria: string | number | string[] | number[] | Date | Date[] | ObjectID | ObjectID[] | FindConditions<TEntity>,
+        ): Promise<UpdateResult> {
+            const partialEntity: QueryDeepPartialEntity<unknown> = { deletedBy: currentUser, deletedOn: new Date(), updatedBy: currentUser };
+            return __update.apply(repository, [criteria, partialEntity]);
+            // return __softDelete.apply(repository, [criteria]);
         };
 
         const __insert = repository.insert;
         repository.insert = async function (entity: QueryDeepPartialEntity<TEntity> | QueryDeepPartialEntity<TEntity>[]) {
-            let createdBy = -1;
-            let updatedBy = -1;
-            try {
-                const context = sessionContext.get('context');
-                createdBy = context.userProfile ? context.userProfile.id : -1;
-                updatedBy = context.userProfile ? context.userProfile.id : -1;
-            } catch (ex) {
-                createdBy - 1;
-                updatedBy - 1;
-            }
+            entity['createdBy'] = currentUser;
+            entity['updatedBy'] = currentUser;
 
-            entity['createdBy'] = createdBy;
-            entity['updatedBy'] = updatedBy;
-
-            return __insert(entity);
+            return __insert.apply(repository, [entity]);
         };
 
         return repository;
