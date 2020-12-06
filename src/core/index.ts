@@ -11,3 +11,5 @@ export { GlobalRpcAction } from './enums/GlobalRpcAction';
 export { ViewDefinition } from './models/ViewDefinition';
 export { EntityModule } from './decorators/entitymodule.decorator';
 export { ComposeModuleRpcAction, ModuleRpcAction } from './enums/ModuleRpcAction';
+export { DataImport } from "./models/DataImport"
+export { DataImportLog } from "./models/DataImportLog"

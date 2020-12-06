@@ -1,5 +1,5 @@
-!.*
+.eslintrc.*
 node_modules/*
-coverage/
-junit/
-dist/
+coverage/*
+junit/*
+dist/*
