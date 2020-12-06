@@ -19,19 +19,25 @@ export class AudibleEntitySubscriber implements EntitySubscriberInterface<Audibl
      * Called before post insertion.
      */
     beforeInsert(event: InsertEvent<AudibleEntity>) {
-        const userId = this.getCurrentUser();
-        event.entity.createdBy = userId;
-        event.entity.updatedBy = userId;
-        // event.metadata.columns[0].spatialFeatureTypell
+        if (event.entity) {
+            //Valid only for save(), because insert() doesn't work with entity but go directly to DB
+            const userId = this.getCurrentUser();
+            event.entity.createdBy = userId;
+            event.entity.updatedBy = userId;
+        }
     }
 
     beforeUpdate(event: UpdateEvent<AudibleEntity>) {
-        event.entity.updatedBy = this.getCurrentUser();
+        if (event.entity)
+            //Valid only for save() and softRemove(), because update() or softDelete() don't work with entity but go directly to DB
+            //FIXME: @mso -> https://github.com/typeorm/typeorm/issues/7162
+            event.entity.updatedBy = this.getCurrentUser();
     }
 
-    beforeRemove(event: RemoveEvent<AudibleEntity>) {
-        if (event.entity) event.entity.deletedBy = this.getCurrentUser();
-    }
+    // @mso -> This event cannot be used to set deleteBy because it will be call only when the record is going to be erased forever from DB
+    // beforeRemove(event: RemoveEvent<AudibleEntity>) {
+    //     if (event.entity) event.entity.deletedBy = this.getCurrentUser();
+    // }
 
     private getCurrentUser(): number {
         const sessionContext = this.sessionManagerContext;
