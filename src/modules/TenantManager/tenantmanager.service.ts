@@ -126,7 +126,11 @@ export class TenantManagerService {
                     const registeredEntity = CommonHelper.getRegisteredEntity(definition.csvOptions.entity);
                     if (registeredEntity && registeredEntity.module == global['appModuleName'])
                         importLogs.push(await CommonHelper.importData(connection, csv.data, definition, file));
-                    else {
+                    else if (global['appModuleName'] == 'core') {
+                        throw new Error(
+                            `Cannot import data for entity [${definition.csvOptions.entity}] within [core] module because circular referenced entity not registered!`,
+                        );
+                    } else {
                         let importResult: MessagePayload<DataImportLog> = null;
                         const dataImport = new DataImport();
                         dataImport.data = csv.data;
