@@ -43,10 +43,10 @@ export class AdvancedLogger extends Logger {
 
     error(message: string | Error, trace?: string) {
         const errorMessage = message instanceof Error ? message.message : message;
-        const errorTrace = message instanceof Error ? message.stack : trace || message;
+        const errorTrace = message instanceof Error ? message.stack : trace ;
 
         Logger.error(errorMessage, errorTrace, this.context, this.timestampEnabled);
-        this.logger.error(errorTrace);
+        this.logger.error(errorTrace || errorMessage);
     }
 
     log(message: string) {

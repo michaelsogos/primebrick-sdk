@@ -18,8 +18,8 @@ export class PrimeBrickModule implements OnApplicationBootstrap {
                 if (tenant.tenant_db_config.enable_auto_seed) {
                     const importsLog = await this.tenantManagerService.importTenantDatabaseData(tenant);
                     for (const importLog of importsLog) {
-                        if (importLog.hasError) this.logger.error(`Import of file [${importLog.file} failed with error: ${importLog.message}]`);
-                        else this.logger.info(`Imported ${importLog.count} records from file [${importLog.file} for entity [${importLog.entity}]`);
+                        if (importLog.hasError) this.logger.error(`Import of file [${importLog.file}] failed with error: ${importLog.message}]`);
+                        else this.logger.info(`Imported ${importLog.count} records from file [${importLog.file}] for entity [${importLog.entity}]`);
                     }
                 }
             }
