@@ -1,10 +1,18 @@
 {
+    "search.exclude": {
+        "**/dist": true,
+        "**/node_modules": true
+    },
+    "files.watcherExclude": {
+        "**/dist/**": true,
+        "**/node_modules/**": true
+    },
     "prettier.printWidth": 150,
     "prettier.singleQuote": true,
     "prettier.tabWidth": 4,
     "typescript.format.semicolons": "insert",
-    "emmet.showExpandedAbbreviation": "never",
+    "emmet.showExpandedAbbreviation": "inMarkupAndStylesheetFilesOnly",
     "eslint.alwaysShowStatus": true,
     "eslint.lintTask.enable": true,
-    "typescript.tsserver.experimental.enableProjectDiagnostics": true
+    "typescript.tsserver.experimental.enableProjectDiagnostics": false,  
 }

@@ -9,7 +9,8 @@ export { Brick } from './models/Brick';
 export { MicroserviceModule } from './microservice.module';
 export { GlobalRpcAction } from './enums/GlobalRpcAction';
 export { ViewDefinition } from './models/ViewDefinition';
-export { EntityModule } from './decorators/entitymodule.decorator';
 export { ComposeModuleRpcAction, ModuleRpcAction } from './enums/ModuleRpcAction';
-export { DataImport } from "./models/DataImport"
-export { DataImportLog } from "./models/DataImportLog"
+export { DataImport } from './models/DataImport';
+export { DataImportLog } from './models/DataImportLog';
+export { RegisterBrick } from './decorators/registerbrick.decorator';
+export { RegisterEntity } from './decorators/registerentity.decorator';
