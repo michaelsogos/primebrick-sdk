@@ -257,26 +257,23 @@ export class CommonHelper {
         const entities: string[] = [];
         const registeredEntities = getMetadataArgsStorage().tables;
         for (const entity of registeredEntities) {
-            if (global['appModuleName'] == entity.target['prototype'].brickModuleName) entities.push(entity.target['name']);
+            entities.push(entity.target instanceof Function ? (entity.target as Function).name : entity.target);
         }
 
         return entities;
     }
 
-    static getRegisteredEntity(entityName: string): { name: String; module: String } {
-        let registeredEntity = null;
+    static isEntityRegistered(entityName: string): boolean {
+        let isRegistered = false;
 
         const registeredEntities = getMetadataArgsStorage().tables;
         for (const entity of registeredEntities) {
-            if (entity.target['name'] == entityName) {
-                registeredEntity = {
-                    name: entityName,
-                    module: entity.target['prototype'].brickModuleName,
-                };
+            if ((entity.target instanceof Function ? (entity.target as Function)['name'] : entity.target) == entityName) {
+                isRegistered = true;
                 break;
             }
         }
 
-        return registeredEntity;
+        return isRegistered;
     }
 }
