@@ -1,7 +1,7 @@
 import { ExecutionContext } from '@nestjs/common';
 import { UserProfile } from '../../modules/AuthManager/models/UserProfile';
 import { Request } from 'express';
-import { Connection, getMetadataArgsStorage } from 'typeorm';
+import { Connection } from 'typeorm';
 import { ImporterCardinalityType, ImporterDefinition } from '../models/ImporterDescriptor';
 import { SessionContext } from '../models/SessionContext';
 import { TenantManagerHelper } from '../../modules/TenantManager/utils/TenantManagerHelper';
