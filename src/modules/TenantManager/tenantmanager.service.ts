@@ -15,7 +15,7 @@ import { MessagePayload } from '../ProcessorManager/models/MessagePayload';
 import { ProcessorManagerService } from '../ProcessorManager/processormanager.service';
 import { DataImportLog } from '../../core/models/DataImportLog';
 import * as papa from 'papaparse';
-import { ComposeModuleRpcAction, GlobalRpcAction, ModuleRpcAction } from '../../core';
+import { GlobalRpcAction } from '../../core';
 import { DataImport } from '../../core/models/DataImport';
 
 @Injectable()
@@ -123,9 +123,8 @@ export class TenantManagerService {
                         delimiter: ImporterDescriptor.mapDelimiterToChar(definition.csvOptions.delimiter),
                     });
 
-                    const registeredEntity = CommonHelper.getRegisteredEntity(definition.csvOptions.entity);
-                    if (registeredEntity && registeredEntity.module == global['appModuleName'])
-                        importLogs.push(await CommonHelper.importData(connection, csv.data, definition, file));
+                    const isEntityRegistered = CommonHelper.isEntityRegistered(definition.csvOptions.entity);
+                    if (isEntityRegistered) importLogs.push(await CommonHelper.importData(connection, csv.data, definition, file));
                     else if (global['appModuleName'] == 'core') {
                         throw new Error(
                             `Cannot import data for entity [${definition.csvOptions.entity}] within [core] module because circular referenced entity not registered!`,
