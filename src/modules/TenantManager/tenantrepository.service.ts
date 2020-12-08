@@ -54,6 +54,9 @@ export class TenantRepositoryService {
         let conn: Connection = null;
 
         if (!connectionManager.has(tenant.code)) {
+            if (!global['registeredEntities'] || (global['registeredEntities'] as RegisteredEntity[]).length <= 0)
+                throw new Error("There aren't entities to be registered !\nMissing decorator @RegisterEntity(brickName:string) or never imported entity anywhere ?");
+
             const registeredEntitiesForBrick = global['registeredEntities']
                 .filter((item: RegisteredEntity) => item.brickName == global['appModuleName'])
                 .map((item) => item.entity);
