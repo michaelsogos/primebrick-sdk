@@ -1,13 +1,14 @@
 import { ExecutionContext } from '@nestjs/common';
 import { UserProfile } from '../../modules/AuthManager/models/UserProfile';
 import { Request } from 'express';
-import { Connection, getMetadataArgsStorage } from 'typeorm';
+import { Connection } from 'typeorm';
 import { ImporterCardinalityType, ImporterDefinition } from '../models/ImporterDescriptor';
 import { SessionContext } from '../models/SessionContext';
 import { TenantManagerHelper } from '../../modules/TenantManager/utils/TenantManagerHelper';
 import { AuthManagerHelper } from '../../modules/AuthManager/utils/AuthManagerHelper';
 import { MessagePayload } from '../../modules';
 import { DataImportLog } from '../models/DataImportLog';
+import { RegisteredEntity } from '../models/RegisteredEntity';
 
 export class CommonHelper {
     static getLanguageCodeFromExecutionContext(context: ExecutionContext, userProfile: UserProfile): string {
@@ -255,25 +256,14 @@ export class CommonHelper {
 
     static getRegisteredEntities(): string[] {
         const entities: string[] = [];
-        const registeredEntities = getMetadataArgsStorage().tables;
-        for (const entity of registeredEntities) {
-            entities.push(entity.target instanceof Function ? (entity.target as Function).name : entity.target);
+        for (const registeredEntity of global['registeredEntities'] as RegisteredEntity[]) {
+            entities.push(registeredEntity.entityName);
         }
 
         return entities;
     }
 
     static isEntityRegistered(entityName: string): boolean {
-        let isRegistered = false;
-
-        const registeredEntities = getMetadataArgsStorage().tables;
-        for (const entity of registeredEntities) {
-            if ((entity.target instanceof Function ? (entity.target as Function)['name'] : entity.target) == entityName) {
-                isRegistered = true;
-                break;
-            }
-        }
-
-        return isRegistered;
+        return (global['registeredEntities'] as RegisteredEntity[]).some((item) => item.entityName == entityName);
     }
 }
