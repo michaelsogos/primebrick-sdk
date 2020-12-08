@@ -4,7 +4,9 @@ import { TenantManagerService } from '../modules/TenantManager/tenantmanager.ser
 import { AdvancedLogger } from './logger.service';
 
 export class PrimeBrickModule implements OnApplicationBootstrap {
-    constructor(readonly tenantManagerService: TenantManagerService, readonly logger: AdvancedLogger) {}
+    constructor(readonly tenantManagerService: TenantManagerService, readonly logger: AdvancedLogger) {
+        logger.setContext(global['appModuleName']);
+    }
 
     async onApplicationBootstrap(): Promise<void> {
         await this.tenantManagerService.loadAllTenantsInMemory(true);
