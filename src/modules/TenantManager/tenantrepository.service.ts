@@ -8,6 +8,7 @@ import { AudibleEntitySubscriber } from '../../db/events/audibleentity.subscribe
 import { SessionManagerContext } from '../SessionManager/sessionmanager.context';
 import { SessionContext } from '../../core';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { RegisteredEntity } from '../../core/models/RegisteredEntity';
 
 @Injectable()
 export class TenantRepositoryService {
@@ -53,6 +54,10 @@ export class TenantRepositoryService {
         let conn: Connection = null;
 
         if (!connectionManager.has(tenant.code)) {
+            const registeredEntitiesForBrick = global['registeredEntities']
+                .filter((item: RegisteredEntity) => item.brickName == global['appModuleName'])
+                .map((item) => item.entity);
+
             conn = await createConnection({
                 name: tenant.code,
                 type: 'postgres',
@@ -61,7 +66,7 @@ export class TenantRepositoryService {
                 username: tenant.tenant_db_config.db_username,
                 password: tenant.tenant_db_config.db_password,
                 database: tenant.tenant_db_config.db_name,
-                entities: ['dist/modules/**/entities/*.js'], //TODO: @mso -> Here an error because it will include also tenant*.js entities, move tenant files out module (maybe a coordinator folder?)
+                entities: registeredEntitiesForBrick, //['dist/modules/**/entities/*.js'],
                 synchronize: false,
                 subscribers: [OptimisticLockingSubscriber],
                 // autoLoadEntities: true,
