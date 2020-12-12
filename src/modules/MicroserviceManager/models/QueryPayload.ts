@@ -1,4 +1,5 @@
 export class QueryPayload {
+    brick: string;
     entity: string;
     fields: (string | QueryField)[];
     filters: QueryFilter[];
