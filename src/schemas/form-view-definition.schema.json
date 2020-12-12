@@ -33,6 +33,10 @@
             "description": "View definition",
             "type": "object",
             "properties": {
+                "brick": {
+                    "description": "Brick name",
+                    "type": "string"
+                },
                 "entity": {
                     "description": "Entity name",
                     "type": "string"
@@ -129,7 +133,7 @@
                     }
                 }
             },
-            "required": ["entity", "type", "containers"],
+            "required": ["brick", "entity", "type", "containers"],
             "additionalProperties": false
         },
         "actions": {
@@ -152,7 +156,7 @@
                         }
                     },
                     "additionalProperties": false
-                },              
+                },
                 "delete": {
                     "description": "[ Delete ] action configuration",
                     "type": "object",
