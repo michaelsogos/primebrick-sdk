@@ -1,6 +1,6 @@
 {
     "name": "primebrick-sdk",
-    "version": "0.129.0",
+    "version": "0.130.0",
     "description": "PrimeBrick SDK",
     "main": "dist/index.js",
     "author": "Michael Sogos",
@@ -9,6 +9,11 @@
         "type": "git",
         "url": "git+https://github.com/michaelsogos/primebrick-sdk.git"
     },
+    "files": [
+        "package.json",
+        "LICENSE",
+        "dist/**"
+    ],
     "bugs": {
         "url": "https://github.com/michaelsogos/primebrick-sdk/issues",
         "email": "michael.sogos@gurustudioweb.it"
