@@ -16,3 +16,6 @@ export { SessionManagerMiddleware } from './SessionManager/sessionmanager.middle
 export { SessionManagerInterceptor } from './SessionManager/sessionmanager.interceptor';
 export { MicroserviceManagerModule } from './MicroserviceManager/microservicemanager.module';
 export { MicroserviceManagerService } from './MicroserviceManager/microservicemanager.service';
+export { QueryPayload } from './MicroserviceManager/models/QueryPayload';
+export { QueryResult } from './MicroserviceManager/models/QueryResult';
+export { SavePayload } from './MicroserviceManager/models/SavePayload';

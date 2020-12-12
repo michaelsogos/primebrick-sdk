@@ -54,6 +54,10 @@
             "description": "View definition",
             "type": "object",
             "properties": {
+                "brick": {
+                    "description": "Brick name",
+                    "type": "string"
+                },
                 "entity": {
                     "description": "Entity name",
                     "type": "string"
@@ -165,7 +169,7 @@
                     }
                 }
             },
-            "required": ["entity", "type", "fields"],
+            "required": ["brick", "entity", "type", "fields"],
             "additionalProperties": false
         },
         "options": {
