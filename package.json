@@ -27,7 +27,7 @@
     },
     "scripts": {
         "prebuild": "rimraf dist",
-        "build": "nest build",
+        "build": "nest build & copyfiles -f ./src/*.d.ts ./dist/",
         "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
         "migration:create": "typeorm migration:generate -n coordinator_schema_update & nest build",
         "migration:run": "typeorm migration:run"
@@ -55,6 +55,7 @@
         "@types/papaparse": "5.2.2",
         "@typescript-eslint/eslint-plugin": "4.7.0",
         "@typescript-eslint/parser": "4.7.0",
+        "copyfiles": "2.4.1",
         "eslint": "7.13.0",
         "eslint-config-prettier": "6.15.0",
         "eslint-plugin-import": "2.22.1",

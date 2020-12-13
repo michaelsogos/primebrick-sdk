@@ -5,7 +5,7 @@ import { AdvancedLogger } from './logger.service';
 
 export class PrimeBrickModule implements OnApplicationBootstrap {
     constructor(readonly tenantManagerService: TenantManagerService, readonly logger: AdvancedLogger) {
-        logger.setContext(process.env.BRICK_NAME);
+        logger.setContext(process.brickName);
     }
 
     async onApplicationBootstrap(): Promise<void> {
