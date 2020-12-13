@@ -12,5 +12,5 @@ export { ViewDefinition } from './models/ViewDefinition';
 export { ComposeModuleRpcAction, ModuleRpcAction } from './enums/ModuleRpcAction';
 export { DataImport } from './models/DataImport';
 export { DataImportLog } from './models/DataImportLog';
-export { RegisterBrick } from './decorators/registerbrick.decorator';
 export { RegisterEntity } from './decorators/registerentity.decorator';
+export { InitializeBrick } from './utils/InitializeBrick';

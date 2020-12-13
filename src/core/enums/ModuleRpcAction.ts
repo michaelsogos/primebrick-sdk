@@ -7,5 +7,7 @@ export enum ModuleRpcAction {
 }
 
 export function ComposeModuleRpcAction(moduleName: String, rpcAction: ModuleRpcAction) {
+    if (!moduleName) throw new Error('Cannot compose ModuleRpcAction with empty or invalid brick name!');
+    if (!rpcAction) throw new Error('Cannot compose ModuleRpcAction with empty or invalid action!');
     return `${moduleName}.${rpcAction}`;
 }

@@ -15,12 +15,13 @@ export class ProcessorManagerService {
         try {
             const sessionManagerContext = SessionManagerContext.getInstance();
             context = sessionManagerContext.get('context');
-            return await this.callMicroservice<TPayload, TResult>(actionName, payload, timeout, context);
         } catch (ex) {
             throw new Error(
                 'ProcessorManagerService.sendMessage() can be used only within an execution context [http request, microservice message, etc.]!',
             );
         }
+
+        return await this.callMicroservice<TPayload, TResult>(actionName, payload, timeout, context);
     }
 
     async sendMessageWithTenant<TPayload, TResult>(

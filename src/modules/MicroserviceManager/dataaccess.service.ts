@@ -35,6 +35,9 @@ export class DataAccessService {
     }
 
     private async getQueryBuilder(query: QueryPayload): Promise<SelectQueryBuilder<unknown>> {
+        if (!query.brick) throw new Error('Cannot execute query with empty or invalid brick name!');
+        if (!query.entity) throw new Error('Cannot execute query with empty or invalid entity name!');
+
         const dbconn = await this.repositoryService.getTenantConnection();
         const queryBuilder = dbconn.createQueryBuilder(query.entity, query.entity);
 

@@ -7,7 +7,6 @@ import { DataImport } from '../../core/models/DataImport';
 import { InstallBrickResponse } from '../../core/models/InstallBrickResponse';
 import { ViewDefinition } from '../../core/models/ViewDefinition';
 import { CommonHelper } from '../../core/utils/CommonHelper';
-import { MessagePayload } from '../ProcessorManager/models/MessagePayload';
 import { ProcessorManagerService } from '../ProcessorManager/processormanager.service';
 import { TenantRepositoryService } from '../TenantManager/tenantrepository.service';
 

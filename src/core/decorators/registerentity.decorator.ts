@@ -1,10 +1,9 @@
 import { RegisteredEntity } from '../models/RegisteredEntity';
 
 export function RegisterEntity(brickName: string) {
-    if (global['registeredEntities'] == null) global['registeredEntities'] = [];
+    if (process.env.REGISTERED_ENTITIES == null) process.env.REGISTERED_ENTITIES = [];
 
     return function (constructor: Function): any {
-        //constructor.prototype.brickModuleName = brickModuleName;
-        global['registeredEntities'].push(new RegisteredEntity(constructor.name, brickName, constructor));
+        process.env.REGISTERED_ENTITIES.push(new RegisteredEntity(constructor.name, brickName, constructor));
     };
 }
