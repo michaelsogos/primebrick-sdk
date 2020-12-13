@@ -87,6 +87,8 @@ export class TenantManagerService {
             if (fs.existsSync(importFolderPath)) importsLog.push(...(await this.importCsv(importFolderPath, 'data-init.json', tenant)));
         }
 
+        //TODO: @mso -> Find a way to send back messages as soon as possible instead all together in an array, else system have to wait till all file imported before see what happening
+        //An idea could be to use RXJS or OBSERVABLE logic in order to receive a stream of messages
         return importsLog;
     }
 
