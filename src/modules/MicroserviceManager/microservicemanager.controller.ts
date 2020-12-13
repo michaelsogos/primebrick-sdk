@@ -11,13 +11,13 @@ import { MicroserviceManagerService } from './microservicemanager.service';
 export class MicroserviceManagerController {
     constructor(private readonly microserviceManagerService: MicroserviceManagerService) {}
 
-    @MessagePattern(`${global['appModuleName']}.brick:install`)
+    @MessagePattern(`${process.env.BRICK_NAME}.brick:install`)
     async installBrick(): Promise<MessagePayload<InstallBrickResponse>> {
         const response = await this.microserviceManagerService.installBrick();
         return MessagePayload.wrap(response);
     }
 
-    @MessagePattern(`${global['appModuleName']}.data:import`)
+    @MessagePattern(`${process.env.BRICK_NAME}.data:import`)
     async importData(message: MessagePayload<DataImport>): Promise<MessagePayload<DataImportLog>> {
         const response = await this.microserviceManagerService.importData(message.data);
         return MessagePayload.wrap(response);

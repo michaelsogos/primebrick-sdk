@@ -17,7 +17,7 @@ export class MicroserviceModule extends PrimeBrickModule implements OnApplicatio
         readonly logger: AdvancedLogger,
     ) {
         super(tenantManagerService, logger);
-        logger.setContext(global['appModuleName']);
+        logger.setContext(process.env.BRICK_NAME);
     }
 
     async onApplicationBootstrap(): Promise<void> {
@@ -27,7 +27,7 @@ export class MicroserviceModule extends PrimeBrickModule implements OnApplicatio
 
         const brick = new Brick();
         brick.code = pkJson.name;
-        brick.module = global['appModuleName'];
+        brick.name = process.env.BRICK_NAME;
         brick.description = pkJson.description;
         brick.version = pkJson.version;
         brick.autoInstall = pkJson.brickConfig.autoInstall;

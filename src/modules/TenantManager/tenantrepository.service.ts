@@ -54,12 +54,14 @@ export class TenantRepositoryService {
         let conn: Connection = null;
 
         if (!connectionManager.has(tenant.code)) {
-            if (!global['registeredEntities'] || (global['registeredEntities'] as RegisteredEntity[]).length <= 0)
-                throw new Error("There aren't entities to be registered !\nMissing decorator @RegisterEntity(brickName:string) or never imported entity anywhere ?");
+            if (!process.env.REGISTERED_ENTITIES || process.env.REGISTERED_ENTITIES.length <= 0)
+                throw new Error(
+                    "There aren't entities to be registered !\nMissing decorator @RegisterEntity(brickName:string) or never imported entity anywhere ?",
+                );
 
-            const registeredEntitiesForBrick = global['registeredEntities']
-                .filter((item: RegisteredEntity) => item.brickName == global['appModuleName'])
-                .map((item) => item.entity);
+            const registeredEntitiesForBrick = process.env.REGISTERED_ENTITIES.filter((item) => item.brickName == process.env.BRICK_NAME).map(
+                (item) => item.entity,
+            );
 
             conn = await createConnection({
                 name: tenant.code,
@@ -76,7 +78,7 @@ export class TenantRepositoryService {
                 migrationsTableName: 'db_migration_history',
                 migrations: ['dist/db/migrations/*.js'],
                 namingStrategy: new SnakeNamingStrategy(),
-                entityPrefix: `${global['appModuleName']}_`,
+                entityPrefix: `${process.env.BRICK_NAME}_`,
             });
             conn.subscribers.push(this.audibleEntitySubscriber);
         } else {

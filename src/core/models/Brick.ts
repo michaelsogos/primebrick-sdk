@@ -1,6 +1,6 @@
 export class Brick {
     code: string;
-    module: string;
+    name: string;
     description: string;
     version: string;
     autoInstall: boolean;
