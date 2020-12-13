@@ -256,7 +256,7 @@ export class CommonHelper {
 
     static getRegisteredEntities(): string[] {
         const entities: string[] = [];
-        for (const registeredEntity of process.env.REGISTERED_ENTITIES) {
+        for (const registeredEntity of process.registeredEntities) {
             entities.push(registeredEntity.entityName);
         }
 
@@ -264,6 +264,6 @@ export class CommonHelper {
     }
 
     static isEntityRegistered(entityName: string): boolean {
-        return process.env.REGISTERED_ENTITIES.some((item) => item.entityName == entityName);
+        return process.registeredEntities.some((item) => item.entityName == entityName);
     }
 }
