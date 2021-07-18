@@ -1,2 +1,2 @@
 import './environment';
-import '../index';
+export * from  '../index';
