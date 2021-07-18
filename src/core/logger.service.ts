@@ -1,16 +1,16 @@
-import { Logger, Optional } from '@nestjs/common';
+import { ConsoleLogger, Optional } from '@nestjs/common';
 import * as winston from 'winston';
 import { CommonHelper } from './utils/CommonHelper';
 import 'winston-daily-rotate-file';
 import * as fs from 'fs';
 
-export class AdvancedLogger extends Logger {
+export class AdvancedLogger extends ConsoleLogger {
     private readonly logger: winston.Logger;
-    private readonly timestampEnabled: boolean;
+    // private readonly timestampEnabled: boolean;
 
     constructor(@Optional() protected context?: string, @Optional() isTimestampEnabled = false) {
         super(context, { timestamp: isTimestampEnabled });
-        this.timestampEnabled = isTimestampEnabled;
+        // this.timestampEnabled = isTimestampEnabled;
 
         if (!fs.existsSync('logs')) {
             fs.mkdirSync('logs');
@@ -48,31 +48,37 @@ export class AdvancedLogger extends Logger {
         const errorTrace = message instanceof Error ? message.stack : trace;
         const isException = message instanceof Error ? true : false;
 
-        Logger.error(isException ? errorTrace : errorMessage, isException ? '' : errorTrace, this.context, this.timestampEnabled);
+        super.error(isException ? errorTrace : errorMessage, isException ? '' : errorTrace, this.context);
+        // Logger.error(isException ? errorTrace : errorMessage, isException ? '' : errorTrace, this.context, this.timestampEnabled);
         this.logger.error(errorTrace || errorMessage);
     }
 
     log(message: string) {
-        Logger.log(message, this.context, this.timestampEnabled);
+        super.log(message, this.context);
+        // Logger.log(message, this.context, this.timestampEnabled);
         this.logger.info(message);
     }
 
     warn(message: string) {
-        Logger.warn(message, this.context, this.timestampEnabled);
+        super.warn(message, this.context);
+        // Logger.warn(message, this.context, this.timestampEnabled);
         this.logger.warn(message);
     }
 
     debug(message: string) {
-        Logger.debug(message, this.context, this.timestampEnabled);
+        super.debug(message, this.context);
+        // Logger.debug(message, this.context, this.timestampEnabled);
         this.logger.debug(message);
     }
     verbose(message: string) {
-        Logger.verbose(message, this.context, this.timestampEnabled);
+        super.verbose(message, this.context);
+        // Logger.verbose(message, this.context, this.timestampEnabled);
         this.logger.debug(message);
     }
 
     info(message: string) {
-        Logger.log(message, this.context, this.timestampEnabled);
+        super.log(message, this.context);
+        // Logger.log(message, this.context, this.timestampEnabled);
         this.logger.info(message);
     }
 
