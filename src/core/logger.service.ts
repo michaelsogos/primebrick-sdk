@@ -9,7 +9,7 @@ export class AdvancedLogger extends Logger {
     private readonly timestampEnabled: boolean;
 
     constructor(@Optional() protected context?: string, @Optional() isTimestampEnabled = false) {
-        super(context, isTimestampEnabled);
+        super(context, { timestamp: isTimestampEnabled });
         this.timestampEnabled = isTimestampEnabled;
 
         if (!fs.existsSync('logs')) {
@@ -23,7 +23,9 @@ export class AdvancedLogger extends Logger {
             level: CommonHelper.isDebugMode() ? 'debug' : 'info',
             format: winston.format.combine(
                 winston.format.timestamp(),
-                winston.format.printf((log) => `${log.timestamp}\t${log.level.toUpperCase()}\t${context}\t${log.stack ? log.stack : log.message}`),
+                winston.format.printf(
+                    (log) => `${log.timestamp}\t${log.level.toUpperCase()}\t${this.context}\t${log.stack ? log.stack : log.message}`,
+                ),
             ),
             //defaultMeta: { service: 'user-service' },
             //TODO: @michaelsogos -> Add to defaultMeta name of module or at least name of app\microservice
@@ -43,9 +45,10 @@ export class AdvancedLogger extends Logger {
 
     error(message: string | Error, trace?: string) {
         const errorMessage = message instanceof Error ? message.message : message;
-        const errorTrace = message instanceof Error ? message.stack : trace ;
+        const errorTrace = message instanceof Error ? message.stack : trace;
+        const isException = message instanceof Error ? true : false;
 
-        Logger.error(errorMessage, errorTrace, this.context, this.timestampEnabled);
+        Logger.error(isException ? errorTrace : errorMessage, isException ? '' : errorTrace, this.context, this.timestampEnabled);
         this.logger.error(errorTrace || errorMessage);
     }
 
@@ -71,5 +74,10 @@ export class AdvancedLogger extends Logger {
     info(message: string) {
         Logger.log(message, this.context, this.timestampEnabled);
         this.logger.info(message);
+    }
+
+    setContext(context: string) {
+        super.context = context;
+        this.context = context;
     }
 }

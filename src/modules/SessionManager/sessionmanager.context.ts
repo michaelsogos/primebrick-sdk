@@ -1,5 +1,6 @@
 import { OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import * as asyncHooks from 'async_hooks';
+import { SessionContext } from '../../core';
 import { SessionManagerException } from './sessionmanager.exception';
 import { SessionManagerHelper } from './sessionmanager.helper';
 import { SessionManagerStorage } from './sessionmanager.storage';
@@ -36,12 +37,12 @@ export class SessionManagerContext implements OnModuleInit, OnModuleDestroy {
         this.asyncHookRef.disable();
     }
 
-    public set<TKey = any, TValue = any>(key: TKey, value: TValue) {
+    public set(key: string, value: any) {
         const store = this.getAsyncStorage();
         store.set(key, value);
     }
 
-    public get<TKey = any, TReturnValue = any>(key: TKey): TReturnValue {
+    public get<TReturnValue = any>(key: string): TReturnValue {
         const store = this.getAsyncStorage();
         return store.get(key) as TReturnValue;
     }
@@ -52,12 +53,16 @@ export class SessionManagerContext implements OnModuleInit, OnModuleDestroy {
         fn();
     }
 
-    private getAsyncStorage(): Map<unknown, unknown> {
+    private getAsyncStorage(): Map<string, any> {
         const eid = asyncHooks.executionAsyncId();
         const state = this.internalStorage.get(eid);
         if (!state) {
             throw new SessionManagerException(eid);
         }
         return state;
+    }
+
+    public getContext() {
+        return this.get<SessionContext>('context');
     }
 }
