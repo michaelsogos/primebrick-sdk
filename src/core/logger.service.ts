@@ -9,7 +9,7 @@ export class AdvancedLogger extends Logger {
     private readonly timestampEnabled: boolean;
 
     constructor(@Optional() protected context?: string, @Optional() isTimestampEnabled = false) {
-        super(context, isTimestampEnabled);
+        super(context, { timestamp: isTimestampEnabled });
         this.timestampEnabled = isTimestampEnabled;
 
         if (!fs.existsSync('logs')) {
@@ -77,7 +77,7 @@ export class AdvancedLogger extends Logger {
     }
 
     setContext(context: string) {
-        super.setContext(context);
+        super.context = context;
         this.context = context;
     }
 }

@@ -6,7 +6,7 @@ module.exports = {
         extraFileExtensions: ['.json'],
     },
     plugins: ['@typescript-eslint/eslint-plugin'],
-    extends: ['plugin:@typescript-eslint/eslint-recommended', 'prettier', 'prettier/@typescript-eslint'],
+    extends: ['plugin:@typescript-eslint/eslint-recommended', 'prettier'],
     root: true,
     env: {
         es6: true,
@@ -18,6 +18,5 @@ module.exports = {
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/no-explicit-any': 'off',
     },
-    ignorePatterns: ['.eslintrc.js','**/node_modules/*'],
-    
+    ignorePatterns: ['.eslintrc.js', '**/node_modules/*'],
 };

@@ -13,4 +13,4 @@ export { ComposeModuleRpcAction, ModuleRpcAction } from './enums/ModuleRpcAction
 export { DataImport } from './models/DataImport';
 export { DataImportLog } from './models/DataImportLog';
 export { RegisterEntity } from './decorators/registerentity.decorator';
-export { InitializeBrick } from './utils/InitializeBrick';
+

@@ -4,6 +4,8 @@ import { ClientProxy } from '@nestjs/microservices';
 import { Tenant } from '../TenantManager/entities/Tenant.entity';
 import { SessionManagerContext } from '../SessionManager/sessionmanager.context';
 import { SessionContext } from '../../core';
+import { timeout as ObservableTimeout } from 'rxjs/operators';
+import { throwError, lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class ProcessorManagerService {
@@ -43,19 +45,29 @@ export class ProcessorManagerService {
         timeout: number,
         context: SessionContext,
     ): Promise<MessagePayload<TResult>> {
-        let connectionTimeout: NodeJS.Timeout = null;
-        const respose = await Promise.race([
-            this.busClient.send(actionName, this.prepareMessage<TPayload>(payload, context)).toPromise<MessagePayload<TResult>>(),
+        // let connectionTimeout: NodeJS.Timeout = null;
 
-            new Promise<MessagePayload<TResult>>((res, rej) => {
-                connectionTimeout = setTimeout(() => {
-                    rej(new Error(`The execution of microservice action [${actionName}] timed out after ${timeout}ms!`));
-                }, timeout); // 30 second timeout
-            }),
-        ]);
+        const response = await lastValueFrom(
+            this.busClient.send<MessagePayload<TResult>, MessagePayload<TPayload>>(actionName, this.prepareMessage<TPayload>(payload, context)).pipe(
+                ObservableTimeout({
+                    each: timeout,
+                    with: () => throwError(() => new Error(`The execution of microservice action [${actionName}] timed out after ${timeout}ms!`)),
+                }),
+            ),
+        );
 
-        clearTimeout(connectionTimeout);
-        return respose;
+        // const respose = await Promise.race([
+        //     this.busClient.send(actionName, this.prepareMessage<TPayload>(payload, context)).toPromise<MessagePayload<TResult>>(),
+
+        //     new Promise<MessagePayload<TResult>>((res, rej) => {
+        //         connectionTimeout = setTimeout(() => {
+        //             rej(new Error(`The execution of microservice action [${actionName}] timed out after ${timeout}ms!`));
+        //         }, timeout); // 30 second timeout
+        //     }),
+        // ]);
+
+        // clearTimeout(connectionTimeout);
+        return response;
     }
 
     private prepareMessage<T>(payload: T, context: SessionContext): MessagePayload<T> {
