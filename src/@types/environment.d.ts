@@ -1,4 +1,4 @@
-import { RegisteredEntity } from './core/models/RegisteredEntity';
+import { RegisteredEntity } from '../core/models/RegisteredEntity';
 
 declare global {
     namespace NodeJS {
