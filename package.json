@@ -28,7 +28,7 @@
     },
     "scripts": {
         "prebuild": "rimraf dist",
-        "build": "yarn prebuild & nest build & copyfiles -f ./src/@types/*.d.ts ./dist/@types/",
+        "build": "nest build & copyfiles -f ./src/@types/*.d.ts ./dist/@types/",
         "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
         "migration:create": "typeorm migration:generate -n coordinator_schema_update & nest build",
         "migration:run": "typeorm migration:run"
