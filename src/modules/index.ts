@@ -18,3 +18,6 @@ export { MicroserviceManagerService } from './MicroserviceManager/microservicema
 export { QueryPayload } from './MicroserviceManager/models/QueryPayload';
 export { QueryResult } from './MicroserviceManager/models/QueryResult';
 export { SavePayload } from './MicroserviceManager/models/SavePayload';
+export { AuthManagerModule } from './AuthManager/authmanager.module';
+export { LocalAuthManagerService } from './AuthManager/localauthmanager.service';
+export { AuthTokenPayload } from './AuthManager/models/AuthTokenPayload';

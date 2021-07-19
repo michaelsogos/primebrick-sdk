@@ -5,12 +5,14 @@ import { LocalAuthConfig } from '../models/LocalAuthConfig';
 import { Tenant } from '../../TenantManager/entities/Tenant.entity';
 import { UserProfile } from '../models/UserProfile';
 import { MessagePayload } from '../../ProcessorManager/models/MessagePayload';
+import { AuthTokenPayload } from '../models/AuthTokenPayload';
 
 export class LocalStrategyHelper {
     static validateRequest(tenantConfig: Tenant, token: string): boolean {
         const authConfig: LocalAuthConfig = tenantConfig.tenant_auth_config.auth_config;
         try {
-            const decodedToken = jwt.verify(token, authConfig.secretKey, { issuer: 'primebrick', audience: `tenant:${tenantConfig.code}` });
+            const decodedToken = LocalStrategyHelper.verifyAuthenticationToken(token, tenantConfig);
+            // jwt.verify(token, authConfig.secretKey, { issuer: 'primebrick', audience: `tenant:${tenantConfig.code}` });
             return true;
         } catch (ex) {
             throw new UnauthorizedException('Authorization token is not valid!');
@@ -58,4 +60,47 @@ export class LocalStrategyHelper {
     static getUserProfileFromRpcRequest(request: MessagePayload<any>): UserProfile {
         return request.context.userProfile;
     }
+
+    static createAuthenticationToken(tenantConfig: Tenant, userProfile: UserProfile) {
+        try {
+            const authConfig: LocalAuthConfig = tenantConfig.tenant_auth_config.auth_config;
+
+            const access_token = jwt.sign(Object.assign({}, userProfile), authConfig.secretKey, {
+                audience: [`tenant:${tenantConfig.code}`],
+                issuer: 'primebrick',
+                expiresIn: authConfig.tokenExpiresIn || '15m',
+            });
+
+            const refresh_token = jwt.sign({}, authConfig.secretKey, {
+                audience: [`tenant:${tenantConfig.code}`],
+                issuer: 'primebrick',
+                expiresIn: authConfig.sessionExpiresIn || '1d',
+            });
+
+            const access_token_payload = jwt.decode(access_token);
+
+            const payload = new AuthTokenPayload();
+            payload.access_token = access_token;
+            payload.refresh_token = refresh_token;
+            payload.token_type = 'Bearer';
+            payload.expires_in = (access_token_payload['exp'] as number) - (access_token_payload['iat'] as number);
+
+            return payload;
+        } catch (ex) {
+            throw new UnauthorizedException('Credentials are invalid!');
+        }
+    }
+
+    static verifyAuthenticationToken(token: string, tenantConfig: Tenant, ignoreExpiration: boolean = false) {
+        const authConfig: LocalAuthConfig = tenantConfig.tenant_auth_config.auth_config;
+
+        const decodedAccessToken = jwt.verify(token, authConfig.secretKey, {
+            issuer: 'primebrick',
+            audience: `tenant:${tenantConfig.code}`,
+            ignoreExpiration: ignoreExpiration,
+        });
+
+        return decodedAccessToken;
+    }
+    
 }
