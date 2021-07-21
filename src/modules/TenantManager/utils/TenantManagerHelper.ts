@@ -33,6 +33,6 @@ export class TenantManagerHelper {
     static getTenantAliasFromHttpRequest(request: Request) {
         const headerTenantAlias = request.header('x-tenant');
         if (headerTenantAlias) return headerTenantAlias;
-        else request.hostname;
+        else return request.hostname;
     }
 }

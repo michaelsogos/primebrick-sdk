@@ -1,6 +1,6 @@
 {
     "name": "primebrick-sdk",
-    "version": "0.143.0",
+    "version": "0.144.0",
     "description": "PrimeBrick SDK",
     "main": "dist/index.js",
     "typings": "dist/@types/index.d.ts",
@@ -21,7 +21,8 @@
     },
     "homepage": "https://github.com/michaelsogos/primebrick-sdk#readme",
     "keywords": [
-        "primebrick"
+        "primebrick",
+        "sdk"
     ],
     "engines": {
         "node": ">=14.12.0"
