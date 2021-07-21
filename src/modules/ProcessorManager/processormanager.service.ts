@@ -11,6 +11,15 @@ import { throwError, lastValueFrom } from 'rxjs';
 export class ProcessorManagerService {
     constructor(@Inject('PRIMEBRICK_SERVICE') private busClient: ClientProxy /* private readonly sessionManagerContext: SessionManagerContext */) {}
 
+    /**
+     * Send a message to a microservice registered under specific action (like a queue name or topic).  
+     * The message will be automatically enriched with session context (which contains TENANT ALIAS, USER PROFILE, LANGUAGE CODE, etc.)
+     * @param actionName The name of the action that will receive the message (look at GlobalRpcAction and ModuleRpcAction from sdk, but it can be any valid string)
+     * @param payload The payload to send based on TPayload, it can be anything from primitive types to complex objects
+     * @param timeout Timeout in milliseconds to wait before raise an exception; default 30000 (30s)
+     * @remarks The message will be automatically enriched with session context (which contains TENANT ALIAS, USER PROFILE, LANGUAGE CODE, etc.)
+     * @returns
+     */
     async sendMessage<TPayload, TResult>(actionName: string, payload: TPayload, timeout = 30000): Promise<MessagePayload<TResult>> {
         let context: SessionContext = null;
 
@@ -26,6 +35,16 @@ export class ProcessorManagerService {
         return await this.callMicroservice<TPayload, TResult>(actionName, payload, timeout, context);
     }
 
+    /**
+     * Send a message to a microservice registered under specific action (like a queue name or topic).  
+     * **USE ONLY ON APPLICATION BOOTSTRAP!!!** The message will contains an empty session context which contains supplied TENANT ALIAS, empty USER PROFILE, 'en' as LANGUAGE CODE)
+     * @param tenant The tenant entity where collect first tenant alias and forcely set it to the message context
+     * @param actionName The name of the action that will receive the message (look at GlobalRpcAction and ModuleRpcAction from sdk, but it can be any valid string)
+     * @param payload The payload to send based on TPayload, it can be anything from primitive types to complex objects
+     * @param timeout Timeout in milliseconds to wait before raise an exception; default 30000 (30s)
+     * @remarks **USE ONLY ON APPLICATION BOOTSTRAP!!!** The message will contains an empty session context which contains supplied TENANT ALIAS, empty USER PROFILE, 'en' as LANGUAGE CODE)
+     * @returns
+     */
     async sendMessageWithTenant<TPayload, TResult>(
         tenant: Tenant,
         actionName: string,

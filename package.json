@@ -21,7 +21,8 @@
     },
     "homepage": "https://github.com/michaelsogos/primebrick-sdk#readme",
     "keywords": [
-        "primebrick"
+        "primebrick",
+        "sdk"
     ],
     "engines": {
         "node": ">=14.12.0"
