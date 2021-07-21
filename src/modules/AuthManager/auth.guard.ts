@@ -11,6 +11,8 @@ export class AuthGuard implements CanActivate {
         const tenantAlias = TenantManagerHelper.getTenantAliasFromExecutionContext(context);
         const tenant = TenantManagerHelper.getTenantConfigByAlias(tenantAlias);
 
+        if (!tenant) throw new Error('The request cannot be authorized because is impossible to identify target tenant!');
+
         switch (tenant.tenant_auth_config.auth_type) {
             case 'local':
                 return LocalStrategyHelper.validateRequestFromExecutionContext(context, tenant);

@@ -42,7 +42,7 @@ export class TenantRepositoryService {
 
         if (!tenant)
             //TODO: @mso -> Add new Exception class for the below error
-            throw new Error(`No tenant aliases found for "${tenantAlias}"!`);
+            throw new Error(`Impossible to identify a tenant for alias "${tenantAlias}"!`);
 
         return await this.getDbConnectionByTenant(tenant);
     }

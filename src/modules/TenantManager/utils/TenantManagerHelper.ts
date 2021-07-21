@@ -4,6 +4,9 @@ import { Request } from 'express';
 
 export class TenantManagerHelper {
     static getTenantConfigByAlias(alias: string): Tenant {
+        if (!alias) throw new Error('Cannot get tenant config from empty or invalid tenant alias!');
+        if (!global['tenants'] || global['tenants'].length <= 0) throw new Error("There aren't tenants configured on system!");
+
         let config: Tenant = null;
         for (const tenant of global['tenants'] as Tenant[]) {
             for (const tenantAlias of tenant.tenant_aliases) {
