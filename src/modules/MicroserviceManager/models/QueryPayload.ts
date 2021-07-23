@@ -9,14 +9,14 @@ export class QueryPayload {
     joins: QueryJoin[];
 }
 
-class QueryFilter {
+export class QueryFilter {
     leftOperator: QueryFilterOperator;
     expressionOperator: QueryFilterOperator;
     expressions: string[];
     expressionValues: any;
 }
 
-class QuerySort {
+export class QuerySort {
     field: string;
     direction: QuerySortDirection;
 }

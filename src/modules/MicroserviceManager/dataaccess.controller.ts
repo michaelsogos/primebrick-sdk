@@ -7,6 +7,7 @@ import { QueryPayload } from './models/QueryPayload';
 import { QueryResult } from './models/QueryResult';
 import { SavePayload } from './models/SavePayload';
 
+//TODO: @mso -> This controller should be AUTHENTICATED with AuthGuard
 @Controller()
 export class DataAccessController {
     constructor(private readonly dataAccessService: DataAccessService) {}
