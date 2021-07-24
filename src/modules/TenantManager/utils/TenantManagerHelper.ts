@@ -1,6 +1,7 @@
 import { Tenant } from '../entities/Tenant.entity';
 import { ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
+import { MessagePayload } from '../../ProcessorManager/models/MessagePayload';
 
 export class TenantManagerHelper {
     static getTenantConfigByAlias(alias: string): Tenant {
@@ -27,10 +28,14 @@ export class TenantManagerHelper {
             case 'http':
                 return this.getTenantAliasFromHttpRequest(context.switchToHttp().getRequest());
             case 'rpc':
-                return context.switchToRpc().getData()['tenantAlias'];
+                return this.getTenantAliasFromRpcRequest(context.switchToRpc().getData());
             case 'ws':
                 throw new Error('Not implemented yet!');
         }
+    }
+
+    static getTenantAliasFromRpcRequest(request: MessagePayload<any>) {
+        return request.context.tenantAlias;
     }
 
     static getTenantAliasFromHttpRequest(request: Request) {
