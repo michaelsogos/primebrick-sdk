@@ -28,7 +28,7 @@ export class CommonHelper {
         const acceptedLanguages = request.acceptsLanguages();
         let languageCode: string = null;
 
-        if (acceptedLanguages) languageCode = acceptedLanguages[0].split('-')[0];
+        if (acceptedLanguages && acceptedLanguages.length > 0) languageCode = acceptedLanguages[0].split('-')[0];
         if (!languageCode || languageCode == '*') languageCode = 'en';
 
         return languageCode;

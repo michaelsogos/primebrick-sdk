@@ -8,4 +8,5 @@ export enum GlobalRpcAction {
     GET_SIDEMENU = 'sidemenu:get',
     GET_VIEW = 'view:get',
     GET_ALL_VIEWS = 'view:all',
+    GET_TRANSLATION = 'translation:all',
 }
