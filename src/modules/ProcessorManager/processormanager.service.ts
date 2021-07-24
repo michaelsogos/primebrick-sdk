@@ -21,6 +21,8 @@ export class ProcessorManagerService {
      * @returns
      */
     async sendMessage<TPayload, TResult>(actionName: string, payload: TPayload, timeout = 30000): Promise<MessagePayload<TResult>> {
+        //TODO: @mso -> Cause not always an microservice endpoint need a payload it should be declared as optional (payload?: TPayload) in order
+        //to not force developer to specify NULL as TPayload
         let context: SessionContext = null;
 
         try {
