@@ -4,4 +4,5 @@ export enum GlobalRpcAction {
     ROUTE_DATAIMPORT = 'route:dataimport',
     AUTH_LOGIN = 'auth:login',
     AUTH_REFRESH_TOKEN = 'auth:refresh_token',
+    GET_APP_MANIFEST = 'app:manifest',
 }
