@@ -1,6 +1,6 @@
 {
     "name": "primebrick-sdk",
-    "version": "0.147.0",
+    "version": "0.148.0",
     "description": "PrimeBrick SDK",
     "main": "dist/index.js",
     "typings": "dist/@types/index.d.ts",
