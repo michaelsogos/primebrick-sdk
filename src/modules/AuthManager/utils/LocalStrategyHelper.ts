@@ -19,12 +19,20 @@ export class LocalStrategyHelper {
         }
     }
 
-    static validateRequestFromExecutionContext(context: ExecutionContext, tenantConfig: Tenant) {
+    static validateRequestFromExecutionContext(context: ExecutionContext, tenantConfig: Tenant): boolean {
         switch (context.getType()) {
             case 'http':
                 return this.validateRequest(tenantConfig, this.getBearerToken(context.switchToHttp().getRequest()));
             case 'rpc':
-                throw new Error('Not implemented yet!');
+                //TODO: @mso -> This check eventually consistent logged in user
+                //Cause it is a lazy check it can be unsecure, at the same time a chain of microservices running long process
+                //can land on race condition where the user token can expire, in that case a microservice should not auto refresh the token
+                //but at the same time a long running process cannot stop work because the token expired
+                //For this reason we have a lazy check that is enought to ensure that at the time user call an RPC action its token was valid
+                //This allow developers to make SECURE CONTROLLER on microservice which need a user to be logged
+                //usually because user profile can be used to add kind of security check accessing data (ROLE PERMISSION, FIELD PERMISSION, etc.)
+                //This comment is to keep track of this choise and in case implement in future a better and more secure approach
+                return this.getUserProfileFromRpcRequest(context.switchToRpc().getData()) ? true : false;
             case 'ws':
                 throw new Error('Not implemented yet!');
         }
@@ -102,5 +110,4 @@ export class LocalStrategyHelper {
 
         return decodedAccessToken;
     }
-    
 }
