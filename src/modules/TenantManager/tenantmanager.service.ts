@@ -123,6 +123,7 @@ export class TenantManagerService {
                         header: definition.csvOptions.header != undefined ? definition.csvOptions.header : true,
                         quoteChar: definition.csvOptions.quoteChar || '"',
                         delimiter: ImporterDescriptor.mapDelimiterToChar(definition.csvOptions.delimiter),
+                        dynamicTyping: true
                     });
 
                     const isEntityRegistered = CommonHelper.isEntityRegistered(definition.csvOptions.entity);
