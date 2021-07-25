@@ -21,6 +21,10 @@
             "description": "View title translatable key",
             "type": "string"
         },
+        "entityNameLabelKey": {
+            "description": "Entity name translatable key",
+            "type": "string"
+        },
         "icon": {
             "description": "View icon",
             "type": "string"
@@ -45,6 +49,14 @@
                     "description": "View type",
                     "type": "string",
                     "enum": ["grid", "form", "cards"]
+                },
+                "entityNameTemplate": {
+                    "description": "Template literal to build entity name using ES6 syntax.",
+                    "examples": [
+                        "for User entity it could be '${first_name} ${last_name} (${code})' => 'Michael Sogos (USR001)'",
+                        "for Sale Order it could be '${code} - ${total_amount - total_discount}€' => 'ORD001 - 123.00€'"
+                    ],
+                    "type": "string"
                 },
                 "containers": {
                     "description": "List of containers",
@@ -133,7 +145,7 @@
                     }
                 }
             },
-            "required": ["brick", "entity", "type", "containers"],
+            "required": ["brick", "entity", "type", "containers", "entityNameTemplate"],
             "additionalProperties": false
         },
         "actions": {
