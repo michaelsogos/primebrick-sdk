@@ -125,8 +125,17 @@ export class DataAccessService {
     async save(entityName: string, entity: unknown): Promise<QueryResult> {
         const dbconn = await this.repositoryService.getTenantConnection();
         const repository = dbconn.getRepository(entityName);
-        const savedEntity = await repository.save(repository.create(entity));
-        return new QueryResult([savedEntity], 1);
+        const result = await repository.save(repository.create(entity));
+        return new QueryResult([result], 1);
+    }
+
+    async delete(entityName: string, entityId: number, isRecoverable: boolean = true): Promise<QueryResult> {
+        const dbconn = await this.repositoryService.getTenantConnection();
+        const repository = dbconn.getRepository(entityName);
+        let entityBackup = null;
+        if (isRecoverable) entityBackup = await repository.findOne(entityId);
+        const result = await repository.delete(entityId);
+        return new QueryResult(isRecoverable ? [entityBackup] : [], result.affected);
     }
 
     async info(query: QueryPayload): Promise<QueryResult> {

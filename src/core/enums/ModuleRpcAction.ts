@@ -4,6 +4,7 @@ export enum ModuleRpcAction {
     DATA_FIND_ONE = 'data:findOne',
     DATA_SAVE = 'data:save',
     DATA_INFO = 'data:info',
+    DATA_DELETE = 'data:delete',
 }
 
 export function ComposeModuleRpcAction(moduleName: String, rpcAction: ModuleRpcAction) {
