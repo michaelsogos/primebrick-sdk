@@ -147,8 +147,8 @@ export class DataAccessService {
         const fakeEntities = [];
         for (const id in entityIds) {
             const fakeEntity = repository.create();
-            fakeEntities['id'] = id;
-            fakeEntities.push(fakeEntities);
+            fakeEntity['id'] = id;
+            fakeEntities.push(fakeEntity);
         }
 
         const result = await repository.remove(fakeEntities, { chunk: 1000 });
