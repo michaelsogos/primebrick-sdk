@@ -5,6 +5,7 @@ export enum ModuleRpcAction {
     DATA_SAVE = 'data:save',
     DATA_INFO = 'data:info',
     DATA_DELETE = 'data:delete',
+    DATA_DELETE_MANY = 'data:deleteMany',
 }
 
 export function ComposeModuleRpcAction(moduleName: String, rpcAction: ModuleRpcAction) {

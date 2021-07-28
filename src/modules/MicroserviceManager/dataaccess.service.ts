@@ -138,6 +138,23 @@ export class DataAccessService {
         return new QueryResult(isRecoverable ? [entityBackup] : [], result.affected);
     }
 
+    async deleteMany(entityName: string, entityIds: number[]): Promise<QueryResult> {
+        const dbconn = await this.repositoryService.getTenantConnection();
+        const repository = dbconn.getRepository(entityName);
+
+        //FIXME: @mso -> Typeorm actually doesn't support for DeleteOptions in order to play with chunck size
+        //That's why we use remove() method making useless fake entities
+        const fakeEntities = [];
+        for (const id in entityIds) {
+            const fakeEntity = repository.create();
+            fakeEntities['id'] = id;
+            fakeEntities.push(fakeEntities);
+        }
+
+        const result = await repository.remove(fakeEntities, { chunk: 1000 });
+        return new QueryResult([], result.length);
+    }
+
     async info(query: QueryPayload): Promise<QueryResult> {
         query.fields = [];
         const versionField = new QueryField();
