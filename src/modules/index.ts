@@ -22,3 +22,4 @@ export { AuthManagerModule } from './AuthManager/authmanager.module';
 export { LocalAuthManagerService } from './AuthManager/localauthmanager.service';
 export { AuthTokenPayload } from './AuthManager/models/AuthTokenPayload';
 export { DeletePayload } from './MicroserviceManager/models/DeletePayload';
+export { DeleteManyPayload } from './MicroserviceManager/models/DeleteManyPayload';
