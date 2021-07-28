@@ -3,6 +3,7 @@ import { MessagePattern } from '@nestjs/microservices';
 import { ModuleRpcAction } from '../../core/enums/ModuleRpcAction';
 import { MessagePayload } from '../ProcessorManager/models/MessagePayload';
 import { DataAccessService } from './dataaccess.service';
+import { DeleteManyPayload } from './models/DeleteManyPayload';
 import { DeletePayload } from './models/DeletePayload';
 import { QueryPayload } from './models/QueryPayload';
 import { QueryResult } from './models/QueryResult';
@@ -38,6 +39,12 @@ export class DataAccessController {
             message.data.entityId,
             message.data.isRecoverable === false ? false : true,
         );
+        return MessagePayload.wrap(response);
+    }
+
+    @MessagePattern(`${process.brickName}.${ModuleRpcAction.DATA_DELETE_MANY}`)
+    async deleteMany(message: MessagePayload<DeleteManyPayload>): Promise<MessagePayload<QueryResult>> {
+        const response = await this.dataAccessService.deleteMany(message.data.entityName, message.data.entityIds);
         return MessagePayload.wrap(response);
     }
 

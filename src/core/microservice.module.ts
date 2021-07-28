@@ -43,8 +43,8 @@ export class MicroserviceModule extends PrimeBrickModule implements OnApplicatio
             //TODO: @mso -> Reduce timeout to at least 5 seconds because 30 are too much.
             //an idea is to add a kind of TIMEOUT in ENV file for default, one for IMPORTS and one for "FAST_CALLS" ?
             const result = await this.processorManagerService.sendMessageWithTenant<Brick, boolean>(tenant, GlobalRpcAction.REGISTER_BRICK, brick);
-            if (result.data) this.logger.debug(`The brick [${brick.code}] has been registered!`);
-            else this.logger.debug(`The brick [${brick.code}] cannot be registered!`);
+            if (result.data) this.logger.debug(`The brick [${brick.code}] has been registered for tenant [${tenant.code}]!`);
+            else this.logger.debug(`The brick [${brick.code}] cannot be registered for tenant [${tenant.code}]!`);
         } catch (ex) {
             this.logger.error(ex);
         }
