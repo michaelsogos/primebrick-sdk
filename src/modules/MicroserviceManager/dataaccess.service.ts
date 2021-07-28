@@ -145,7 +145,7 @@ export class DataAccessService {
         //FIXME: @mso -> Typeorm actually doesn't support for DeleteOptions in order to play with chunck size
         //That's why we use remove() method making useless fake entities
         const fakeEntities = [];
-        for (const id in entityIds) {
+        for (const id of entityIds) {
             const fakeEntity = repository.create();
             fakeEntity['id'] = id;
             fakeEntities.push(fakeEntity);
