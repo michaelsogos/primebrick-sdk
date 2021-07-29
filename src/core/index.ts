@@ -9,7 +9,7 @@ export { Brick } from './models/Brick';
 export { MicroserviceModule } from './microservice.module';
 export { GlobalRpcAction } from './enums/GlobalRpcAction';
 export { ViewDefinition } from './models/ViewDefinition';
-export { ComposeModuleRpcAction, ModuleRpcAction } from './enums/ModuleRpcAction';
+export { ComposeModuleRpcAction, DataRpcAction } from './enums/DataRpcAction';
 export { DataImport } from './models/DataImport';
 export { DataImportLog } from './models/DataImportLog';
 export { RegisterEntity } from './decorators/registerentity.decorator';

@@ -1,6 +1,5 @@
 import { BaseEntityActionPayload } from './BaseEntityActionPayload';
 
-export class DeletePayload extends BaseEntityActionPayload {
+export class ArchivePayload extends BaseEntityActionPayload {
     entityId: number;
-    isRecoverable: boolean;
 }

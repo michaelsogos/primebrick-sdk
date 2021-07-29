@@ -1,5 +1,5 @@
-export class SavePayload {
-    brickName: string;
-    entityName: string;
+import { BaseEntityActionPayload } from './BaseEntityActionPayload';
+
+export class SavePayload extends BaseEntityActionPayload {
     entity: unknown;
 }
