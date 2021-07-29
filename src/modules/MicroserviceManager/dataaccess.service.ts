@@ -135,6 +135,7 @@ export class DataAccessService {
         let entityBackup = null;
         if (isRecoverable) entityBackup = await repository.findOne(entityId);
         const result = await repository.delete(entityId);
+        if (result.affected != 1) throw new Error(`No record to delete found for entity "${entityName}" with ID {${entityId}}!`);
         return new QueryResult(isRecoverable ? [entityBackup] : [], result.affected);
     }
 
@@ -152,6 +153,31 @@ export class DataAccessService {
         }
 
         const result = await repository.remove(fakeEntities, { chunk: 1000 });
+        return new QueryResult([], result.length);
+    }
+
+    async archive(entityName: string, entityId: number): Promise<QueryResult> {
+        const dbconn = await this.repositoryService.getTenantConnection();
+        const repository = dbconn.getRepository(entityName);
+        const result = await repository.softDelete(entityId);
+        if (result.affected != 1) throw new Error(`No record to archive found for entity "${entityName}" with ID {${entityId}}!`);
+        return new QueryResult([result.generatedMaps[0].id], result.affected);
+    }
+
+    async archiveMany(entityName: string, entityIds: number[]): Promise<QueryResult> {
+        const dbconn = await this.repositoryService.getTenantConnection();
+        const repository = dbconn.getRepository(entityName);
+
+        //FIXME: @mso -> Typeorm actually doesn't support for SoftDeleteOptions in order to play with chunck size
+        //That's why we use remove() method making useless fake entities
+        const fakeEntities = [];
+        for (const id of entityIds) {
+            const fakeEntity = repository.create();
+            fakeEntity['id'] = id;
+            fakeEntities.push(fakeEntity);
+        }
+
+        const result = await repository.softRemove(fakeEntities, { chunk: 1000 });
         return new QueryResult([], result.length);
     }
 
