@@ -8,7 +8,6 @@ import { TenantManagerHelper } from '../../modules/TenantManager/utils/TenantMan
 import { AuthManagerHelper } from '../../modules/AuthManager/utils/AuthManagerHelper';
 import { MessagePayload } from '../../modules';
 import { DataImportLog } from '../models/DataImportLog';
-import { RegisteredEntity } from '../models/RegisteredEntity';
 
 export class CommonHelper {
     static getLanguageCodeFromExecutionContext(context: ExecutionContext, userProfile: UserProfile): string {
@@ -67,7 +66,10 @@ export class CommonHelper {
 
                 const sourceEntity = await repository.findOne(null, {
                     where: findConditions,
+                    withDeleted: true,
                 });
+
+                if (sourceEntity && definition.disableUpdate) continue;
 
                 if (sourceEntity) entity = sourceEntity;
             }
@@ -86,8 +88,6 @@ export class CommonHelper {
                 }
             }
 
-            if (repository.metadata.columns.some((column) => column.propertyName == 'importedBy')) entity['importedBy'] = -1; //TODO: @mso -> Collect from context the LOGGED IN USER ID
-            if (repository.metadata.columns.some((column) => column.propertyName == 'importedOn')) entity['importedOn'] = new Date();
             entities.push(entity);
         }
 
@@ -177,7 +177,7 @@ export class CommonHelper {
                         (entity) => entity[circularRelation.mappedByColumn] == record[circularRelation.parentColumn],
                     );
                     parentEntity = entities[parentEntityIndex];
-                    parentEntity = await repository.save(parentEntity);
+                    parentEntity = await repository.save(parentEntity, { data: { importing: true } });
                     savedEntitiesCount++;
                     savedParents.push(parentEntity);
                     entities.splice(parentEntityIndex, 1);
@@ -193,7 +193,7 @@ export class CommonHelper {
         }
 
         //TODO: @michaelsogos -> find a way to save only entities that has been really changed; actually every imported entity will be updated even if already exists
-        const savedEntities = await repository.save(entities, { chunk: definition.chunkSize || 1000 });
+        const savedEntities = await repository.save(entities, { chunk: definition.chunkSize || 1000, data: { importing: true } });
         savedEntitiesCount += savedEntities.length;
 
         if (definition.csvOptions.circularRelation && repository.metadata.treeType && repository.metadata.treeType == 'closure-table')

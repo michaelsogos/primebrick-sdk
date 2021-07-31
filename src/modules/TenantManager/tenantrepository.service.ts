@@ -1,5 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { Repository, getConnectionManager, createConnection, Connection, ObjectID, FindConditions, EntityTarget, UpdateResult } from 'typeorm';
+import {
+    Repository,
+    getConnectionManager,
+    createConnection,
+    Connection,
+    ObjectID,
+    FindConditions,
+    EntityTarget,
+    UpdateResult,
+    SaveOptions,
+} from 'typeorm';
 import { Tenant } from '../TenantManager/entities/Tenant.entity';
 import { OptimisticLockingSubscriber } from '../../db/events/optimisticLocking.subscriber';
 import { TenantManagerHelper } from './utils/TenantManagerHelper';
@@ -8,7 +18,6 @@ import { AudibleEntitySubscriber } from '../../db/events/audibleentity.subscribe
 import { SessionManagerContext } from '../SessionManager/sessionmanager.context';
 import { SessionContext } from '../../core';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { RegisteredEntity } from '../../core/models/RegisteredEntity';
 
 @Injectable()
 export class TenantRepositoryService {
@@ -128,6 +137,12 @@ export class TenantRepositoryService {
             entity['updatedBy'] = currentUser;
 
             return __insert.apply(repository, [entity]);
+        };
+
+        const __softRemove = repository.softRemove;
+        repository.softRemove = function <T>(entityOrEntities: T | T[], options: SaveOptions) {
+            options.data = { action: 'soft-remove' };
+            return __softRemove.apply(repository, [entityOrEntities, options]);
         };
 
         return repository;
