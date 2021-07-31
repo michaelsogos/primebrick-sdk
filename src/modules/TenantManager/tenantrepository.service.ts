@@ -18,6 +18,7 @@ import { AudibleEntitySubscriber } from '../../db/events/audibleentity.subscribe
 import { SessionManagerContext } from '../SessionManager/sessionmanager.context';
 import { SessionContext } from '../../core';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { AudibleEntity } from '../../db';
 
 @Injectable()
 export class TenantRepositoryService {
@@ -139,10 +140,33 @@ export class TenantRepositoryService {
             return __insert.apply(repository, [entity]);
         };
 
+        const __save = repository.save;
         const __softRemove = repository.softRemove;
-        repository.softRemove = function <T>(entityOrEntities: T | T[], options: SaveOptions) {
+        repository.softRemove = function <TEntity>(
+            entityOrEntities: QueryDeepPartialEntity<TEntity> | QueryDeepPartialEntity<TEntity>[],
+            options: SaveOptions,
+        ) {
             options.data = { action: 'soft-remove' };
-            return __softRemove.apply(repository, [entityOrEntities, options]);
+
+            if (Array.isArray(entityOrEntities)) {
+                const audibleEntities: AudibleEntity[] = [];
+                const notAudibleEntities: QueryDeepPartialEntity<TEntity>[] = [];
+
+                for (const entity of entityOrEntities) {
+                    if (entity instanceof AudibleEntity) {
+                        entity.deletedOn = new Date();
+                        audibleEntities.push(entity);
+                    } else notAudibleEntities.push(entity);
+                }
+
+                if (audibleEntities.length > 0) return __save.apply(repository, [audibleEntities, options]);
+                if (notAudibleEntities.length > 0) return __softRemove.apply(repository, [notAudibleEntities, options]);
+            } else {
+                if (entityOrEntities instanceof AudibleEntity) {
+                    entityOrEntities.deletedOn = new Date();
+                    return __save.apply(repository, [entityOrEntities, options]);
+                } else return __softRemove.apply(repository, [entityOrEntities, options]);
+            }
         };
 
         return repository;

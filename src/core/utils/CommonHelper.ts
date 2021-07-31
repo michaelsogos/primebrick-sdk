@@ -192,7 +192,6 @@ export class CommonHelper {
             }
         }
 
-        //TODO: @michaelsogos -> find a way to save only entities that has been really changed; actually every imported entity will be updated even if already exists
         const savedEntities = await repository.save(entities, { chunk: definition.chunkSize || 1000, data: { importing: true } });
         savedEntitiesCount += savedEntities.length;
 
