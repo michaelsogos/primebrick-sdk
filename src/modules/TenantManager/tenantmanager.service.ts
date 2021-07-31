@@ -97,7 +97,6 @@ export class TenantManagerService {
         if (!tenant) connection = await this.tenantRepositoryService.getTenantConnection();
         else connection = await this.tenantRepositoryService.getDbConnectionByTenant(tenant as Tenant);
 
-        //TODO: @mso -> Create a model for return type array
         const descriptorFilePath = path.join(importFolderPath, descriptorFileName);
         if (!fs.existsSync(descriptorFilePath)) return [];
 

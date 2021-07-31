@@ -35,7 +35,6 @@ export class AudibleEntitySubscriber implements EntitySubscriberInterface<Audibl
     beforeUpdate(event: UpdateEvent<AudibleEntity>) {
         if (event.entity) {
             //Valid only for save() and softRemove(), because update() or softDelete() don't work with entity but go directly to DB
-            //FIXME: @mso -> https://github.com/typeorm/typeorm/issues/7162
             const userId = this.getCurrentUser();
             event.entity.updatedBy = userId;
 
@@ -44,7 +43,10 @@ export class AudibleEntitySubscriber implements EntitySubscriberInterface<Audibl
                 event.entity.importedOn = new Date();
             }
 
-            if (event.queryRunner.data['action'] == 'soft-remove') event.entity.deletedBy = userId;
+            if (event.queryRunner.data['action'] == 'soft-remove') {
+                event.entity.deletedBy = userId;
+                event.entity.updatedBy = userId;
+            }
         }
     }
 
