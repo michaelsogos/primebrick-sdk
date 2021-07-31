@@ -22,6 +22,7 @@ export class ImporterDefinition {
     type: ImporterDefinitionFileType;
     chunkSize: number;
     csvOptions: ImporterCsvOptions;
+    disableUpdate: boolean;
 }
 
 class ImporterCsvOptions {

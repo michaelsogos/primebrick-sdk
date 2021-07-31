@@ -41,6 +41,11 @@
                         "type": "number",
                         "default": 1000
                     },
+                    "disableUpdate": {
+                        "description": "True if existing entity should not be updated. Mandatory to set csvOptions.checkColumns property.",
+                        "type": "boolean",
+                        "default": false
+                    },
                     "csvOptions": {
                         "description": "The CSV options to parse file",
                         "type": "object",
@@ -170,12 +175,28 @@
                         "additionalProperties": false
                     }
                 },
-                "if": {
-                    "properties": { "type": { "const": "csv" } }
-                },
-                "then": {
-                    "required": ["csvOptions"]
-                },
+                "allOf": [
+                    {
+                        "if": {
+                            "properties": { "type": { "const": "csv" } }
+                        },
+                        "then": {
+                            "required": ["csvOptions"]
+                        }
+                    },
+                    {
+                        "if": {
+                            "properties": { "disableUpdate": { "const": true } }
+                        },
+                        "then": {
+                            "properties": {
+                                "csvOptions": {
+                                    "required": ["checkColumns"]
+                                }
+                            }
+                        }
+                    }
+                ],
                 "required": ["files", "type", "name"],
                 "additionalProperties": false
             }

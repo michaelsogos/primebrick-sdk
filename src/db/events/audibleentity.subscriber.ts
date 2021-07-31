@@ -24,14 +24,28 @@ export class AudibleEntitySubscriber implements EntitySubscriberInterface<Audibl
             const userId = this.getCurrentUser();
             event.entity.createdBy = userId;
             event.entity.updatedBy = userId;
+
+            if (event.queryRunner.data['importing'] === true) {
+                event.entity.importedBy = userId;
+                event.entity.importedOn = new Date();
+            }
         }
     }
 
     beforeUpdate(event: UpdateEvent<AudibleEntity>) {
-        if (event.entity)
+        if (event.entity) {
             //Valid only for save() and softRemove(), because update() or softDelete() don't work with entity but go directly to DB
             //FIXME: @mso -> https://github.com/typeorm/typeorm/issues/7162
-            event.entity.updatedBy = this.getCurrentUser();
+            const userId = this.getCurrentUser();
+            event.entity.updatedBy = userId;
+
+            if (event.queryRunner.data['importing'] === true) {
+                event.entity.importedBy = userId;
+                event.entity.importedOn = new Date();
+            }
+
+            if (event.queryRunner.data['action'] == 'soft-remove') event.entity.deletedBy = userId;
+        }
     }
 
     // @mso -> This event cannot be used to set deleteBy because it will be call only when the record is going to be erased forever from DB

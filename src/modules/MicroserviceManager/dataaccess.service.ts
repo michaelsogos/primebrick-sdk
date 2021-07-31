@@ -161,7 +161,7 @@ export class DataAccessService {
         const repository = dbconn.getRepository(entityName);
         const result = await repository.softDelete(entityId);
         if (result.affected != 1) throw new Error(`No record to archive found for entity "${entityName}" with ID {${entityId}}!`);
-        return new QueryResult([result.generatedMaps[0].id], result.affected);
+        return new QueryResult([], result.affected);
     }
 
     async archiveMany(entityName: string, entityIds: number[]): Promise<QueryResult> {
