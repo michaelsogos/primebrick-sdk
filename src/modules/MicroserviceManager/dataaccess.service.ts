@@ -7,6 +7,7 @@ import {
     QueryJoin,
     QueryJoinCondition,
     QueryField,
+    QueryShowArchivedEntity,
 } from './models/QueryPayload';
 import { QueryResult } from './models/QueryResult';
 import { Brackets, SelectQueryBuilder } from 'typeorm';
@@ -104,6 +105,9 @@ export class DataAccessService {
                     );
             }
         }
+
+        if (query.showArchivedEntities == QueryShowArchivedEntity.ALSO) queryBuilder.withDeleted();
+        else if (query.showArchivedEntities == QueryShowArchivedEntity.ONLY) queryBuilder.withDeleted().andWhere('$self.deletedOn is not null');
 
         if (query.sorts) {
             queryBuilder.orderBy();

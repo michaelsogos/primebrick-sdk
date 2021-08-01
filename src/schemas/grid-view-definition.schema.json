@@ -113,6 +113,12 @@
                         "additionalProperties": false
                     }
                 },
+                "showArchivedEntities": {
+                    "description": "Flag to change how archived record are retrieved",
+                    "type": "string",
+                    "enum": ["none", "only", "also"],
+                    "default": "none"
+                },
                 "filters": {
                     "description": "List of filters to apply",
                     "minItems": 1,
