@@ -335,6 +335,23 @@
                     },
                     "additionalProperties": false
                 },
+                "showArchived": {
+                    "description": "[ Show Archived ] action configuration",
+                    "type": "object",
+                    "properties": {
+                        "enableToolbarButton": {
+                            "description": "Show dropdown in toolbar",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "enableMenuLink": {
+                            "description": "Show link in menu",
+                            "type": "boolean",
+                            "default": false
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "search": {
                     "description": "[ Search ] action configuration",
                     "type": "object",

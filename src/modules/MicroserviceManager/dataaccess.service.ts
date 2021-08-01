@@ -107,7 +107,8 @@ export class DataAccessService {
         }
 
         if (query.showArchivedEntities == QueryShowArchivedEntity.ALSO) queryBuilder.withDeleted();
-        else if (query.showArchivedEntities == QueryShowArchivedEntity.ONLY) queryBuilder.withDeleted().andWhere('$self.deletedOn is not null');
+        else if (query.showArchivedEntities == QueryShowArchivedEntity.ONLY)
+            queryBuilder.withDeleted().andWhere(`${query.entity}.deletedOn is not null`);
 
         if (query.sorts) {
             queryBuilder.orderBy();
