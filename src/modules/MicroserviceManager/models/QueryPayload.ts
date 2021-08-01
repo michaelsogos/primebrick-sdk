@@ -2,6 +2,7 @@ export class QueryPayload {
     brick: string;
     entity: string;
     fields: (string | QueryField)[];
+    showArchivedEntities: QueryShowArchivedEntity;
     filters: QueryFilter[];
     sorts: QuerySort[];
     take: number;
@@ -52,4 +53,10 @@ export enum QuerySortDirection {
 export enum QueryJoinType {
     LEFT = 'LEFT',
     INNER = 'INNER',
+}
+
+export enum QueryShowArchivedEntity {
+    NONE = 'none',
+    ONLY = 'only',
+    ALSO = 'also',
 }
