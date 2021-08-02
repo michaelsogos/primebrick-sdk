@@ -1,5 +1,5 @@
 import { BaseEntityActionPayload } from './BaseEntityActionPayload';
 
-export class ArchivePayload extends BaseEntityActionPayload {
+export class ArchiveOrRestorePayload extends BaseEntityActionPayload {
     entityId: number;
 }

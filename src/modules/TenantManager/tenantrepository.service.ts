@@ -123,13 +123,18 @@ export class TenantRepositoryService {
             return __update.apply(repository, [criteria, partialEntity]);
         };
 
-        //const __softDelete = repository.softDelete;
         repository.softDelete = async function (
             criteria: string | number | string[] | number[] | Date | Date[] | ObjectID | ObjectID[] | FindConditions<TEntity>,
         ): Promise<UpdateResult> {
             const partialEntity: QueryDeepPartialEntity<unknown> = { deletedBy: currentUser, deletedOn: new Date(), updatedBy: currentUser };
             return __update.apply(repository, [criteria, partialEntity]);
-            // return __softDelete.apply(repository, [criteria]);
+        };
+
+        repository.restore = async function (
+            criteria: string | number | string[] | number[] | Date | Date[] | ObjectID | ObjectID[] | FindConditions<TEntity>,
+        ): Promise<UpdateResult> {
+            const partialEntity: QueryDeepPartialEntity<unknown> = { deletedBy: null, deletedOn: null, updatedBy: currentUser };
+            return __update.apply(repository, [criteria, partialEntity]);
         };
 
         const __insert = repository.insert;
@@ -166,6 +171,34 @@ export class TenantRepositoryService {
                     entityOrEntities.deletedOn = new Date();
                     return __save.apply(repository, [entityOrEntities, options]);
                 } else return __softRemove.apply(repository, [entityOrEntities, options]);
+            }
+        };
+
+        const __recover = repository.recover;
+        repository.recover = function <TEntity>(
+            entityOrEntities: QueryDeepPartialEntity<TEntity> | QueryDeepPartialEntity<TEntity>[],
+            options: SaveOptions,
+        ) {
+            options.data = { action: 'recover' };
+
+            if (Array.isArray(entityOrEntities)) {
+                const audibleEntities: AudibleEntity[] = [];
+                const notAudibleEntities: QueryDeepPartialEntity<TEntity>[] = [];
+
+                for (const entity of entityOrEntities) {
+                    if (entity instanceof AudibleEntity) {
+                        entity.deletedOn = null;
+                        audibleEntities.push(entity);
+                    } else notAudibleEntities.push(entity);
+                }
+
+                if (audibleEntities.length > 0) return __save.apply(repository, [audibleEntities, options]);
+                if (notAudibleEntities.length > 0) return __recover.apply(repository, [notAudibleEntities, options]);
+            } else {
+                if (entityOrEntities instanceof AudibleEntity) {
+                    entityOrEntities.deletedOn = null;
+                    return __save.apply(repository, [entityOrEntities, options]);
+                } else return __recover.apply(repository, [entityOrEntities, options]);
             }
         };
 

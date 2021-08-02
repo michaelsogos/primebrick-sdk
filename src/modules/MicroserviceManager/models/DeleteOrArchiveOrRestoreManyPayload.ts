@@ -1,5 +1,5 @@
 import { BaseEntityActionPayload } from './BaseEntityActionPayload';
 
-export class DeleteOrArchiveManyPayload extends BaseEntityActionPayload {
+export class DeleteOrArchiveOrRestoreManyPayload extends BaseEntityActionPayload {
     entityIds: number[];
 }

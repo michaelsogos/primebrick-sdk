@@ -186,6 +186,31 @@ export class DataAccessService {
         return new QueryResult([], result.length);
     }
 
+    async restore(entityName: string, entityId: number): Promise<QueryResult> {
+        const dbconn = await this.repositoryService.getTenantConnection();
+        const repository = dbconn.getRepository(entityName);
+        const result = await repository.restore(entityId);
+        if (result.affected != 1) throw new Error(`No record to restore found for entity "${entityName}" with ID {${entityId}}!`);
+        return new QueryResult([], result.affected);
+    }
+
+    async restoreMany(entityName: string, entityIds: number[]): Promise<QueryResult> {
+        const dbconn = await this.repositoryService.getTenantConnection();
+        const repository = dbconn.getRepository(entityName);
+
+        //FIXME: @mso -> Typeorm actually doesn't support for SoftDeleteOptions in order to play with chunck size
+        //That's why we use remove() method making useless fake entities
+        const fakeEntities = [];
+        for (const id of entityIds) {
+            const fakeEntity = repository.create();
+            fakeEntity['id'] = id;
+            fakeEntities.push(fakeEntity);
+        }
+
+        const result = await repository.recover(fakeEntities, { chunk: 1000 });
+        return new QueryResult([], result.length);
+    }
+
     async info(query: QueryPayload): Promise<QueryResult> {
         query.fields = [];
         const versionField = new QueryField();

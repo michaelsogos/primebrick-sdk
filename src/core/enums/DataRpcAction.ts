@@ -7,7 +7,9 @@ export enum DataRpcAction {
     DATA_DELETE = 'data:delete',
     DATA_DELETE_MANY = 'data:deleteMany',
     DATA_ARCHIVE = 'data:archive',
-    DATA_ARCHIVE_MANY = 'data:archiveMany'
+    DATA_ARCHIVE_MANY = 'data:archiveMany',
+    DATA_RESTORE = 'data:restore',
+    DATA_RESTORE_MANY = 'data:restoreMany',
 }
 
 export function ComposeModuleRpcAction(moduleName: String, rpcAction: DataRpcAction) {
