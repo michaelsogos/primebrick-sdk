@@ -34,7 +34,7 @@ export class AudibleEntitySubscriber implements EntitySubscriberInterface<Audibl
 
     beforeUpdate(event: UpdateEvent<AudibleEntity>) {
         if (event.entity) {
-            //Valid only for save() and softRemove(), because update() or softDelete() don't work with entity but go directly to DB
+            //Valid only for save(), softRemove() and recover(); because update() or softDelete() don't work with entity but go directly to DB
             const userId = this.getCurrentUser();
             event.entity.updatedBy = userId;
 
@@ -45,7 +45,10 @@ export class AudibleEntitySubscriber implements EntitySubscriberInterface<Audibl
 
             if (event.queryRunner.data['action'] == 'soft-remove') {
                 event.entity.deletedBy = userId;
-                event.entity.updatedBy = userId;
+            }
+
+            if (event.queryRunner.data['action'] == 'recover') {
+                event.entity.deletedBy = null;
             }
         }
     }

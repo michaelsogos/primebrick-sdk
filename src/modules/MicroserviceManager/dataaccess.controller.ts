@@ -3,7 +3,8 @@ import { MessagePattern } from '@nestjs/microservices';
 import { DataRpcAction } from '../../core/enums/DataRpcAction';
 import { MessagePayload } from '../ProcessorManager/models/MessagePayload';
 import { DataAccessService } from './dataaccess.service';
-import { DeleteOrArchiveManyPayload } from './models/DeleteOrArchiveManyPayload';
+import { ArchiveOrRestorePayload } from './models/ArchiveOrRestorePayload';
+import { DeleteOrArchiveOrRestoreManyPayload } from './models/DeleteOrArchiveOrRestoreManyPayload';
 import { DeletePayload } from './models/DeletePayload';
 import { QueryPayload } from './models/QueryPayload';
 import { QueryResult } from './models/QueryResult';
@@ -43,20 +44,32 @@ export class DataAccessController {
     }
 
     @MessagePattern(`${process.brickName}.${DataRpcAction.DATA_DELETE_MANY}`)
-    async deleteMany(message: MessagePayload<DeleteOrArchiveManyPayload>): Promise<MessagePayload<QueryResult>> {
+    async deleteMany(message: MessagePayload<DeleteOrArchiveOrRestoreManyPayload>): Promise<MessagePayload<QueryResult>> {
         const response = await this.dataAccessService.deleteMany(message.data.entityName, message.data.entityIds);
         return MessagePayload.wrap(response);
     }
 
     @MessagePattern(`${process.brickName}.${DataRpcAction.DATA_ARCHIVE}`)
-    async archive(message: MessagePayload<DeletePayload>): Promise<MessagePayload<QueryResult>> {
+    async archive(message: MessagePayload<ArchiveOrRestorePayload>): Promise<MessagePayload<QueryResult>> {
         const response = await this.dataAccessService.archive(message.data.entityName, message.data.entityId);
         return MessagePayload.wrap(response);
     }
 
     @MessagePattern(`${process.brickName}.${DataRpcAction.DATA_ARCHIVE_MANY}`)
-    async archiveMany(message: MessagePayload<DeleteOrArchiveManyPayload>): Promise<MessagePayload<QueryResult>> {
+    async archiveMany(message: MessagePayload<DeleteOrArchiveOrRestoreManyPayload>): Promise<MessagePayload<QueryResult>> {
         const response = await this.dataAccessService.archiveMany(message.data.entityName, message.data.entityIds);
+        return MessagePayload.wrap(response);
+    }
+
+    @MessagePattern(`${process.brickName}.${DataRpcAction.DATA_RESTORE}`)
+    async restore(message: MessagePayload<ArchiveOrRestorePayload>): Promise<MessagePayload<QueryResult>> {
+        const response = await this.dataAccessService.restore(message.data.entityName, message.data.entityId);
+        return MessagePayload.wrap(response);
+    }
+
+    @MessagePattern(`${process.brickName}.${DataRpcAction.DATA_RESTORE_MANY}`)
+    async restoreMany(message: MessagePayload<DeleteOrArchiveOrRestoreManyPayload>): Promise<MessagePayload<QueryResult>> {
+        const response = await this.dataAccessService.restoreMany(message.data.entityName, message.data.entityIds);
         return MessagePayload.wrap(response);
     }
 
