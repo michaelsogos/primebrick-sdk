@@ -7,7 +7,7 @@ export class OptimisticLockingSubscriber implements EntitySubscriberInterface<Au
     beforeUpdate(event: UpdateEvent<AudibleEntity>): void {
         //If entity is going to be archived then we don't check for optimistic lock
         //Theoretically a softRemove() or softDelete() should change only fields deletedOn, deletedBy, updatedOn and updatedBy
-        if (event.queryRunner.data['action'] == 'soft-remove') return;
+        if (event.queryRunner.data['action'] == 'soft-remove' || event.queryRunner.data['action'] == 'recover') return;
 
         // To know if an entity has a version number, we check if versionColumn
         // is defined in the metadatas of that entity.
