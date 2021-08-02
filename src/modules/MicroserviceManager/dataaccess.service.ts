@@ -24,7 +24,6 @@ export class DataAccessService {
         const queryBuilder = await this.getQueryBuilder(query);
 
         const result = await queryBuilder.getManyAndCount();
-        this.logger.debug(result[1].toString());
         return new QueryResult(result[0], result[1]);
     }
 
