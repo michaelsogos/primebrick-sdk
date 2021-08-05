@@ -1,0 +1,37 @@
+{
+    "$schema": "./grid-view-definition.schema.json",
+    "name": "",
+    "labelKey": "",
+    "entityNameLabelKey": "",
+    "definition": {
+        "brick": "",
+        "entity": "",
+        "type": "grid",
+        "entityNameTemplate": "for Sale Order it could be '${code} - ${total_amount - total_discount}€' => 'ORD001 - 123.00€'",
+        "fields": [
+            {
+                "name": "",
+                "labelKey": ""
+            }
+        ]
+    },
+    "actions": {
+        "filter": {
+            "enableColumns": false,
+            "fields": [
+                {
+                    "field": "",
+                    "type": "list",
+                    "listOptions": {
+                        "values": [
+                            {
+                                "labelKey": "",
+                                "value": ""
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}

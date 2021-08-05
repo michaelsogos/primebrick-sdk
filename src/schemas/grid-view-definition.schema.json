@@ -419,8 +419,8 @@
                             "type": "boolean",
                             "default": false
                         },
-                        "enableToolbarButton": {
-                            "description": "Show button in toolbar",
+                        "enableDialog": {
+                            "description": "Show filters in a modal dialog",
                             "type": "boolean",
                             "default": false
                         },
@@ -438,13 +438,127 @@
                                     "type": {
                                         "description": "Type of filter",
                                         "type": "string",
-                                        "enum": ["string", "list", "search"]
+                                        "enum": ["string", "list", "search"],
+                                        "default": "string"
+                                    },
+                                    "listOptions": {
+                                        "description": "List options to configure dropdown filter component",
+                                        "type": "object",
+                                        "properties": {
+                                            "enableMultiSelection": {
+                                                "description": "True to allow selection of more than one dropdown item",
+                                                "type": "boolean",
+                                                "default": false
+                                            },
+                                            "values": {
+                                                "description": "A set of pre-defined items to populate dropdown",
+                                                "type": "array",
+                                                "minItems": 1,
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "labelKey": {
+                                                            "description": "Item label translatable key",
+                                                            "type": "string"
+                                                        },
+                                                        "value": {
+                                                            "description": "Item value",
+                                                            "type": ["string", "number"]
+                                                        }
+                                                    },
+                                                    "required": ["labelKey", "value"],
+                                                    "additionalProperties": false
+                                                }
+                                            },
+                                            "query": {
+                                                "description": "Query to retrieve items to populate dropdown",
+                                                "type": "object",
+                                                "properties": {
+                                                    "brick": {
+                                                        "description": "Brick name",
+                                                        "type": "string"
+                                                    },
+                                                    "entity": {
+                                                        "description": "Entity name",
+                                                        "type": "string"
+                                                    },
+                                                    "filters": {
+                                                        "description": "List of filters to apply",
+                                                        "minItems": 1,
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "leftOperator": {
+                                                                    "description": "Logical operator AND/OR before the expression block",
+                                                                    "type": "string",
+                                                                    "enum": ["AND", "OR"],
+                                                                    "default": "AND"
+                                                                },
+                                                                "expressionOperator": {
+                                                                    "description": "Logical operator AND/OR between expression values",
+                                                                    "type": "string",
+                                                                    "enum": ["AND", "OR"],
+                                                                    "default": "AND"
+                                                                },
+                                                                "expressions": {
+                                                                    "description": "Array of conditions to apply",
+                                                                    "type": "array",
+                                                                    "minItems": 1,
+                                                                    "items": {
+                                                                        "type": "string"
+                                                                    }
+                                                                },
+                                                                "expressionValues": {
+                                                                    "description": "Object with parametrized values",
+                                                                    "examples": ["{valueAlias: value}"],
+                                                                    "type": "object"
+                                                                }
+                                                            },
+                                                            "required": ["expressions"],
+                                                            "additionalProperties": false
+                                                        }
+                                                    },
+                                                    "sorts": {
+                                                        "description": "List of sort conditions to apply",
+                                                        "type": "array",
+                                                        "minItems": 1,
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "field": {
+                                                                    "description": "Field name to sort with",
+                                                                    "type": "string"
+                                                                },
+                                                                "direction": {
+                                                                    "description": "Direction to sort with",
+                                                                    "type": "string",
+                                                                    "enum": ["ASC", "DESC"],
+                                                                    "default": "ASC"
+                                                                }
+                                                            },
+                                                            "required": ["field"],
+                                                            "additionalProperties": false
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "additionalProperties": false
                                     }
                                 },
-                                "additionalProperties": false
+                                "required": ["field", "type"],
+                                "additionalProperties": false,
+                                "if": {
+                                    "properties": { "type": { "const": "list" } }
+                                },
+                                "then": {
+                                    "required": ["listOptions"]
+                                }
                             }
                         }
                     },
+                    "required": ["fields"],
                     "additionalProperties": false
                 }
             },
