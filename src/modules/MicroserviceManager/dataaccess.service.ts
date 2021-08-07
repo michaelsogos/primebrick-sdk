@@ -21,17 +21,27 @@ export class DataAccessService {
     }
 
     async find(query: QueryPayload): Promise<QueryResult> {
-        const queryBuilder = await this.getQueryBuilder(query);
+        try {
+            const queryBuilder = await this.getQueryBuilder(query);
 
-        const result = await queryBuilder.getManyAndCount();
-        return new QueryResult(result[0], result[1]);
+            const result = await queryBuilder.getManyAndCount();
+            return new QueryResult(result[0], result[1]);
+        } catch (err) {
+            this.logger.error(err);
+            throw err;
+        }
     }
 
     async findOne(query: QueryPayload): Promise<QueryResult> {
-        const queryBuilder = await this.getQueryBuilder(query);
+        try {
+            const queryBuilder = await this.getQueryBuilder(query);
 
-        const result = await queryBuilder.getOne();
-        return new QueryResult([result], 1);
+            const result = await queryBuilder.getOne();
+            return new QueryResult([result], 1);
+        } catch (err) {
+            this.logger.error(err);
+            throw err;
+        }
     }
 
     private async getQueryBuilder(query: QueryPayload): Promise<SelectQueryBuilder<unknown>> {
@@ -127,164 +137,204 @@ export class DataAccessService {
     }
 
     async save(entityName: string, entity: unknown): Promise<QueryResult> {
-        const dbconn = await this.repositoryService.getTenantConnection();
-        const repository = dbconn.getRepository(entityName);
-        const result = await repository.save(repository.create(entity));
-        return new QueryResult([result], 1);
+        try {
+            const dbconn = await this.repositoryService.getTenantConnection();
+            const repository = dbconn.getRepository(entityName);
+            const result = await repository.save(repository.create(entity));
+            return new QueryResult([result], 1);
+        } catch (err) {
+            this.logger.error(err);
+            throw err;
+        }
     }
 
     async delete(entityName: string, entityId: number, isRecoverable: boolean = true): Promise<QueryResult> {
-        const dbconn = await this.repositoryService.getTenantConnection();
-        const repository = dbconn.getRepository(entityName);
-        let entityBackup = null;
-        if (isRecoverable) entityBackup = await repository.findOne(entityId);
-        const result = await repository.delete(entityId);
-        if (result.affected != 1) throw new Error(`No record to delete found for entity "${entityName}" with ID {${entityId}}!`);
-        return new QueryResult(isRecoverable ? [entityBackup] : [], result.affected);
+        try {
+            const dbconn = await this.repositoryService.getTenantConnection();
+            const repository = dbconn.getRepository(entityName);
+            let entityBackup = null;
+            if (isRecoverable) entityBackup = await repository.findOne(entityId);
+            const result = await repository.delete(entityId);
+            if (result.affected != 1) throw new Error(`No record to delete found for entity "${entityName}" with ID {${entityId}}!`);
+            return new QueryResult(isRecoverable ? [entityBackup] : [], result.affected);
+        } catch (err) {
+            this.logger.error(err);
+            throw err;
+        }
     }
 
     async deleteMany(entityName: string, entityIds: number[]): Promise<QueryResult> {
-        const dbconn = await this.repositoryService.getTenantConnection();
-        const repository = dbconn.getRepository(entityName);
+        try {
+            const dbconn = await this.repositoryService.getTenantConnection();
+            const repository = dbconn.getRepository(entityName);
 
-        //FIXME: @mso -> Typeorm actually doesn't support for DeleteOptions in order to play with chunck size
-        //That's why we use remove() method making useless fake entities
-        const fakeEntities = [];
-        for (const id of entityIds) {
-            const fakeEntity = repository.create();
-            fakeEntity['id'] = id;
-            fakeEntities.push(fakeEntity);
+            //FIXME: @mso -> Typeorm actually doesn't support for DeleteOptions in order to play with chunck size
+            //That's why we use remove() method making useless fake entities
+            const fakeEntities = [];
+            for (const id of entityIds) {
+                const fakeEntity = repository.create();
+                fakeEntity['id'] = id;
+                fakeEntities.push(fakeEntity);
+            }
+
+            const result = await repository.remove(fakeEntities, { chunk: 1000 });
+            return new QueryResult([], result.length);
+        } catch (err) {
+            this.logger.error(err);
+            throw err;
         }
-
-        const result = await repository.remove(fakeEntities, { chunk: 1000 });
-        return new QueryResult([], result.length);
     }
 
     async archive(entityName: string, entityId: number): Promise<QueryResult> {
-        const dbconn = await this.repositoryService.getTenantConnection();
-        const repository = dbconn.getRepository(entityName);
-        const result = await repository.softDelete(entityId);
-        if (result.affected != 1) throw new Error(`No record to archive found for entity "${entityName}" with ID {${entityId}}!`);
-        return new QueryResult([], result.affected);
+        try {
+            const dbconn = await this.repositoryService.getTenantConnection();
+            const repository = dbconn.getRepository(entityName);
+            const result = await repository.softDelete(entityId);
+            if (result.affected != 1) throw new Error(`No record to archive found for entity "${entityName}" with ID {${entityId}}!`);
+            return new QueryResult([], result.affected);
+        } catch (err) {
+            this.logger.error(err);
+            throw err;
+        }
     }
 
     async archiveMany(entityName: string, entityIds: number[]): Promise<QueryResult> {
-        const dbconn = await this.repositoryService.getTenantConnection();
-        const repository = dbconn.getRepository(entityName);
+        try {
+            const dbconn = await this.repositoryService.getTenantConnection();
+            const repository = dbconn.getRepository(entityName);
 
-        //FIXME: @mso -> Typeorm actually doesn't support for SoftDeleteOptions in order to play with chunck size
-        //That's why we use remove() method making useless fake entities
-        const fakeEntities = [];
-        for (const id of entityIds) {
-            const fakeEntity = repository.create();
-            fakeEntity['id'] = id;
-            fakeEntities.push(fakeEntity);
+            //FIXME: @mso -> Typeorm actually doesn't support for SoftDeleteOptions in order to play with chunck size
+            //That's why we use remove() method making useless fake entities
+            const fakeEntities = [];
+            for (const id of entityIds) {
+                const fakeEntity = repository.create();
+                fakeEntity['id'] = id;
+                fakeEntities.push(fakeEntity);
+            }
+
+            const result = await repository.softRemove(fakeEntities, { chunk: 1000 });
+            return new QueryResult([], result.length);
+        } catch (err) {
+            this.logger.error(err);
+            throw err;
         }
-
-        const result = await repository.softRemove(fakeEntities, { chunk: 1000 });
-        return new QueryResult([], result.length);
     }
 
     async restore(entityName: string, entityId: number): Promise<QueryResult> {
-        const dbconn = await this.repositoryService.getTenantConnection();
-        const repository = dbconn.getRepository(entityName);
-        const result = await repository.restore(entityId);
-        if (result.affected != 1) throw new Error(`No record to restore found for entity "${entityName}" with ID {${entityId}}!`);
-        return new QueryResult([], result.affected);
+        try {
+            const dbconn = await this.repositoryService.getTenantConnection();
+            const repository = dbconn.getRepository(entityName);
+            const result = await repository.restore(entityId);
+            if (result.affected != 1) throw new Error(`No record to restore found for entity "${entityName}" with ID {${entityId}}!`);
+            return new QueryResult([], result.affected);
+        } catch (err) {
+            this.logger.error(err);
+            throw err;
+        }
     }
 
     async restoreMany(entityName: string, entityIds: number[]): Promise<QueryResult> {
-        const dbconn = await this.repositoryService.getTenantConnection();
-        const repository = dbconn.getRepository(entityName);
+        try {
+            const dbconn = await this.repositoryService.getTenantConnection();
+            const repository = dbconn.getRepository(entityName);
 
-        //FIXME: @mso -> Typeorm actually doesn't support for SoftDeleteOptions in order to play with chunck size
-        //That's why we use remove() method making useless fake entities
-        const fakeEntities = [];
-        for (const id of entityIds) {
-            const fakeEntity = repository.create();
-            fakeEntity['id'] = id;
-            fakeEntities.push(fakeEntity);
+            //FIXME: @mso -> Typeorm actually doesn't support for SoftDeleteOptions in order to play with chunck size
+            //That's why we use remove() method making useless fake entities
+            const fakeEntities = [];
+            for (const id of entityIds) {
+                const fakeEntity = repository.create();
+                fakeEntity['id'] = id;
+                fakeEntities.push(fakeEntity);
+            }
+
+            const result = await repository.recover(fakeEntities, { chunk: 1000 });
+            return new QueryResult([], result.length);
+        } catch (err) {
+            this.logger.error(err);
+            throw err;
         }
-
-        const result = await repository.recover(fakeEntities, { chunk: 1000 });
-        return new QueryResult([], result.length);
     }
 
     async info(query: QueryPayload): Promise<QueryResult> {
-        query.fields = [];
-        const versionField = new QueryField();
-        versionField.expression = '$self.version';
-        versionField.alias = 'version';
-        const createdOnField = new QueryField();
-        createdOnField.expression = '$self.createdOn';
-        createdOnField.alias = 'createdOn';
-        const updatedOnField = new QueryField();
-        updatedOnField.expression = '$self.updatedOn';
-        updatedOnField.alias = 'updatedOn';
-        const deletedOnField = new QueryField();
-        deletedOnField.expression = '$self.deletedOn';
-        deletedOnField.alias = 'deletedOn';
-        const importedOnField = new QueryField();
-        importedOnField.expression = '$self.importedOn';
-        importedOnField.alias = 'importedOn';
-        query.fields.push(...[versionField, createdOnField, updatedOnField, deletedOnField, importedOnField]);
+        try {
+            query.fields = [];
+            const versionField = new QueryField();
+            versionField.expression = '$self.version';
+            versionField.alias = 'version';
+            const createdOnField = new QueryField();
+            createdOnField.expression = '$self.createdOn';
+            createdOnField.alias = 'createdOn';
+            const updatedOnField = new QueryField();
+            updatedOnField.expression = '$self.updatedOn';
+            updatedOnField.alias = 'updatedOn';
+            const deletedOnField = new QueryField();
+            deletedOnField.expression = '$self.deletedOn';
+            deletedOnField.alias = 'deletedOn';
+            const importedOnField = new QueryField();
+            importedOnField.expression = '$self.importedOn';
+            importedOnField.alias = 'importedOn';
+            query.fields.push(...[versionField, createdOnField, updatedOnField, deletedOnField, importedOnField]);
 
-        query.joins = [];
-        const ownerJoin = new QueryJoin();
-        ownerJoin.entity = 'User';
-        ownerJoin.alias = 'owner';
-        ownerJoin.type = QueryJoinType.LEFT;
-        const ownerJoinCondition = new QueryJoinCondition();
-        ownerJoinCondition.expression = `owner.id = $self.createdBy`;
-        ownerJoin.condition = ownerJoinCondition;
-        const ownerNameField = new QueryField();
-        ownerNameField.expression = "(owner.firstName || ' ' || owner.lastName)";
-        ownerNameField.alias = 'createdBy';
-        ownerJoin.fields = [ownerNameField];
-        query.joins.push(ownerJoin);
+            query.joins = [];
+            const ownerJoin = new QueryJoin();
+            ownerJoin.entity = 'User';
+            ownerJoin.alias = 'owner';
+            ownerJoin.type = QueryJoinType.LEFT;
+            const ownerJoinCondition = new QueryJoinCondition();
+            ownerJoinCondition.expression = `owner.id = $self.createdBy`;
+            ownerJoin.condition = ownerJoinCondition;
+            const ownerNameField = new QueryField();
+            ownerNameField.expression = "(owner.firstName || ' ' || owner.lastName)";
+            ownerNameField.alias = 'createdBy';
+            ownerJoin.fields = [ownerNameField];
+            query.joins.push(ownerJoin);
 
-        const editorJoin = new QueryJoin();
-        editorJoin.entity = 'User';
-        editorJoin.alias = 'editor';
-        editorJoin.type = QueryJoinType.LEFT;
-        const editorJoinCondition = new QueryJoinCondition();
-        editorJoinCondition.expression = `editor.id = $self.updatedBy`;
-        editorJoin.condition = editorJoinCondition;
-        const editorNameField = new QueryField();
-        editorNameField.expression = "(editor.firstName || ' ' || editor.lastName)";
-        editorNameField.alias = 'updatedBy';
-        editorJoin.fields = [editorNameField];
-        query.joins.push(editorJoin);
+            const editorJoin = new QueryJoin();
+            editorJoin.entity = 'User';
+            editorJoin.alias = 'editor';
+            editorJoin.type = QueryJoinType.LEFT;
+            const editorJoinCondition = new QueryJoinCondition();
+            editorJoinCondition.expression = `editor.id = $self.updatedBy`;
+            editorJoin.condition = editorJoinCondition;
+            const editorNameField = new QueryField();
+            editorNameField.expression = "(editor.firstName || ' ' || editor.lastName)";
+            editorNameField.alias = 'updatedBy';
+            editorJoin.fields = [editorNameField];
+            query.joins.push(editorJoin);
 
-        const deleterJoin = new QueryJoin();
-        deleterJoin.entity = 'User';
-        deleterJoin.alias = 'deleter';
-        deleterJoin.type = QueryJoinType.LEFT;
-        const deleterJoinCondition = new QueryJoinCondition();
-        deleterJoinCondition.expression = `deleter.id = $self.deletedBy`;
-        deleterJoin.condition = deleterJoinCondition;
-        const deleterNameField = new QueryField();
-        deleterNameField.expression = "(deleter.firstName || ' ' || deleter.lastName)";
-        deleterNameField.alias = 'deletedBy';
-        deleterJoin.fields = [deleterNameField];
-        query.joins.push(deleterJoin);
+            const deleterJoin = new QueryJoin();
+            deleterJoin.entity = 'User';
+            deleterJoin.alias = 'deleter';
+            deleterJoin.type = QueryJoinType.LEFT;
+            const deleterJoinCondition = new QueryJoinCondition();
+            deleterJoinCondition.expression = `deleter.id = $self.deletedBy`;
+            deleterJoin.condition = deleterJoinCondition;
+            const deleterNameField = new QueryField();
+            deleterNameField.expression = "(deleter.firstName || ' ' || deleter.lastName)";
+            deleterNameField.alias = 'deletedBy';
+            deleterJoin.fields = [deleterNameField];
+            query.joins.push(deleterJoin);
 
-        const importerJoin = new QueryJoin();
-        importerJoin.entity = 'User';
-        importerJoin.alias = 'importer';
-        importerJoin.type = QueryJoinType.LEFT;
-        const importerJoinCondition = new QueryJoinCondition();
-        importerJoinCondition.expression = `importer.id = $self.importedBy`;
-        importerJoin.condition = importerJoinCondition;
-        const importerNameField = new QueryField();
-        importerNameField.expression = "(importer.firstName || ' ' || importer.lastName)";
-        importerNameField.alias = 'importedBy';
-        importerJoin.fields = [importerNameField];
-        query.joins.push(importerJoin);
+            const importerJoin = new QueryJoin();
+            importerJoin.entity = 'User';
+            importerJoin.alias = 'importer';
+            importerJoin.type = QueryJoinType.LEFT;
+            const importerJoinCondition = new QueryJoinCondition();
+            importerJoinCondition.expression = `importer.id = $self.importedBy`;
+            importerJoin.condition = importerJoinCondition;
+            const importerNameField = new QueryField();
+            importerNameField.expression = "(importer.firstName || ' ' || importer.lastName)";
+            importerNameField.alias = 'importedBy';
+            importerJoin.fields = [importerNameField];
+            query.joins.push(importerJoin);
 
-        const queryBuilder = await this.getQueryBuilder(query);
+            const queryBuilder = await this.getQueryBuilder(query);
 
-        const result = await queryBuilder.getRawOne();
-        return new QueryResult([result], 1);
+            const result = await queryBuilder.getRawOne();
+            return new QueryResult([result], 1);
+        } catch (err) {
+            this.logger.error(err);
+            throw err;
+        }
     }
 }

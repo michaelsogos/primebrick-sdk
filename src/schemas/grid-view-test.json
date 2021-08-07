@@ -23,12 +23,19 @@
                     "field": "",
                     "type": "list",
                     "listOptions": {
-                        "values": [
-                            {
-                                "labelKey": "",
-                                "value": ""
-                            }
-                        ]
+                        // "values": [
+                        //     {
+                        //         "labelKey": "",
+                        //         "value": ""
+                        //     }
+                        // ],
+                        "query": {
+                            "brick": "",
+                            "entity": "",
+                            "valueFieldName": "",
+                            "labelKeyFieldName": "",
+                            "searchFields": [""]
+                        }
                     }
                 }
             ]
