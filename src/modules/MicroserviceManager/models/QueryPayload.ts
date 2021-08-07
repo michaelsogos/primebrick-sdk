@@ -8,6 +8,7 @@ export class QueryPayload {
     take: number;
     skip: number;
     joins: QueryJoin[];
+    excludeIDField: boolean;
 }
 
 export class QueryFilter {
