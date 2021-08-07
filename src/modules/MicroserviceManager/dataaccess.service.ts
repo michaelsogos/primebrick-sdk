@@ -52,7 +52,7 @@ export class DataAccessService {
         const queryBuilder = dbconn.createQueryBuilder(query.entity, query.entity);
 
         if (query.fields && query.fields.length > 0) {
-            queryBuilder.select([`${query.entity}.id`]);
+            if (!query.excludeIDField) queryBuilder.select([`${query.entity}.id`]);
             for (const field of query.fields) {
                 if (typeof field === 'string') queryBuilder.addSelect(`${query.entity}.${field}`);
                 else queryBuilder.addSelect(field.expression.replace('$self', query.entity), field.alias);
