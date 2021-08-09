@@ -12,5 +12,5 @@ export { ViewDefinition } from './models/ViewDefinition';
 export { ComposeModuleRpcAction, DataRpcAction } from './enums/DataRpcAction';
 export { DataImport } from './models/DataImport';
 export { DataImportLog } from './models/DataImportLog';
-export { RegisterEntity } from './decorators/registerentity.decorator';
+export { MainBoot } from './decorators/mainboot.decorator';
 export { AppManifest } from './models/AppManifest';
