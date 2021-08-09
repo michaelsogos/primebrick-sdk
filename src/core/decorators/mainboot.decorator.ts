@@ -2,10 +2,13 @@ import { RegisteredEntity } from '../models/RegisteredEntity';
 import * as fs from 'fs';
 import * as path from 'path';
 import { CommonHelper } from '../utils/CommonHelper';
+import { MainBootOptions } from '../models/MainBootOptions';
 
-export function MainBoot(brickName: string, options: { startMethod: string }): Function {
+export function MainBoot(brickName: string, options?: MainBootOptions): Function {
     if (!brickName) throw new Error("Cannot boot up application because brick name not definded! Maybe @MainBoot('brick name') missing!");
     if (process.registeredEntities == null) process.registeredEntities = [];
+
+    if (!options) options = new MainBootOptions();
     options.startMethod = options.startMethod || 'start';
 
     process.brickName = brickName;
