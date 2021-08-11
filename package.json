@@ -15,13 +15,13 @@
         "*.d.ts"
     ],
     "exports": {
-        "./": "./src/core/index.ts",
-        "./modules": "./src/modules/index.js",
-        "./models": "./src/core/models/index.ts",
-        "./enums": "./src/core/enums/index.ts",
-        "./decorators": "./src/core/decorators/index.ts",
-        "./nest": "./src/nest.addon.ts",
-        "./orm": "./src/db/index.ts"
+        "./core": "./dist/core/index.js",
+        "./modules": "./dist/modules/index.js",
+        "./models": "./dist/core/models/index.js",
+        "./enums": "./dist/core/enums/index.js",
+        "./decorators": "./dist/core/decorators/index.js",
+        "./nest": "./dist/nest.addon.js",
+        "./orm": "./dist/db/index.js"
     },
     "bugs": {
         "url": "https://github.com/michaelsogos/primebrick-sdk/issues",
