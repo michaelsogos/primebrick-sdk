@@ -1,3 +1,5 @@
+import { RegisteredEntity } from "./RegisteredEntity";
+
 export interface PrimebrickConfig {
     app: AppConfig;
     database: DatabaseConfig;
@@ -18,4 +20,13 @@ export interface AppConfig {
         tenantsLoader: number;
     };
     natsUrl: string;
+}
+
+declare global {
+    namespace NodeJS {
+        interface Process {
+            brickName: string;
+            registeredEntities: RegisteredEntity[];
+        }
+    }
 }
