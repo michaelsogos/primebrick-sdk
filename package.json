@@ -12,7 +12,6 @@
         "package.json",
         "LICENSE",
         "dist/**",
-        "@types/**",
         "*.d.ts"
     ],
     "exports": {
