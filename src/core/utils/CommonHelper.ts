@@ -247,6 +247,7 @@ export class CommonHelper {
             switch (tenant.tenant_auth_config.auth_type) {
                 case 'local':
                     result.userProfile = LocalStrategyHelper.getUserProfileFromHttpRequest(request);
+                    break;
                 case 'oauth2':
                     throw new Error('Not implemented yet!');
                 case 'saml2':
