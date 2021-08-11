@@ -21,7 +21,7 @@
         "./models": "./src/core/models/index.ts",
         "./enums": "./src/core/enums/index.ts",
         "./decorators": "./src/core/decorators/index.ts",
-        "./nest": "./src/modules/nest.addon.ts",
+        "./nest": "./src/nest.addon.ts",
         "./orm": "./src/db/index.ts"
     },
     "bugs": {
