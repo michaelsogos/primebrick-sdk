@@ -1,6 +1,5 @@
 import { Inject } from '@nestjs/common';
 import { EntitySubscriberInterface, EventSubscriber, InsertEvent, RemoveEvent, UpdateEvent } from 'typeorm';
-import { SessionContext } from '../../core';
 import { SessionManagerContext } from '../../modules/SessionManager/sessionmanager.context';
 import { AudibleEntity } from '../entities/audible.entity';
 

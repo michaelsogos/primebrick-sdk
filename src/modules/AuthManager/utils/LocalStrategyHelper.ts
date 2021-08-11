@@ -3,9 +3,9 @@ import { Request } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { LocalAuthConfig } from '../models/LocalAuthConfig';
 import { Tenant } from '../../TenantManager/entities/Tenant.entity';
-import { UserProfile } from '../models/UserProfile';
-import { MessagePayload } from '../../ProcessorManager/models/MessagePayload';
-import { AuthTokenPayload } from '../models/AuthTokenPayload';
+import { UserProfile } from '../../../core/models/UserProfile';
+import { AuthTokenPayload } from '../../../core/models/AuthTokenPayload';
+import { AuthManagerHelper } from './AuthManagerHelper';
 
 export class LocalStrategyHelper {
     static validateRequest(tenantConfig: Tenant, token: string): boolean {
@@ -32,7 +32,7 @@ export class LocalStrategyHelper {
                 //This allow developers to make SECURE CONTROLLER on microservice which need a user to be logged
                 //usually because user profile can be used to add kind of security check accessing data (ROLE PERMISSION, FIELD PERMISSION, etc.)
                 //This comment is to keep track of this choise and in case implement in future a better and more secure approach
-                return this.getUserProfileFromRpcRequest(context.switchToRpc().getData()) ? true : false;
+                return AuthManagerHelper.getUserProfileFromRpcRequest(context.switchToRpc().getData()) ? true : false;
             case 'ws':
                 throw new Error('Not implemented yet!');
         }
@@ -48,25 +48,10 @@ export class LocalStrategyHelper {
         return token;
     }
 
-    static getUserProfileFromExecutionContext(context: ExecutionContext): UserProfile {
-        switch (context.getType()) {
-            case 'http':
-                return LocalStrategyHelper.getUserProfileFromHttpRequest(context.switchToHttp().getRequest());
-            case 'rpc':
-                return LocalStrategyHelper.getUserProfileFromRpcRequest(context.switchToRpc().getData());
-            case 'ws':
-                throw new Error('Not implemented yet!');
-        }
-    }
-
     static getUserProfileFromHttpRequest(request: Request) {
         const token = this.getBearerToken(request);
         const userProfile = jwt.decode(token) as UserProfile;
         return userProfile;
-    }
-
-    static getUserProfileFromRpcRequest(request: MessagePayload<any>): UserProfile {
-        return request.context.userProfile;
     }
 
     static createAuthenticationToken(tenantConfig: Tenant, userProfile: UserProfile) {

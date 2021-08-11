@@ -1,7 +1,7 @@
-import { UserProfile } from "../../modules/AuthManager/models/UserProfile";
+import { UserProfile } from './UserProfile';
 
 export class SessionContext {
-	tenantAlias: string;
-	userProfile: UserProfile;
-	languageCode: string;
+    tenantAlias: string;
+    userProfile: UserProfile;
+    languageCode: string;
 }

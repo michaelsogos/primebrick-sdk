@@ -1,14 +1,14 @@
 import { Controller, Body, Post } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { DataRpcAction } from '../../core/enums/DataRpcAction';
-import { MessagePayload } from '../ProcessorManager/models/MessagePayload';
+import { MessagePayload } from '../../core/models/MessagePayload';
 import { DataAccessService } from './dataaccess.service';
-import { ArchiveOrRestorePayload } from './models/ArchiveOrRestorePayload';
-import { DeleteOrArchiveOrRestoreManyPayload } from './models/DeleteOrArchiveOrRestoreManyPayload';
-import { DeletePayload } from './models/DeletePayload';
-import { QueryPayload } from './models/QueryPayload';
-import { QueryResult } from './models/QueryResult';
-import { SavePayload } from './models/SavePayload';
+import { ArchiveOrRestorePayload } from '../../core/models/ArchiveOrRestorePayload';
+import { DeleteOrArchiveOrRestoreManyPayload } from '../../core/models/DeleteOrArchiveOrRestoreManyPayload';
+import { DeletePayload } from '../../core/models/DeletePayload';
+import { QueryPayload } from '../../core/models/QueryPayload';
+import { QueryResult } from '../../core/models/QueryResult';
+import { SavePayload } from '../../core/models/SavePayload';
 
 //TODO: @mso -> This controller should be AUTHENTICATED with AuthGuard
 @Controller()

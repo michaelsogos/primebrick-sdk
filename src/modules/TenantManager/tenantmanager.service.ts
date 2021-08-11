@@ -11,11 +11,11 @@ import * as path from 'path';
 import { SessionManagerContext } from '../SessionManager/sessionmanager.context';
 import { SessionContext } from '../../core/models/SessionContext';
 import { ImporterDescriptor } from '../../core/models/ImporterDescriptor';
-import { MessagePayload } from '../ProcessorManager/models/MessagePayload';
+import { MessagePayload } from '../../core/models/MessagePayload';
 import { ProcessorManagerService } from '../ProcessorManager/processormanager.service';
 import { DataImportLog } from '../../core/models/DataImportLog';
 import * as papa from 'papaparse';
-import { GlobalRpcAction } from '../../core';
+import { GlobalRpcAction } from '../../core/enums/GlobalRpcAction';
 import { DataImport } from '../../core/models/DataImport';
 
 @Injectable()

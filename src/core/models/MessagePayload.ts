@@ -1,5 +1,5 @@
-import { SessionContext } from '../../../core/models/SessionContext';
-import { SessionManagerContext } from '../../SessionManager/sessionmanager.context';
+import { SessionContext } from './SessionContext';
+import { SessionManagerContext } from '../../modules/SessionManager/sessionmanager.context';
 
 export class MessagePayload<T> {
     context: SessionContext;

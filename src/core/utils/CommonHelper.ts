@@ -1,13 +1,13 @@
 import { ExecutionContext } from '@nestjs/common';
-import { UserProfile } from '../../modules/AuthManager/models/UserProfile';
+import { UserProfile } from '../models/UserProfile';
 import { Request } from 'express';
 import { Connection } from 'typeorm';
 import { ImporterCardinalityType, ImporterDefinition } from '../models/ImporterDescriptor';
 import { SessionContext } from '../models/SessionContext';
 import { TenantManagerHelper } from '../../modules/TenantManager/utils/TenantManagerHelper';
-import { AuthManagerHelper } from '../../modules/AuthManager/utils/AuthManagerHelper';
-import { MessagePayload } from '../../modules';
+import { MessagePayload } from '../models/MessagePayload';
 import { DataImportLog } from '../models/DataImportLog';
+import { LocalStrategyHelper } from '../../modules/AuthManager/utils/LocalStrategyHelper';
 
 export class CommonHelper {
     static getLanguageCodeFromExecutionContext(context: ExecutionContext, userProfile: UserProfile): string {
@@ -241,7 +241,17 @@ export class CommonHelper {
         const result = new SessionContext();
         result.tenantAlias = TenantManagerHelper.getTenantAliasFromHttpRequest(request);
         try {
-            result.userProfile = AuthManagerHelper.getUserProfileFromHttpRequest(request);
+            const tenant = TenantManagerHelper.getTenantConfigByAlias(result.tenantAlias);
+            if (!tenant) throw new Error('The request cannot be authorized because is impossible to identify target tenant!');
+
+            switch (tenant.tenant_auth_config.auth_type) {
+                case 'local':
+                    return LocalStrategyHelper.getUserProfileFromHttpRequest(request);
+                case 'oauth2':
+                    throw new Error('Not implemented yet!');
+                case 'saml2':
+                    throw new Error('Not implemented yet!');
+            }
         } catch (err) {
             result.userProfile = null;
         }

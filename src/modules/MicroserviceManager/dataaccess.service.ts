@@ -8,8 +8,8 @@ import {
     QueryJoinCondition,
     QueryField,
     QueryShowArchivedEntity,
-} from './models/QueryPayload';
-import { QueryResult } from './models/QueryResult';
+} from '../../core/models/QueryPayload';
+import { QueryResult } from '../../core/models/QueryResult';
 import { Brackets, SelectQueryBuilder } from 'typeorm';
 import { TenantRepositoryService } from '../TenantManager/tenantrepository.service';
 import { AdvancedLogger } from '../../core/logger.service';

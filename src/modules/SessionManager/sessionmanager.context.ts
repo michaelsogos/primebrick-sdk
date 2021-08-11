@@ -1,6 +1,6 @@
 import { OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import * as asyncHooks from 'async_hooks';
-import { SessionContext } from '../../core';
+import { SessionContext } from '../../core/models/SessionContext';
 import { SessionManagerException } from './sessionmanager.exception';
 import { SessionManagerHelper } from './sessionmanager.helper';
 import { SessionManagerStorage } from './sessionmanager.storage';
