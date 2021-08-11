@@ -2,8 +2,6 @@
     "name": "primebrick-sdk",
     "version": "0.171.0",
     "description": "PrimeBrick SDK",
-    "main": "dist/core/index.js",
-    "typings": "dist/@types/index.d.ts",
     "author": "Michael Sogos",
     "license": "MIT",
     "repository": {
@@ -14,6 +12,7 @@
         "package.json",
         "LICENSE",
         "dist/**",
+        "@types/**",
         "*.d.ts"
     ],
     "exports": {
@@ -39,7 +38,7 @@
     },
     "scripts": {
         "prebuild": "rimraf dist",
-        "build": "nest build & copyfiles -f ./src/@types/*.d.ts ./dist/@types/",
+        "build": "nest build",
         "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
         "migration:create": "typeorm migration:generate -n coordinator_schema_update & nest build",
         "migration:run": "typeorm migration:run"

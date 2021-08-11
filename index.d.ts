@@ -1,4 +1,3 @@
-import './dist/@types/environment';
 import './core';
 import './decorators';
 import './enums';
