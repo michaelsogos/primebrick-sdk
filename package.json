@@ -13,7 +13,8 @@
     "files": [
         "package.json",
         "LICENSE",
-        "dist/**"
+        "dist/**",
+        "*.d.ts"
     ],
     "exports": {
         "./": "./src/core/index.ts",

@@ -18,5 +18,5 @@ module.exports = {
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/no-explicit-any': 'off',
     },
-    ignorePatterns: ['.eslintrc.js', '**/node_modules/*'],
+    ignorePatterns: ['.eslintrc.js', '**/node_modules/*',"*.d.ts"],
 };

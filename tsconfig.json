@@ -11,16 +11,7 @@
         "outDir": "./dist",
         "baseUrl": "./",
         "incremental": false,
-        "resolveJsonModule": true,
-        "paths": {
-            "primebrick-sdk/*": ["src/core/index.ts"],
-            "primebrick-sdk/modules": ["src/modules/index.ts"],
-            "primebrick-sdk/models": ["src/core/models/index.ts"],
-            "primebrick-sdk/enums": ["src/core/enums/index.ts"],
-            "primebrick-sdk/decorators": ["src/core/decorators/index.ts"],
-            "primebrick-sdk/nest": ["src/nest.addon.ts"],
-            "primebrick-sdk/orm": ["src/db/index.ts"]
-        }
+        "resolveJsonModule": true
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
