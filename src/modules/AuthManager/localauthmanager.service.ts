@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { AdvancedLogger } from '../../core/logger.service';
 import { Tenant } from '../TenantManager/entities/Tenant.entity';
-import { AuthTokenPayload } from './models/AuthTokenPayload';
-import { UserProfile } from './models/UserProfile';
+import { AuthTokenPayload } from '../../core/models/AuthTokenPayload';
+import { UserProfile } from '../../core/models/UserProfile';
 import { AuthManagerHelper } from './utils/AuthManagerHelper';
 import { LocalStrategyHelper } from './utils/LocalStrategyHelper';
 

@@ -16,7 +16,7 @@ import { TenantManagerHelper } from './utils/TenantManagerHelper';
 import { SnakeNamingStrategy } from '../../db/namingStrategies/SnakeNamingStrategy';
 import { AudibleEntitySubscriber } from '../../db/events/audibleentity.subscriber';
 import { SessionManagerContext } from '../SessionManager/sessionmanager.context';
-import { SessionContext } from '../../core';
+import { SessionContext } from '../../core/models/SessionContext';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { AudibleEntity } from '../../db';
 

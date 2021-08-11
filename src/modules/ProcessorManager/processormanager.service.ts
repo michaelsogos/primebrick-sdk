@@ -1,9 +1,9 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { MessagePayload } from './models/MessagePayload';
+import { MessagePayload } from '../../core/models/MessagePayload';
 import { ClientProxy } from '@nestjs/microservices';
 import { Tenant } from '../TenantManager/entities/Tenant.entity';
 import { SessionManagerContext } from '../SessionManager/sessionmanager.context';
-import { SessionContext } from '../../core';
+import { SessionContext } from '../../core/models/SessionContext';
 import { timeout as ObservableTimeout } from 'rxjs/operators';
 import { throwError, lastValueFrom } from 'rxjs';
 
@@ -12,7 +12,7 @@ export class ProcessorManagerService {
     constructor(@Inject('PRIMEBRICK_SERVICE') private busClient: ClientProxy /* private readonly sessionManagerContext: SessionManagerContext */) {}
 
     /**
-     * Send a message to a microservice registered under specific action (like a queue name or topic).  
+     * Send a message to a microservice registered under specific action (like a queue name or topic).
      * The message will be automatically enriched with session context (which contains TENANT ALIAS, USER PROFILE, LANGUAGE CODE, etc.)
      * @param actionName The name of the action that will receive the message (look at GlobalRpcAction and ModuleRpcAction from sdk, but it can be any valid string)
      * @param payload The payload to send based on TPayload, it can be anything from primitive types to complex objects
@@ -38,7 +38,7 @@ export class ProcessorManagerService {
     }
 
     /**
-     * Send a message to a microservice registered under specific action (like a queue name or topic).  
+     * Send a message to a microservice registered under specific action (like a queue name or topic).
      * **USE ONLY ON APPLICATION BOOTSTRAP!!!** The message will contains an empty session context which contains supplied TENANT ALIAS, empty USER PROFILE, 'en' as LANGUAGE CODE)
      * @param tenant The tenant entity where collect first tenant alias and forcely set it to the message context
      * @param actionName The name of the action that will receive the message (look at GlobalRpcAction and ModuleRpcAction from sdk, but it can be any valid string)

@@ -2,7 +2,7 @@
     "name": "primebrick-sdk",
     "version": "0.169.0",
     "description": "PrimeBrick SDK",
-    "main": "dist/index.js",
+    "main": "dist/core/index.js",
     "typings": "dist/@types/index.d.ts",
     "author": "Michael Sogos",
     "license": "MIT",
@@ -15,6 +15,15 @@
         "LICENSE",
         "dist/**"
     ],
+    "exports": {
+        "./": "./src/core/index.ts",
+        "./modules": "./src/modules/index.js",
+        "./models": "./src/core/models/index.ts",
+        "./enums": "./src/core/enums/index.ts",
+        "./decorators": "./src/core/decorators/index.ts",
+        "./nest": "./src/modules/nest.addon.ts",
+        "./orm": "./src/db/index.ts"
+    },
     "bugs": {
         "url": "https://github.com/michaelsogos/primebrick-sdk/issues",
         "email": "michael.sogos@gurustudioweb.it"

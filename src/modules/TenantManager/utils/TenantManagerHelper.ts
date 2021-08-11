@@ -1,7 +1,7 @@
 import { Tenant } from '../entities/Tenant.entity';
 import { ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
-import { MessagePayload } from '../../ProcessorManager/models/MessagePayload';
+import { MessagePayload } from '../../../core/models/MessagePayload';
 
 export class TenantManagerHelper {
     static getTenantConfigByAlias(alias: string): Tenant {

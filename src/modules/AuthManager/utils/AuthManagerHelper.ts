@@ -1,27 +1,8 @@
-import { ExecutionContext } from '@nestjs/common';
-import { LocalStrategyHelper } from './LocalStrategyHelper';
-import { UserProfile } from '../models/UserProfile';
-import { Request } from 'express';
 import { SecureString } from '../models/SecureString';
 import * as crypto from 'crypto';
-import { MessagePayload } from '../../ProcessorManager/models/MessagePayload';
+import { MessagePayload } from '../../../core/models/MessagePayload';
 
 export class AuthManagerHelper {
-    static getUserProfileFromExecutionContext(context: ExecutionContext): UserProfile {
-        switch (context.getType()) {
-            case 'http':
-                return this.getUserProfileFromHttpRequest(context.switchToHttp().getRequest());
-            case 'rpc':
-                return this.getUserProfileFromRpcRequest(context.switchToRpc().getData());
-            case 'ws':
-                throw new Error('Not implemented yet!');
-        }
-    }
-
-    static getUserProfileFromHttpRequest(request: Request) {
-        return LocalStrategyHelper.getUserProfileFromHttpRequest(request);
-    }
-
     static getUserProfileFromRpcRequest(request: MessagePayload<any>) {
         return request.context.userProfile;
     }

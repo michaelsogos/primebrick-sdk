@@ -1,10 +1,9 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
-import { Brick } from '../../core/models/Brick';
 import { DataImport } from '../../core/models/DataImport';
 import { DataImportLog } from '../../core/models/DataImportLog';
 import { InstallBrickResponse } from '../../core/models/InstallBrickResponse';
-import { MessagePayload } from '../ProcessorManager/models/MessagePayload';
+import { MessagePayload } from '../../core/models/MessagePayload';
 import { MicroserviceManagerService } from './microservicemanager.service';
 
 @Controller()

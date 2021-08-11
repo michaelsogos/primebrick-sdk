@@ -1,7 +1,7 @@
 import { Inject, Module, OnApplicationBootstrap } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { ClientProxy, ClientsModule, Transport } from '@nestjs/microservices';
-import { loadConfig } from '../../core/models/primebrick.config';
+import { ConfigLoader } from '../../core/utils/ConfigLoader';
 import { SessionManagerModule } from '../SessionManager/sessionmanager.module';
 import { ProcessorManagerService } from './processormanager.service';
 
@@ -10,7 +10,7 @@ import { ProcessorManagerService } from './processormanager.service';
         ConfigModule.forRoot({
             isGlobal: true,
             envFilePath: ['.app.config.env', '.logger.config.env', '.db.config.env', '.primebrick.config.env', '.env'],
-            load: [loadConfig],
+            load: [ConfigLoader],
         }),
         ClientsModule.register([
             {
