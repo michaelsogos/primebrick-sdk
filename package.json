@@ -1,6 +1,6 @@
 {
     "name": "primebrick-sdk",
-    "version": "0.170.0",
+    "version": "0.171.0",
     "description": "PrimeBrick SDK",
     "main": "dist/core/index.js",
     "typings": "dist/@types/index.d.ts",
@@ -13,7 +13,8 @@
     "files": [
         "package.json",
         "LICENSE",
-        "dist/**"
+        "dist/**",
+        "*.d.ts"
     ],
     "exports": {
         "./": "./src/core/index.ts",
