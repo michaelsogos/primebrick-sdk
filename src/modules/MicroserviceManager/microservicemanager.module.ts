@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { AdvancedLogger } from '../../core/logger.service';
+import { LogManagerModule } from '../LogManager/logmanager.module';
 import { ProcessorManagerModule } from '../ProcessorManager/processormanager.module';
 import { TenantManagerModule } from '../TenantManager/tenantmanager.module';
 import { DataAccessController } from './dataaccess.controller';
@@ -8,9 +8,9 @@ import { MicroserviceManagerController } from './microservicemanager.controller'
 import { MicroserviceManagerService } from './microservicemanager.service';
 
 @Module({
-    imports: [ProcessorManagerModule, TenantManagerModule],
+    imports: [ProcessorManagerModule, TenantManagerModule, LogManagerModule],
     controllers: [MicroserviceManagerController, DataAccessController],
-    providers: [MicroserviceManagerService, AdvancedLogger, DataAccessService],
+    providers: [MicroserviceManagerService, DataAccessService],
     exports: [MicroserviceManagerService],
 })
 export class MicroserviceManagerModule {}

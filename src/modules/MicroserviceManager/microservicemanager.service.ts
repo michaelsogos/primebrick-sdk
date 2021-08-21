@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
 import { GlobalRpcAction } from '../../core/enums/GlobalRpcAction';
-import { AdvancedLogger } from '../../core/logger.service';
 import { DataImport } from '../../core/models/DataImport';
 import { InstallBrickResponse } from '../../core/models/InstallBrickResponse';
 import { ViewDefinition } from '../../core/models/ViewDefinition';
 import { CommonHelper } from '../../core/utils/CommonHelper';
+import { LogManagerService } from '../LogManager/logmanager.service';
 import { ProcessorManagerService } from '../ProcessorManager/processormanager.service';
 import { TenantRepositoryService } from '../TenantManager/tenantrepository.service';
 
@@ -15,10 +15,8 @@ export class MicroserviceManagerService {
     constructor(
         private readonly tenantRepositoryService: TenantRepositoryService,
         private readonly processorManagerService: ProcessorManagerService,
-        private readonly logger: AdvancedLogger,
-    ) {
-        logger.setContext(MicroserviceManagerService.name);
-    }
+        private readonly logger: LogManagerService,
+    ) {}
 
     async installBrick() {
         const response = new InstallBrickResponse();

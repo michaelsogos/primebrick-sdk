@@ -6,15 +6,15 @@ import { Brick } from './models/Brick';
 import * as fs from 'fs';
 import * as path from 'path';
 import { ProcessorManagerService } from '../modules/ProcessorManager/processormanager.service';
-import { AdvancedLogger } from './logger.service';
 import { GlobalRpcAction } from './enums/GlobalRpcAction';
 import { CommonHelper } from './utils/CommonHelper';
+import { LogManagerService } from '../modules';
 
 export class MicroserviceModule extends PrimeBrickModule implements OnApplicationBootstrap {
     constructor(
         readonly tenantManagerService: TenantManagerService,
         readonly processorManagerService: ProcessorManagerService,
-        readonly logger: AdvancedLogger,
+        readonly logger: LogManagerService,
     ) {
         super(tenantManagerService, logger);
         logger.setContext(process.brickName);

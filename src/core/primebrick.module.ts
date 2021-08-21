@@ -1,12 +1,10 @@
 import { OnApplicationBootstrap } from '@nestjs/common';
+import { LogManagerService } from '../modules';
 import { Tenant } from '../modules/TenantManager/entities/Tenant.entity';
 import { TenantManagerService } from '../modules/TenantManager/tenantmanager.service';
-import { AdvancedLogger } from './logger.service';
 
 export class PrimeBrickModule implements OnApplicationBootstrap {
-    constructor(readonly tenantManagerService: TenantManagerService, readonly logger: AdvancedLogger) {
-        logger.setContext(process.brickName);
-    }
+    constructor(readonly tenantManagerService: TenantManagerService, readonly logger: LogManagerService) {}
 
     async onApplicationBootstrap(): Promise<void> {
         await this.tenantManagerService.loadAllTenantsInMemory(true);
