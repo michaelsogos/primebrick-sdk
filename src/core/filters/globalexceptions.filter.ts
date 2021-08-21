@@ -22,12 +22,13 @@ export class GlobalExceptionsFilter implements ExceptionFilter {
                 }
                 break;
             case 'rpc': {
-                // return throwError({
-                // 	statusCode: status,
-                // 	timestamp: new Date().toISOString(),
-                // 	message: error.message || "Internal Server Error",
-                // });
-                return throwError(() => new Error(error.message || 'Internal Server Error'));
+                return throwError(() => {
+                    return {
+                        statusCode: status,
+                        timestamp: new Date().toISOString(),
+                        message: error.message || 'Internal Server Error',
+                    };
+                });
             }
             case 'ws':
                 throw new Error('Not implemented yet!');
