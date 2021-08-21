@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AdvancedLogger } from '../../core/logger.service';
+import { LogManagerModule } from '../LogManager/logmanager.module';
 import { LocalAuthManagerService } from './localauthmanager.service';
 
 @Module({
-    imports: [],
+    imports: [LogManagerModule],
     controllers: [],
-    providers: [AdvancedLogger, LocalAuthManagerService],
+    providers: [LocalAuthManagerService],
     exports: [LocalAuthManagerService],
 })
 export class AuthManagerModule {}

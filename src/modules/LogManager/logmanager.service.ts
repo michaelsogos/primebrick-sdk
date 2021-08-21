@@ -1,14 +1,15 @@
-import { ConsoleLogger, Optional } from '@nestjs/common';
+import { ConsoleLogger, Injectable, LoggerService, Optional } from '@nestjs/common';
 import * as winston from 'winston';
-import { CommonHelper } from './utils/CommonHelper';
+import { CommonHelper } from '../../core/utils/CommonHelper';
 import 'winston-daily-rotate-file';
 import * as fs from 'fs';
 
-export class AdvancedLogger extends ConsoleLogger {
+@Injectable()
+export class LogManagerService extends ConsoleLogger implements LoggerService {
     private readonly logger: winston.Logger;
 
-    constructor(@Optional() protected context?: string, @Optional() isTimestampEnabled = false) {
-        super(context, { timestamp: isTimestampEnabled });
+    constructor() {
+        super(process.brickName, { timestamp: true });
 
         if (!fs.existsSync('logs')) {
             fs.mkdirSync('logs');

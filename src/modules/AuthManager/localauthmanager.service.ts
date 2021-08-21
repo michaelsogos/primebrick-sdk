@@ -1,16 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { AdvancedLogger } from '../../core/logger.service';
 import { Tenant } from '../TenantManager/entities/Tenant.entity';
 import { AuthTokenPayload } from '../../core/models/AuthTokenPayload';
 import { UserProfile } from '../../core/models/UserProfile';
 import { AuthManagerHelper } from './utils/AuthManagerHelper';
 import { LocalStrategyHelper } from './utils/LocalStrategyHelper';
+import { LogManagerService } from '../LogManager/logmanager.service';
 
 @Injectable()
 export class LocalAuthManagerService {
-    constructor(private readonly logger: AdvancedLogger) {
-        logger.setContext(LocalAuthManagerService.name);
-    }
+    constructor(private readonly logger: LogManagerService) {}
 
     async createAuthenticationToken(tenantConfig: Tenant, userProfile: UserProfile): Promise<AuthTokenPayload> {
         const result = LocalStrategyHelper.createAuthenticationToken(tenantConfig, userProfile);

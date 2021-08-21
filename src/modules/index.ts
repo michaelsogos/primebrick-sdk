@@ -9,3 +9,5 @@ export { MicroserviceManagerModule } from './MicroserviceManager/microserviceman
 export { MicroserviceManagerService } from './MicroserviceManager/microservicemanager.service';
 export { AuthManagerModule } from './AuthManager/authmanager.module';
 export { LocalAuthManagerService } from './AuthManager/localauthmanager.service';
+export { LogManagerModule } from './LogManager/logmanager.module';
+export { LogManagerService } from './LogManager/logmanager.service';

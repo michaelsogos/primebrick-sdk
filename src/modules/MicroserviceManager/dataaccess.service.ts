@@ -12,13 +12,11 @@ import {
 import { QueryResult } from '../../core/models/QueryResult';
 import { Brackets, SelectQueryBuilder } from 'typeorm';
 import { TenantRepositoryService } from '../TenantManager/tenantrepository.service';
-import { AdvancedLogger } from '../../core/logger.service';
+import { LogManagerService } from '../LogManager/logmanager.service';
 
 @Injectable()
 export class DataAccessService {
-    constructor(private readonly repositoryService: TenantRepositoryService, private readonly logger: AdvancedLogger) {
-        logger.setContext(DataAccessService.name);
-    }
+    constructor(private readonly repositoryService: TenantRepositoryService, private readonly logger: LogManagerService) {}
 
     async find(query: QueryPayload): Promise<QueryResult> {
         try {
