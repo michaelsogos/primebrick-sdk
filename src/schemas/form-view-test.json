@@ -1,0 +1,206 @@
+{
+    "$schema": "./base-view-definition.schema.json",
+    "name": "translations-form",
+    "labelKey": "translation",
+    "brick": "core",
+    "entity": {
+        "name": "MetaTranslation",
+        "labelKey": "translation",
+        "recordNameTemplate": "Key: ${key}, Lang: ${languageCode}, Group: ${group}"
+    },
+    "type": "form",
+    "version": "1.0.0",
+    "showLogs": true,
+    "definition": {
+        "containers": [
+            {
+                "cols": 9,
+                "showTitle": false,
+                "fields": [
+                    {
+                        "name": "key",
+                        "labelKey": "key",
+                        "cols": 6,
+                        "type": "textbox",
+                        "validationRules": [
+                            {
+                                "rule": "required",
+                                "labelKey": "field_required"
+                            }
+                        ],
+                        "translatable": false
+                    },
+                    {
+                        "name": "languageCode",
+                        "labelKey": "language-code",
+                        "cols": 6,
+                        "validationRules": [
+                            {
+                                "rule": "required",
+                                "labelKey": "field_required"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "value",
+                        "labelKey": "translation"
+                    },
+                    {
+                        "name": "group",
+                        "labelKey": "group"
+                    },
+                    {
+                        "name": "isTemplate",
+                        "labelKey": "template",
+                        "validationRules": [
+                            {
+                                "rule": "required",
+                                "labelKey": "field_required"
+                            }
+                        ],
+                        "type": "checkbox"
+                    }
+                ]
+            },
+            {
+                "cols": 3,
+                "showTitle": false,
+                "fields": [
+                    {
+                        "name": "key",
+                        "labelKey": "key",
+                        "cols": 6,
+                        "type": "textbox",
+                        "validationRules": [
+                            {
+                                "rule": "required",
+                                "labelKey": "field_required"
+                            }
+                        ],
+                        "translatable": false
+                    },
+                    {
+                        "name": "languageCode",
+                        "labelKey": "language-code",
+                        "cols": 6
+                    },
+                    {
+                        "name": "value",
+                        "labelKey": "translation"
+                    },
+                    {
+                        "name": "group",
+                        "labelKey": "group"
+                    },
+                    {
+                        "name": "isTemplate",
+                        "labelKey": "template",
+                        "validationRules": [
+                            {
+                                "rule": "required",
+                                "labelKey": "field_required"
+                            }
+                        ],
+                        "type": "switch"
+                    }
+                ]
+            },
+            {
+                "cols": 3,
+                "showTitle": false,
+                "fields": [
+                    {
+                        "name": "key",
+                        "labelKey": "key",
+                        "cols": 6,
+                        "type": "textbox",
+                        "validationRules": [
+                            {
+                                "rule": "required",
+                                "labelKey": "validation-message-field-is-required"
+                            }
+                        ],
+                        "translatable": false
+                    },
+                    {
+                        "name": "languageCode",
+                        "labelKey": "language-code",
+                        "cols": 6
+                    },
+                    {
+                        "name": "value",
+                        "labelKey": "translation"
+                    },
+                    {
+                        "name": "group",
+                        "labelKey": "group"
+                    },
+                    {
+                        "name": "isTemplate",
+                        "labelKey": "template",
+                        "type": "checkbox"
+                    }
+                ]
+            },
+            {
+                "cols": 9,
+                "showTitle": false,
+                "fields": [
+                    {
+                        "name": "key",
+                        "labelKey": "key",
+                        "cols": 6,
+                        "type": "textbox",
+                        "validationRules": [
+                            {
+                                "labelKey": "validation-message-field-is-required",
+                                "rule": "required"
+                            }
+                        ],
+                        "translatable": false
+                    },
+                    {
+                        "name": "languageCode",
+                        "labelKey": "language-code",
+                        "cols": 6
+                    },
+                    {
+                        "name": "value",
+                        "labelKey": "translation"
+                    },
+                    {
+                        "name": "group",
+                        "labelKey": "group"
+                    },
+                    {
+                        "name": "isTemplate",
+                        "labelKey": "template",
+                        "type": "textbox"
+                    }
+                ]
+            }
+        ],
+        "actions": {
+            "save": {
+                "enableToolbarButton": true,
+                "enableMenuLink": true
+            },
+            "delete": {
+                "enableToolbarButton": false,
+                "enableMenuLink": false
+            },
+            "archive": {
+                "enableToolbarButton": false,
+                "enableMenuLink": false
+            },
+            "refresh": {
+                "enableToolbarButton": false,
+                "enableMenuLink": false
+            },
+            "info": {
+                "enableToolbarButton": false,
+                "enableMenuLink": true
+            }
+        }
+    }
+}

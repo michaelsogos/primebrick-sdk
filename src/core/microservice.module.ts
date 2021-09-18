@@ -17,7 +17,6 @@ export class MicroserviceModule extends PrimeBrickModule implements OnApplicatio
         readonly logger: LogManagerService,
     ) {
         super(tenantManagerService, logger);
-        logger.setContext(process.brickName);
     }
 
     async onApplicationBootstrap(): Promise<void> {

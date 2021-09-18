@@ -1,8 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "http://primebrick-sdk/grid-view-definition.schema.json",
-    "title": "GridViewDefinition",
-    "description": "The grid view definition model",
+    "$id": "http://primebrick-sdk/cards-view-definition.schema.json",
+    "title": "CardsViewDefinition",
+    "description": "The cards view definition model",
     "type": "object",
     "properties": {
         "showArchivedEntities": {
@@ -47,10 +47,81 @@
                         "type": "boolean",
                         "default": false
                     },
-                    "hideColumn": {
-                        "description": "True to hide column in data table",
-                        "type": "boolean",
-                        "default": false
+                    "layout": {
+                        "description": "Card layout where place the field",
+                        "type": "object",
+                        "properties": {
+                            "isTitle": {
+                                "description": "True if field must be placed as title (its label will not be printed)",
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "isSubTitle": {
+                                "description": "True if field must be placed as sub title (its label will not be printed)",
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "line": {
+                                "description": "Line number name. All field with same line number will be placed on same row.",
+                                "type": "number"
+                            },
+                            "filling": {
+                                "description": "Horizontal positions to fill",
+                                "type": "array",
+                                "minItems": 1,
+                                "items": {
+                                    "type": "string",
+                                    "enum": ["left", "middle", "right"],
+                                    "default": "left"
+                                }
+                            },
+                            "align": {
+                                "description": "Horizontal text alignment. Also the label will be aligned",
+                                "type": "string",
+                                "enum": ["left", "center", "right"],
+                                "default": "left"
+                            },
+                            "isChip": {
+                                "description": "Draw value inside a chip and hide field label",
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "hideLabel": {
+                                "description": "Hide field label",
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "isBold": {
+                                "description": "Change font weigth to BOLD for field value",
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "isDetail": {
+                                "description": "True if field must be visible only when card show details",
+                                "type": "boolean",
+                                "default": false
+                            }
+                        },
+                        "required": [],
+                        "additionalProperties": false,
+                        "anyOf": [
+                            {
+                                "if": {
+                                    "properties": { "isSubTitle": { "const": false } }
+                                },
+                                "then": {
+                                    "required": ["line", "filling"]
+                                }
+                            },
+                            {
+                                "if": {
+                                    "properties": { "isTitle": { "const": false } }
+                                },
+                                "then": {
+                                    "required": ["line", "filling"]
+                                }
+                            }
+                        ]
                     },
                     "disableSort": {
                         "description": "True to disable column sort feature",
@@ -64,13 +135,7 @@
                     }
                 },
                 "required": ["name"],
-                "additionalProperties": false,
-                "if": {
-                    "properties": { "hideColumn": { "const": false } }
-                },
-                "then": {
-                    "required": ["labelKey"]
-                }
+                "additionalProperties": false
             }
         },
         "filters": {
@@ -152,7 +217,17 @@
                 "itemsPerPage": {
                     "description": "Number of items to retrieve per page",
                     "type": "number",
-                    "default": 50
+                    "default": 20
+                },
+                "enableRecordNameAsTitle": {
+                    "description": "Allow record name to be show as title",
+                    "type": "boolean",
+                    "default": false
+                },
+                "enableRecordNameAsSubTitle": {
+                    "description": "Allow record name to be show as title",
+                    "type": "boolean",
+                    "default": false
                 }
             },
             "additionalProperties": false
@@ -175,7 +250,12 @@
                             "default": false
                         },
                         "enableItemButton": {
-                            "description": "Show button on row",
+                            "description": "Show button on card",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "enableTitleLink": {
+                            "description": "Show link on card title",
                             "type": "boolean",
                             "default": false
                         }
@@ -196,7 +276,12 @@
                             "default": false
                         },
                         "enableItemButton": {
-                            "description": "Show button on row",
+                            "description": "Show button on card",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "enableTitleLink": {
+                            "description": "Show link on card title",
                             "type": "boolean",
                             "default": false
                         }
@@ -244,7 +329,7 @@
                             "default": false
                         },
                         "enableItemButton": {
-                            "description": "Show button on row",
+                            "description": "Show button on card",
                             "type": "boolean",
                             "default": false
                         }
@@ -266,7 +351,7 @@
                             "default": false
                         },
                         "enableItemButton": {
-                            "description": "Show button on row",
+                            "description": "Show button on card",
                             "type": "boolean",
                             "default": false
                         }
@@ -317,7 +402,7 @@
                             "default": false
                         },
                         "enableItemButton": {
-                            "description": "Show button on row",
+                            "description": "Show button on card",
                             "type": "boolean",
                             "default": false
                         }
@@ -355,7 +440,7 @@
                     "type": "object",
                     "properties": {
                         "enableHeader": {
-                            "description": "Show filter field under column header",
+                            "description": "Show filter field under header",
                             "type": "boolean",
                             "default": false
                         },
@@ -571,12 +656,8 @@
                         "description": "Conditional expression",
                         "type": "string"
                     },
-                    "backgroundColor": {
-                        "description": "Background color",
-                        "type": "string"
-                    },
-                    "text": {
-                        "description": "Text font settings",
+                    "title": {
+                        "description": "Title font settings",
                         "type": "object",
                         "properties": {
                             "color": {
@@ -601,6 +682,54 @@
                                 "default": false
                             }
                         },
+                        "additionalProperties": false
+                    },
+                    "border": {
+                        "description": "Card borders settings",
+                        "type": "object",
+                        "properties": {
+                            "sides": {
+                                "description": "Side borders to fill ",
+                                "type": "array",
+                                "minItems": 1,
+                                "items": {
+                                    "type": "string",
+                                    "enum": ["left", "top", "right", "bottom"],
+                                    "default": "left"
+                                }
+                            },
+                            "size": {
+                                "description": "Border size in pixel",
+                                "type": "number",
+                                "default": 5
+                            },
+                            "color": {
+                                "description": "Border color both HEX or NAMED",
+                                "type": "string",
+                                "examples": ["#607D8B", "success"],
+                                "default": "#607D8B"
+                            }
+                        },
+                        "required": ["sides"],
+                        "additionalProperties": false
+                    },
+                    "icon": {
+                        "description": "Card icon title settings",
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "description": "Icon class name",
+                                "type": "string",
+                                "default": "mdi-card-text"
+                            },
+                            "color": {
+                                "description": "Icon color name",
+                                "type": "string",
+                                "examples": ["success"],
+                                "default": "success"
+                            }
+                        },
+                        "required": ["name", "color"],
                         "additionalProperties": false
                     }
                 },

@@ -1,0 +1,127 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://primebrick-sdk/base-view-definition.schema.json",
+    "title": "BaseViewDefinition",
+    "description": "The base view definition model",
+    "type": "object",
+    "properties": {
+        "$schema": {
+            "description": "JSON Schema URL or path",
+            "type": "string"
+        },
+        "type": {
+            "description": "View type",
+            "type": "string",
+            "enum": ["grid", "form", "cards"]
+        },
+        "version": {
+            "description": "Definition version",
+            "type": "string"
+        },
+        "name": {
+            "description": "View name",
+            "type": "string"
+        },
+        "labelKey": {
+            "description": "View title translatable key",
+            "type": "string"
+        },
+        "icon": {
+            "description": "View icon",
+            "type": "string"
+        },
+        "color": {
+            "description": "View main color",
+            "type": "string"
+        },
+        "brick": {
+            "description": "Brick name",
+            "type": "string"
+        },
+        "entity": {
+            "description": "Entity definition",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "description": "Entity name to query",
+                    "type": "string"
+                },
+                "labelKey": {
+                    "description": "Entity translation key",
+                    "type": "string"
+                },
+                "recordNameTemplate": {
+                    "description": "Template literal to build record name using ES6 syntax",
+                    "examples": [
+                        "for User entity it could be '${first_name} ${last_name} (${code})' => 'Michael Sogos (USR001)'",
+                        "for Sale Order it could be '${code} - ${total_amount - total_discount}€' => 'ORD001 - 123.00€'"
+                    ],
+                    "type": "string"
+                }
+            },
+            "required": ["name", "labelKey", "recordNameTemplate"],
+            "additionalProperties": false
+        },
+        "showLogs": {
+            "description": "True to show logs on footer",
+            "type": "boolean",
+            "default": false
+        },
+        "definition": {
+            "description": "View definition",
+            "type": "object"
+        }
+    },
+    "required": ["name", "labelKey", "definition", "brick", "entity", "type", "version"],
+    "additionalProperties": false,
+    "allOf": [
+        {
+            "if": {
+                "properties": {
+                    "type": {
+                        "const": "grid"
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "definition": {
+                        "$ref": "grid-view-definition.schema.json#"
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "type": {
+                        "const": "form"
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "definition": {
+                        "$ref": "form-view-definition.schema.json#"
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "type": {
+                        "const": "cards"
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "definition": {
+                        "$ref": "cards-view-definition.schema.json#"
+                    }
+                }
+            }
+        }
+    ]
+}

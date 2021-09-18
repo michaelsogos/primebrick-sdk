@@ -33,8 +33,9 @@ export class DataAccessService {
     async findOne(query: QueryPayload): Promise<QueryResult> {
         try {
             const queryBuilder = await this.getQueryBuilder(query);
+            // const result = await queryBuilder.getOne();
+            const result = await queryBuilder.getRawOne();
 
-            const result = await queryBuilder.getOne();
             return new QueryResult([result], 1);
         } catch (err) {
             this.logger.error(err);
@@ -51,6 +52,8 @@ export class DataAccessService {
 
         if (query.fields && query.fields.length > 0) {
             if (!query.excludeIDField) queryBuilder.select([`${query.entity}.id`]);
+            else queryBuilder.select([]);
+
             for (const field of query.fields) {
                 if (typeof field === 'string') queryBuilder.addSelect(`${query.entity}.${field}`);
                 else queryBuilder.addSelect(field.expression.replace('$self', query.entity), field.alias);

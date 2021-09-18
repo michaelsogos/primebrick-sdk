@@ -1,49 +1,68 @@
 {
     "$schema": "./base-view-definition.schema.json",
+    "type": "cards",
     "name": "translations-grid",
     "labelKey": "translations",
     "brick": "core",
+    "showLogs": true,
+    "version": "1.0.0",
     "entity": {
         "name": "MetaTranslation",
         "labelKey": "translation",
         "recordNameTemplate": "Key: ${key}, Lang: ${languageCode}, Group: ${group}"
     },
-    "type": "grid",
-    "version": "1.0.0",
-    "showLogs": true,
     "definition": {
         "fields": [
             {
                 "name": "key",
-                "labelKey": "key"
+                "labelKey": "key",
+                "layout": {
+                    "isTitle": true
+                }
             },
             {
                 "name": "languageCode",
-                "labelKey": "language-code"
+                "labelKey": "language-code",
+                "layout": {
+                    "line": 1,
+                    "filling": ["left"]
+                }
             },
             {
                 "name": "value",
-                "labelKey": "translation"
+                "labelKey": "translation",
+                "layout": {
+                    "line": 2,
+                    "filling": ["left", "middle", "right"],
+                    "hideLabel": true,
+                    "isBold": true,
+                    "isDetail": true
+                }
             },
             {
                 "name": "group",
-                "labelKey": "group"
+                "labelKey": "group",
+                "layout": {
+                    "line": 1,
+                    "filling": ["middle"],
+                    "align": "center",
+                    "isChip": true
+                }
             },
             {
                 "name": "isTemplate",
                 "labelKey": "template",
-                "type": "boolean"
+                "type": "boolean",
+                "layout": {
+                    "line": 1,
+                    "filling": ["right"],
+                    "align": "right"
+                }
             },
             {
                 "name": "deletedOn",
-                "hideColumn": true,
-                "isArchiveFlag": true
-            }
-        ],
-        "showArchivedEntities": "none",
-        "filters": [
-            {
-                "expressions": ["$self.languageCode = 'it'"]
+                "isArchiveFlag": true,
+                "disableSort": true
             }
         ],
         "sorts": [
@@ -53,13 +72,38 @@
         ],
         "alternativeViews": [
             {
-                "name": "translations-cards",
-                "type": "cards"
+                "name": "translations-grid",
+                "type": "grid"
+            }
+        ],
+        "highlighters": [
+            {
+                "expression": "group == 'login'",
+                "border": {
+                    "color": "teal lighten-4",
+                    "sides": ["left"]
+                },
+                "title": {
+                    "color": "teal"
+                },
+                "icon": {
+                    "color": "teal",
+                    "name": "mdi-card-text"
+                }
+            },
+            {
+                "expression": "deletedOn",
+                "border": {
+                    "color": "error lighten-4",
+                    "sides": ["left"]
+                },
+                "title": {
+                    "color": "error"
+                }
             }
         ],
         "options": {
-            "enableMultiSelect": true,
-            "itemsPerPage": 50
+            "enableRecordNameAsSubTitle": true
         },
         "actions": {
             "open": {
@@ -160,22 +204,6 @@
                 ]
             }
         },
-        "highlighters": [
-            {
-                "expression": "group == 'login'",
-                "backgroundColor": "teal lighten-4",
-                "text": {
-                    "color": "teal"
-                }
-            },
-            {
-                "expression": "deletedOn",
-                "backgroundColor": "error lighten-4",
-                "text": {
-                    "color": "error"
-                }
-            }
-        ],
         "aggregators": [
             {
                 "expression": "COUNT($self.id)",
